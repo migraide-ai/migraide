@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en">
+  <!-- [Head] start -->
+  <head>
+    <title>Multi-step Form</title>
+    @@include('../layouts/head-page-meta.html', {'title': 'Form Sections'}) @@include('../layouts/head-css.html')
+    <link rel="stylesheet" href="path/to/bootstrap.css" />
+    <style>
+      /* Card and Form Styles */
+      .card {
+        background-color: #fff;
+        border-radius: 8px;
+        /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
+        /* padding: 30px 20px 50px 20px; */
+      }
+
+      /* Progress bar */
+      .progress-wrapper {
+        position: relative;
+        margin-bottom: 40px;
+      }
+
+      .progress {
+        height: 10px;
+        border: 1px solid #DDDDDD;
+        border-radius: 5px;
+        background-color: #F2F2F2;
+      }
+
+      .progress-bar {
+        background-color: #4285F4;
+        border-radius: 5px;
+        transition: width 0.4s;
+      }
+
+      .progress-percentage {
+        position: absolute;
+        right: 20px;
+        top: -25px;
+        font-size: 14px;
+        color: #000;
+        font-weight: 500;
+      }
+
+      /* Styling for form input fields */
+      .form-control {
+        background-color: #FFFFFF;
+        border: 1px solid #DDDDDD;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 20px;
+      }
+
+      .form-control:focus {
+        border-color: #4285F4;
+        box-shadow: none;
+      }
+
+      .form-label {
+        font-weight: 500;
+        color: #333333;
+        margin-bottom: 10px;
+      }
+
+      /* Styling the submit button */
+      .btn-primary {
+        background-color: #4285F4;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 287px;
+        height: 44px;
+      }
+
+      .btn-primary:focus {
+        box-shadow: none;
+      }
+
+      .btn-secondary {
+        background-color: #C7C7C7;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        width: 287px;
+        height: 44px;
+      }
+
+      .btn-secondary:focus {
+        box-shadow: none;
+      }
+
+      /* Heading */
+      h5, h3 {
+        font-family: 'Inter', sans-serif;
+        font-size: 28px;
+        font-weight: 600;
+      }
+
+      .description-text {
+        margin-top: 30px; /* Adds 30px space between heading and description */
+        color: #666666;
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <!-- [Head] end -->
+  
+  <!-- [Body] Start -->
+  <body @@bodySetup>
+    @@include('../layouts/layout-vertical.html')
+
+    <!-- [ Main Content ] start -->
+    <div class="pc-container">
+      <div class="pc-content">
+        <div class="card-header" style="padding-bottom: 20px;">
+          <h3>Additional Information</h3>
+        </div>
+        <!-- Progress bar placed at the top of both pages -->
+        <div class="progress-wrapper">
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" id="progress-bar" style="width: 25%;"></div>
+          </div>
+          <span class="progress-percentage" id="progress-percentage">25%</span>
+        </div>
+
+        <div class="card" id="additional-information-section" style="border-radius: 8px; border: 1px solid #DDDDDD; padding-top: 0px; ">
+  
+          <!-- Title Section with Underline for "Form controls" -->
+          <div class="card-header" style="padding-bottom: 10px; border-bottom: 1px solid #E0E0E0; width: 100%;">
+            <h5 style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; color: #333;  padding-right: 30px;">
+              This form requires some additional information not available on any documents we collect at this point.
+            </h5>
+          </div>          
+        
+          <div class="card-body margin-top: 20px;">
+            <!-- Form Fields styled exactly like the screenshot -->
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label" style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; color: #333;">Are you applying alone or including your spouse or children?</label>
+                  <select class="form-control" style="background-color: #FFFFFF; border: 1px solid #DDDDDD; border-radius: 8px; padding: 12px 15px; font-size: 14px; color: #a3a3a3; font-family: 'Inter', sans-serif;" required>
+                    <option value="" style="color: #888888; font-style: italic;">Select</option>
+                    <option value="alone">Alone</option>
+                    <option value="spouse">Including Spouse/Children</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label" style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; color: #333;">Will you be applying for adjustment of status?</label>
+                  <select class="form-control" style="background-color: #FFFFFF; border: 1px solid #DDDDDD; border-radius: 8px; padding: 12px 15px; font-size: 14px; color: #a3a3a3; font-family: 'Inter', sans-serif;" required>
+                    <option value="" style="color: #888888; font-style: italic;">Select</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label" style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; color: #333;">Are you a non-profit organized as tax exempt or government?</label>
+                  <select class="form-control" style="background-color: #FFFFFF; border: 1px solid #DDDDDD; border-radius: 8px; padding: 12px 15px; font-size: 14px; color: #a3a3a3; font-family: 'Inter', sans-serif;" required>
+                    <option value="" style="color: #888888; font-style: italic;">Select</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label" style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; color: #333;">Are you applying from abroad?</label>
+                  <select class="form-control" style="background-color: #FFFFFF; border: 1px solid #DDDDDD; border-radius: 8px; padding: 12px 15px; font-size: 14px; color: #a3a3a3; font-family: 'Inter', sans-serif;" required>
+                    <option value="" style="color: #888888; font-style: italic;">Select</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label" style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; color: #333;">Do you currently employ 25 or fewer employees in the US?</label>
+                  <select class="form-control" style="background-color: #FFFFFF; border: 1px solid #DDDDDD; border-radius: 8px; padding: 12px 15px; font-size: 14px; color: #a3a3a3; font-family: 'Inter', sans-serif;" required>
+                    <option value="" style="color: #888888; font-style: italic;">Select</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label" style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; color: #333;">Is any member of your family applying from outside of the USA?</label>
+                  <select class="form-control" style="background-color: #FFFFFF; border: 1px solid #DDDDDD; border-radius: 8px; padding: 12px 15px; font-size: 14px; color: #a3a3a3; font-family: 'Inter', sans-serif;" required>
+                    <option value="" style="color: #888888; font-style: italic;">Select</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+        
+            <!-- Continue Button -->
+            <div class="text-end" style="margin-top: 20px; margin-bottom: 20px;">
+              <button type="button" class="btn btn-primary" 
+                      style="background-color: #4285F4; border: none; padding: 10px 20px; font-size: 16px; font-family: 'Inter', sans-serif; 
+                      border-radius: 50px; width: 287px; height: 44px; text-align: center; transition: background-color 0.3s ease;"
+                      onmouseover="this.style.backgroundColor='#2a6ad7';" 
+                      onmouseout="this.style.backgroundColor='#4285F4';"
+                      onclick="goToNextPage()">
+                Continue
+              </button>
+            </div>
+            
+            
+          </div>
+        </div>
+        
+        
+
+        <!-- Second Page: Visa Document Checklist (Initially hidden) -->
+      <div style="padding-bottom:30px;">
+        <div class="card" id="visa-checklist-section" style="display: none;">
+          <div class="card-header" style="padding-bottom: 10px; border-bottom: 1px solid #E0E0E0; width: 100%;">
+            <h5 style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; color: #333;  padding-right: 30px;">
+              Select the forms you want to fill and I will help you complete the forms in 30 secs.            </h5>
+          </div> 
+          <div style="margin-left: 20px; margin-top: 20px;">
+          <div class="form-check-group" style="font-family: 'Inter', sans-serif; font-size: 14px; color: #333;">
+            <div class="form-check" style="margin-bottom: 10px; display: flex; align-items: center;">
+              <input class="form-check-input" type="checkbox" id="formI140" value="I-140" style="width: 20px; height: 20px; border-radius: 5px; border: 1px solid #DDDDDD; background-color: #FFFFFF; cursor: pointer; appearance: none; display: inline-block; position: relative; vertical-align: middle; margin-right: 10px;" onclick="this.style.backgroundColor=this.checked ? '#4285F4' : '#FFFFFF'; this.style.borderColor=this.checked ? '#4285F4' : '#DDDDDD';">
+              <label class="form-check-label" for="formI140">
+                <a href="https://example.com/formI140" target="_blank" style="text-decoration: none; color: #4285F4;">Form I-140</a>
+              </label>
+            </div>
+          <div><div class="form-check-group" style="font-family: 'Inter', sans-serif; font-size: 14px; color: #333;">
+            <div class="form-check" style="margin-bottom: 10px; display: flex; align-items: center;">
+              <input class="form-check-input" type="checkbox" id="formI140" value="I-140" style="width: 20px; height: 20px; border-radius: 5px; border: 1px solid #DDDDDD; background-color: #FFFFFF; cursor: pointer; appearance: none; display: inline-block; position: relative; vertical-align: middle; margin-right: 10px;" onclick="this.style.backgroundColor=this.checked ? '#4285F4' : '#FFFFFF'; this.style.borderColor=this.checked ? '#4285F4' : '#DDDDDD';">
+              <label class="form-check-label" for="formI140">
+                <a href="https://example.com/formI140" target="_blank" style="text-decoration: none; color: #4285F4;">Form I-140</a>
+              </label>
+            </div>
+          
+            <div class="form-check" style="margin-bottom: 10px; display: flex; align-items: center;">
+              <input class="form-check-input" type="checkbox" id="formI907" value="I-907" style="width: 20px; height: 20px; border-radius: 5px; border: 1px solid #DDDDDD; background-color: #FFFFFF; cursor: pointer; appearance: none; display: inline-block; position: relative; vertical-align: middle; margin-right: 10px;" onclick="this.style.backgroundColor=this.checked ? '#4285F4' : '#FFFFFF'; this.style.borderColor=this.checked ? '#4285F4' : '#DDDDDD';">
+              <label class="form-check-label" for="formI907">
+                <a href="https://example.com/formI907" target="_blank" style="text-decoration: none; color: #4285F4;">Form I-907</a>
+              </label>
+            </div>
+          
+            <div class="form-check" style="margin-bottom: 10px; display: flex; align-items: center;">
+              <input class="form-check-input" type="checkbox" id="formG1145" value="G-1145" style="width: 20px; height: 20px; border-radius: 5px; border: 1px solid #DDDDDD; background-color: #FFFFFF; cursor: pointer; appearance: none; display: inline-block; position: relative; vertical-align: middle; margin-right: 10px;" onclick="this.style.backgroundColor=this.checked ? '#4285F4' : '#FFFFFF'; this.style.borderColor=this.checked ? '#4285F4' : '#DDDDDD';">
+              <label class="form-check-label" for="formG1145">
+                <a href="https://example.com/formG1145" target="_blank" style="text-decoration: none; color: #4285F4;">Form G-1145</a>
+              </label>
+            </div>
+          
+            <div class="form-check" style="margin-bottom: 10px; display: flex; align-items: center;">
+              <input class="form-check-input" type="checkbox" id="formG1450" value="G-1450" style="width: 20px; height: 20px; border-radius: 5px; border: 1px solid #DDDDDD; background-color: #FFFFFF; cursor: pointer; appearance: none; display: inline-block; position: relative; vertical-align: middle; margin-right: 10px;" onclick="this.style.backgroundColor=this.checked ? '#4285F4' : '#FFFFFF'; this.style.borderColor=this.checked ? '#4285F4' : '#DDDDDD';">
+              <label class="form-check-label" for="formG1450">
+                <a href="https://example.com/formG1450" target="_blank" style="text-decoration: none; color: #4285F4;">Form G-1450</a>
+              </label>
+            </div>
+          </div>
+          </div>
+          </div>
+            
+   <!-- File Uploader Section -->
+<div style="font-family: 'Inter', sans-serif; padding: 20px; background-color: #fff; border-radius: 8px; border: 1px dashed #666; margin-top: 30px; margin-bottom: 30px; width: 50%;">
+  <p style="font-size: 14px; color: #666; margin-bottom: 20px;">Kindly upload the following files to initiate the automated form filling.</p>
+
+  
+  <!-- First Upload Field (Success Scenario) -->
+  <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background-color: #F8F8F8; border: 1px solid #E0E0E0; border-radius: 8px; margin-bottom: 15px;">
+      <span id="passport-file-label" style="font-size: 16px; font-weight: 500; color: #333;">Passport data page for main applicant</span>
+      <input type="file" id="passport-upload" style="display: none;" onchange="uploadFile('passport')">
+      <button id="passport-upload-btn" style="background-color: #4285F4; color: #fff; border: none; padding: 10px 40px; border-radius: 25px; cursor: pointer; transition: background-color 0.3s ease; font-size: 16px;" 
+              onclick="document.getElementById('passport-upload').click()">Upload file</button>
+  </div>
+  <!-- Progress Bar for First File (Success) -->
+  <div id="passport-progress-bar" style="height: 8px; background-color: #E0E0E0; border-radius: 5px; margin-top: 10px; margin-bottom: 10px; overflow: hidden; position: relative; width: 100%; display: none;">
+    <div id="passport-progress-fill" style="height: 100%; background-color: #4CAF50; width: 0%; transition: width 2s ease;"></div> <!-- Green for success -->
+  </div>
+  
+
+  <!-- Second Upload Field (Failed Scenario) -->
+  <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background-color: #F8F8F8; border: 1px solid #E0E0E0; border-radius: 8px; margin-bottom: 15px;">
+      <span style="font-size: 16px; font-weight: 500; color: #333;">Birth certificates for all main applicants</span>
+      <input type="file" id="birth-cert-upload" style="display: none;" onchange="uploadFile('birth-cert')">
+      <button id="birth-cert-upload-btn" style="background-color: #4285F4; color: #fff; border: none; padding: 10px 40px; border-radius: 25px; cursor: pointer; transition: background-color 0.3s ease; font-size: 16px;" 
+              onclick="document.getElementById('birth-cert-upload').click()">Upload file</button>
+  </div>
+  <!-- Progress Bar for Second File (Failed) -->
+  <div id="birth-cert-progress-bar" style="height: 8px; background-color: #E0E0E0; border-radius: 5px; margin-top: 10px; margin-bottom: 10px; overflow: hidden; position: relative; width: 100%; display: none;">
+      <div id="birth-cert-progress-fill" style="height: 100%; background-color: #4A90E2; width: 0%; transition: width 2s ease;"></div>
+  </div>
+  <!-- Error Message for Failed Upload (Visible only on failure) -->
+  <div id="birth-cert-error-message" style="display: none; color: #FF0000; margin-top: 10px;">File incorrect. This is not a birth certificate. Please upload the correct file.</div>
+
+  <!-- Third Upload Field (Error Scenario) -->
+  <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background-color: #F8F8F8; border: 1px solid #E0E0E0; border-radius: 8px; margin-bottom: 15px;">
+      <span style="font-size: 16px; font-weight: 500; color: #333;">Proof of Address for main applicant</span>
+      <input type="file" id="address-proof-upload" style="display: none;" onchange="uploadFile('address-proof')">
+      <button id="address-proof-upload-btn" style="background-color: #4285F4; color: #fff; border: none; padding: 10px 40px; border-radius: 25px; cursor: pointer; transition: background-color 0.3s ease; font-size: 16px;" 
+              onclick="document.getElementById('address-proof-upload').click()">Upload file</button>
+  </div>
+  <!-- Progress Bar for Third File -->
+  <div id="address-proof-progress-bar" style="height: 8px; background-color: #E0E0E0; border-radius: 5px; margin-top: 10px; margin-bottom: 10px; overflow: hidden; position: relative; width: 100%; display: none;">
+      <div id="address-proof-progress-fill" style="height: 100%; background-color: #4A90E2; width: 100%; transition: width 5s ease;"></div>
+  </div>
+  <!-- Error Message for Third Upload (Visible only on failure) -->
+  <div id="address-proof-error-message" style="display: none; color: #FF0000; margin-top: 10px;">File incorrect. This is not a valid proof of address. Please upload the correct file.</div>
+</div>
+</div> 
+
+<div style="display: flex; justify-content: space-between; margin-top: 30px; margin-bottom: 30px;">
+
+  <!-- Back Button -->
+  <div style="margin-left: 30px;">
+    <button type="button" 
+    style="background-color: #E0E0E0; color: #333; border: none; padding: 10px 40px; border-radius: 25px; cursor: pointer; transition: background-color 0.3s ease; font-size: 16px; width: 287px; height: 44px; margin-right: 30px;" 
+    onmouseover="this.style.backgroundColor='#c7c7c7';"
+    onmouseout="this.style.backgroundColor='#E0E0E0';"
+    onclick="goToPreviousPage()">
+    Back
+  </button>
+</div>
+
+  <!-- Continue Button -->
+  <div class="text-end" style="margin-top: 20px; margin-bottom: 20px; margin-right: 30px;">
+    <button type="button" class="btn btn-primary" 
+            style="background-color: #4285F4; border: none; padding: 10px 20px; font-size: 16px; font-family: 'Inter', sans-serif; 
+            border-radius: 50px; width: 287px; height: 44px; text-align: center; transition: background-color 0.3s ease;"
+            onmouseover="this.style.backgroundColor='#2a6ad7';" 
+            onmouseout="this.style.backgroundColor='#4285F4';"
+            onclick="goToNextPage()">
+      Continue
+    </button>
+  </div>
+</div>
+<script>
+function uploadFile(fileType) {
+  let progressBarFill, progressBar, fileInfoLabel, uploadButton, errorMessage;
+  
+  if (fileType === 'passport') {
+    progressBarFill = document.getElementById('passport-progress-fill');
+    progressBar = document.getElementById('passport-progress-bar');
+    fileInfoLabel = document.getElementById('passport-file-label');
+    uploadButton = document.getElementById('passport-upload-btn');
+    errorMessage = null;
+
+    // Set the progress bar fill color for the passport upload
+    progressBarFill.style.backgroundColor = '#4CAF50'; // Green color for success
+} else if (fileType === 'birth-cert') {
+    progressBarFill = document.getElementById('birth-cert-progress-fill');
+    progressBar = document.getElementById('birth-cert-progress-bar');
+    fileInfoLabel = null;
+    uploadButton = document.getElementById('birth-cert-upload-btn');
+    errorMessage = document.getElementById('birth-cert-error-message');
+
+    // Set the progress bar fill color for the birth certificate upload
+    progressBarFill.style.backgroundColor = '#FF0000'; // Red color for failure
+} else if (fileType === 'address-proof') {
+    progressBarFill = document.getElementById('address-proof-progress-fill');
+    progressBar = document.getElementById('address-proof-progress-bar');
+    fileInfoLabel = null;
+    uploadButton = document.getElementById('address-proof-upload-btn');
+    errorMessage = document.getElementById('address-proof-error-message');
+
+    // Set the progress bar fill color for the address proof upload
+    progressBarFill.style.backgroundColor = '#FF0000'; // Red color for failure
+}
+
+
+  const fileInput = document.getElementById(`${fileType}-upload`);
+  const file = fileInput.files[0];
+  
+  if (file) {
+    // Show progress bar and start upload
+    progressBar.style.display = 'block';
+    progressBarFill.style.width = '0%';
+
+    // Simulate upload progress
+    setTimeout(() => {
+      if (fileType === 'passport') {
+        progressBarFill.style.width = '100%'; // Success for passport
+        fileInfoLabel.textContent = file.name; // Display file name
+        uploadButton.textContent = "Change file"; // Change button to "Change file"
+        uploadButton.style.backgroundColor = '#4CAF50'; // Change button color to green
+      } else if (fileType === 'birth-cert') {
+        progressBarFill.style.width = '50%'; // Fail for birth cert
+        errorMessage.style.display = 'block'; // Show error message
+        setTimeout(() => {
+          errorMessage.style.display = 'none'; // Hide error message after 3 seconds
+        }, 3000);
+      } else if (fileType === 'address-proof') {
+        progressBarFill.style.width = '50%'; // Fail for address proof
+        errorMessage.style.display = 'block'; // Show error message
+        setTimeout(() => {
+          errorMessage.style.display = 'none'; // Hide error message after 3 seconds
+        }, 3000);
+      }
+      progressBar.style.display = 'none'; // Hide progress bar after upload is complete
+    }, 2000);
+  }
+}
+</script>
+
+       
+          </div>
+        </div>
+      </div>
+    </div>
+
+    @@include('../layouts/footer-block.html') 
+    @@include('../layouts/footer-js.html')
+
+    <script>
+      // Function to move to the next page
+      function goToNextPage() {
+        document.getElementById('additional-information-section').style.display = 'none';
+        document.getElementById('visa-checklist-section').style.display = 'block';
+        document.getElementById('progress-bar').style.width = '50%';
+        document.getElementById('progress-percentage').innerText = '50%';
+      }
+
+      // Function to move to the previous page
+      function goToPreviousPage() {
+        document.getElementById('visa-checklist-section').style.display = 'none';
+        document.getElementById('additional-information-section').style.display = 'block';
+        document.getElementById('progress-bar').style.width = '25%';
+        document.getElementById('progress-percentage').innerText = '25%';
+      }
+    </script>
+  </body>
+  <!-- [Body] end -->
+</html>
