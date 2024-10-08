@@ -1,159 +1,159 @@
 <!doctype html>
 <html lang="en">
-  <!-- [Head] start -->
   <head>
-    @@include('../layouts/head-page-meta.html', {'title': 'Image Cropper'}) @@include('../layouts/head-css.html')
+    <title>Visa Form Completed</title>
+    @@include('../layouts/head-page-meta.html', {'title': 'Visa Form Completed'}) 
+    @@include('../layouts/head-css.html')
+    <link rel="stylesheet" href="path/to/bootstrap.css" />
+    <style>
+      /* General card and form styles */
+      .card {
+        background-color: #fff;
+        border-radius: 8px;
+      }
 
-    <!-- [Page specific CSS] start -->
-    <!-- cropper css -->
-    <link rel="stylesheet" href="../assets/css/plugins/croppr.min.css" />
-    <!-- [Page specific CSS] end -->
+      /* Progress bar */
+      .progress-wrapper {
+        position: relative;
+        margin-bottom: 40px;
+      }
+
+      .progress {
+        height: 10px;
+        background-color: #F2F2F2;
+        width: 100%;
+        border-radius: 5px;
+      }
+
+      .progress-bar {
+        background-color: #4285F4;
+        height: 100%;
+        transition: width 0.4s;
+        border-radius: 5px;
+      }
+
+      .progress-percentage {
+        position: absolute;
+        right: 0;
+        top: -25px;
+        font-size: 12px;
+        color: #333;
+        font-weight: 600;
+      }
+
+      /* Success Page Styling */
+      .success-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 50vh; /* Adjust height as per needs */
+      }
+
+      .success-message {
+        text-align: center;
+        margin-top: 40px; /* Space between checkmark and message */
+      }
+
+      .success-message h3 {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #333;
+      }
+
+      .success-message p {
+        font-size: 16px;
+        color: #666;
+        margin-bottom: 40px;
+      }
+
+      .success-checkmark {
+        font-size: 72px;
+        color: #39b54a; /* Green checkmark */
+        margin-bottom: 20px;
+      }
+
+      .new-application-btn {
+        background-color: #4285F4;
+        color: #fff;
+        padding: 10px 40px;
+        border-radius: 50px;
+        font-size: 16px;
+        cursor: pointer;
+        border: none;
+        transition: background-color 0.3s ease;
+      }
+
+      .new-application-btn:hover {
+        background-color: #2a6ad7;
+      }
+
+      /* Progressing steps and bar */
+      .processing-bar {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        margin-bottom: 20px;
+        margin-top: 30px;
+        position: relative;
+      }
+
+      .processing-bar span {
+        font-size: 12px;
+        color: #669;
+      }
+    </style>
   </head>
   <!-- [Head] end -->
+  
   <!-- [Body] Start -->
   <body @@bodySetup>
     @@include('../layouts/layout-vertical.html')
 
     <!-- [ Main Content ] start -->
-    <section class="pc-container">
+    <div class="pc-container">
       <div class="pc-content">
-        @@include('../layouts/breadcrumb.html', {'breadcrumb-item': 'Forms', 'breadcrumb-item-active': 'Image Cropper'})
-
-        <!-- [ Main Content ] start -->
-        <div class="row">
-          <!-- prettier-ignore -->
-          @@include('../layouts/component/component-link.html',{
-            title:'Cropper',
-            text:'JavaScript image cropper for image or canvas element for cropping',
-            link:'https://fengyuanchen.github.io/cropperjs/'
-          })
+        <div class="card-header" style="padding-bottom: 20px;">
+          <h3>Visa Form Filling Completed</h3>
         </div>
-        <div class="row">
-          <!-- [ Form Validation ] start -->
-          <div class="col-sm-12">
-            <!-- Image cropper plugin start -->
-            <div class="card">
-              <div class="card-header">
-                <h5>Image Cropper Plugin</h5>
-              </div>
-              <div class="card-body">
-                <div class="container">
-                  <div class="row">
-                    <div class="col-md-7 mb-3 mb-md-0">
-                      <div class="cropper"><img src="../assets/images/light-box/l1.jpg" alt="image" id="croppr" /> </div>
-                    </div>
-                    <div class="col-md-5">
-                      <div class="rounded bg-light px-4 py-3 mb-3">
-                        <h5>Selection value</h5>
-                        <div class="row">
-                          <div class="col-6">
-                            <p id="valX"><strong>x: </strong>&nbsp;500</p>
-                            <p class="mb-1" id="valY"><strong>y: </strong>&nbsp;500</p>
-                          </div>
-                          <div class="col-6">
-                            <p id="valW"><strong>width: </strong>&nbsp;500</p>
-                            <p class="mb-1" id="valH"><strong>height: </strong>&nbsp;500</p>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="row mb-1">
-                        <div class="col">
-                          <h6>Aspect Ratio</h6>
-                        </div>
-                        <div class="col-auto">
-                          <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="cb-ratio" />
-                            <label class="form-check-label" for="cb-ratio"> Enable </label>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="input-group mb-3">
-                        <span class="input-group-text">A</span>
-                        <input type="text" class="form-control" id="input-ratio" value="1.0" disabled="disabled" />
-                      </div>
-                      <div class="row mb-1">
-                        <div class="col">
-                          <h6>Maximum size</h6>
-                        </div>
-                        <div class="col-auto">
-                          <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="max-checkbox" />
-                            <label class="form-check-label" for="max-checkbox"> Enable </label>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="row g-1 g-sm-3 mb-4">
-                        <div class="col-4">
-                          <div class="input-group">
-                            <span class="input-group-text">W</span>
-                            <input type="text" class="form-control" id="max-input-width" value="150" disabled="disabled" />
-                          </div>
-                        </div>
-                        <div class="col-4">
-                          <div class="input-group">
-                            <span class="input-group-text">H</span>
-                            <input type="text" class="form-control" id="max-input-height" value="150" disabled="disabled" />
-                          </div>
-                        </div>
-                        <div class="col-4">
-                          <select id="max-input-unit" disabled="disabled" class="form-control">
-                            <option>px</option>
-                            <option value="%">%</option>
-                          </select>
-                        </div>
-                      </div>
-
-                      <div class="row mb-1">
-                        <div class="col">
-                          <h6>Minimum size</h6>
-                        </div>
-                        <div class="col-auto">
-                          <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="min-checkbox" />
-                            <label class="form-check-label" for="min-checkbox"> Enable </label>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="row g-1 g-sm-3">
-                        <div class="col-4">
-                          <div class="input-group">
-                            <span class="input-group-text">W</span>
-                            <input type="text" class="form-control" id="min-input-width" value="150" disabled="disabled" />
-                          </div>
-                        </div>
-                        <div class="col-4">
-                          <div class="input-group">
-                            <span class="input-group-text">H</span>
-                            <input type="text" class="form-control" id="min-input-height" value="150" disabled="disabled" />
-                          </div>
-                        </div>
-                        <div class="col-4">
-                          <select id="min-input-unit" disabled="disabled" class="form-control">
-                            <option> px </option>
-                            <option value="%"> % </option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- Image cropper plugin end -->
+        <div class="progress-wrapper">
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" id="progress-bar" style="width: 100%;"></div>
           </div>
-          <!-- [ Form Validation ] end -->
+          <span class="progress-percentage" id="progress-percentage">100%</span>
         </div>
-        <!-- [ Main Content ] end -->
-      </div>
-    </section>
-    <!-- [ Main Content ] end -->
-    @@include('../layouts/footer-block.html') @@include('../layouts/footer-js.html') @@include('../layouts/customizer.html')
 
-    <!-- [Page Specific JS] start -->
-    <!-- cropper js -->
-    <script src="../assets/js/plugins/croppr.min.js"></script>
-    <script src="../assets/js/pages/page-croper.js"></script>
-    <!-- [Page Specific JS] end -->
+        <div class="processing-section">
+          <div class="card-header" style="padding-bottom: 20px;">
+            <h5 style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #333; padding-right: 30px;">
+              Visa Form Completed Successfully            </h5>            
+            <p style="font-size: 14px; color: #666; margin-top: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+              A copy of the form(s) have been sent to migraide.ai@gmail.com
+            </p>
+          </div>
+
+        <!-- Success Page Section -->
+        <div class="success-container">
+          <div class="success-checkmark">&#10004;</div> <!-- Checkmark icon -->
+          <div class="success-message">
+            <p style="font-size: 14px;">All documents now destroyed and deleted from our database.</p>
+          </div>
+          <button class="new-application-btn" onclick="startNewApplication()">New Application</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function startNewApplication() {
+        // Logic to start a new application, redirect to form page, etc.
+        window.location.href = '/new-application-page'; // Redirect to the appropriate page
+      }
+    </script>
+    
+    @@include('../layouts/footer-block.html') 
+    @@include('../layouts/footer-js.html')
+
   </body>
   <!-- [Body] end -->
 </html>
