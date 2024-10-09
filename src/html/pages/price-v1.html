@@ -2,215 +2,350 @@
 <html lang="en">
   <!-- [Head] start -->
 
-  <head>
-    @@include('../layouts/head-page-meta.html', {'title': 'Pricing 1'}) @@include('../layouts/head-css.html')
-  </head>
-  <!-- [Head] end -->
-  <!-- [Body] Start -->
+<head>
+ @@include('../layouts/head-page-meta.html', {'title': 'Pricing'}) @@include('../layouts/head-css.html')
+</head>
+<!-- [Head] end -->
+<!-- [Body] Start -->
+<header id="home" style="background-image: url(assets/images/landing/img-headerbg.jpg)">
+ <!-- [ Nav ] start -->
+ <nav class="navbar navbar-expand-md navbar-light default">
+   <div class="container">
+     <div class="d-inline-flex align-items-center">
+       <a class="navbar-brand" href="index.html">
+         <img src="/assets/images/widget/logo-dark.svg" alt="" />
+       </a>
+     </div>
 
-  <body @@bodySetup>
-    @@include('../layouts/layout-vertical.html')
 
-    <!-- [ Main Content ] start -->
-    <div class="pc-container">
-      <div class="pc-content">
-        @@include('../layouts/breadcrumb.html', {'breadcrumb-item': 'Other', 'breadcrumb-item-active': 'Pricing '})
+     <button
+       class="navbar-toggler rounded"
+       type="button"
+       data-bs-toggle="collapse"
+       data-bs-target="#navbarTogglerDemo01"
+       aria-controls="navbarTogglerDemo01"
+       aria-expanded="false"
+       aria-label="Toggle navigation"
+     >
+       <span class="navbar-toggler-icon"></span>
+     </button>
+  
+     <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+       <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+         <li class="dropdown pc-h-item" style="margin-right: 30px;">
+           <a
+             class="pc-head-link dropdown-toggle arrow-none me-0"
+             data-bs-toggle="dropdown"
+             href="#"
+             role="button"
+             aria-haspopup="false"
+             aria-expanded="false"
+           >
+             <svg class="pc-icon">
+               <use xlink:href="#custom-sun-1"></use>
+             </svg>
+           </a>
+           <div class="dropdown-menu dropdown-menu-end pc-h-dropdown">
+             <a href="#!" class="dropdown-item" onclick="layout_change('dark')">
+               <svg class="pc-icon">
+                 <use xlink:href="#custom-moon"></use>
+               </svg>
+               <span>Dark</span>
+             </a>
+             <a href="#!" class="dropdown-item" onclick="layout_change('light')">
+               <svg class="pc-icon">
+                 <use xlink:href="#custom-sun-1"></use>
+               </svg>
+               <span>Light</span>
+             </a>
+             <a href="#!" class="dropdown-item" onclick="layout_change_default()">
+               <svg class="pc-icon">
+                 <use xlink:href="#custom-setting-2"></use>
+               </svg>
+               <span>Default</span>
+             </a>
+           </div>
+         </li>
+      
+         <li class="nav-item px-1 tech-link" style="margin-right: 30px;">
+           <a class="nav-link" href="dashboard/index.html" target="_blank">Home</a>
+         </li>
+      
+         <li class="nav-item px-1 tech-link" style="margin-right: 30px;">
+           <a class="nav-link" href="pages/price-v1.html" target="_blank">Pricing</a>
+         </li>
+      
+         <li class="nav-item px-1" style="margin-right: 30px;">
+           <a class="nav-link" href="https://phoenixcoded.gitbook.io/able-pro/" target="_blank">API</a>
+         </li>
+      
+         <li class="nav-item">
+           <a class="btn btn-primary dropdown-toggle arrow-none d-inline-flex align-items-center" target="_blank" href="migraide.com">Sign Up</a>
+         </li>
+       </ul>
+     </div>
+   </div>
+ </nav>
+</header>
 
-        <!-- [ Main Content ] start -->
-        <div class="card border-0 shadow-none bg-transparent">
-          <div class="card-body px-0">
-            <div class="row align-items-center mb-3">
-              <div class="col">
-                <h5>Quality is never an accident. It is always the result of interlligent effort</h5>
-                <p>It makes no difference what the price is, it all makes senses to us.</p>
-              </div>
-              <div class="col-auto">
-                <ul class="nav nav-pills nav-price" id="pills-tab" role="tablist">
-                  <li class="nav-item" role="presentation">
-                    <button
-                      class="nav-link active"
-                      id="pills-home-tab"
-                      data-bs-toggle="pill"
-                      data-bs-target="#pills-home"
-                      type="button"
-                      role="tab"
-                      aria-controls="pills-home"
-                      aria-selected="true"
-                      >Monthly</button
-                    >
-                  </li>
-                  <li class="nav-item" role="presentation">
-                    <button
-                      class="nav-link"
-                      id="pills-profile-tab"
-                      data-bs-toggle="pill"
-                      data-bs-target="#pills-profile"
-                      type="button"
-                      role="tab"
-                      aria-controls="pills-profile"
-                      aria-selected="false"
-                      >Yearly <span class="badge bg-primary ms-2">Save 30%</span></button
-                    >
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="tab-content" id="pills-tabContent">
-          <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
-            <div class="row justify-content-center align-items-center">
-              <!-- [ sample-page ] start -->
-              <div class="col-md-6 col-lg-4">
-                <div class="card price-card">
-                  <div class="card-body">
-                    <div class="price-head">
-                      <h5 class="mb-0">Basic</h5>
-                      <p class="text-muted">03 Services</p>
-                      <div class="price-price mt-4">$69 <span class="text-muted"> Lifetime</span></div>
-                      <div class="d-grid"><a class="btn btn-outline-secondary mt-4" href="#">Buy Now</a></div>
-                    </div>
-                    <ul class="list-group list-group-flush product-list">
-                      <li class="list-group-item enable">One End Product</li>
-                      <li class="list-group-item enable">No attribution required</li>
-                      <li class="list-group-item enable">TypeScript</li>
-                      <li class="list-group-item">Figma Design Resources</li>
-                      <li class="list-group-item">Create Multiple Products</li>
-                      <li class="list-group-item">Create a SaaS Project</li>
-                      <li class="list-group-item">Resale Product</li>
-                      <li class="list-group-item">Separate sale of our UI Elements?</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 col-lg-4">
-                <div class="card price-card price-popular">
-                  <div class="card-body">
-                    <div class="price-head">
-                      <span class="badge f-12 bg-success mb-3">Popular</span>
-                      <h5 class="mb-0">Standard</h5>
-                      <p class="text-muted">05 Services</p>
-                      <div class="price-price mt-4">$129 <span class="text-muted"> Lifetime</span></div>
-                      <div class="d-grid"><a class="btn btn-primary mt-4" href="#">Buy Now</a></div>
-                    </div>
-                    <ul class="list-group list-group-flush product-list">
-                      <li class="list-group-item enable">One End Product</li>
-                      <li class="list-group-item enable">No attribution required</li>
-                      <li class="list-group-item enable">TypeScript</li>
-                      <li class="list-group-item enable">Figma Design Resources</li>
-                      <li class="list-group-item enable">Create Multiple Products</li>
-                      <li class="list-group-item">Create a SaaS Project</li>
-                      <li class="list-group-item">Resale Product</li>
-                      <li class="list-group-item">Separate sale of our UI Elements?</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 col-lg-4">
-                <div class="card price-card">
-                  <div class="card-body">
-                    <div class="price-head">
-                      <h5 class="mb-0">Premium</h5>
-                      <p class="text-muted">08 Services</p>
-                      <div class="price-price mt-4">$599 <span class="text-muted"> Lifetime</span></div>
-                      <div class="d-grid"><a class="btn btn-outline-secondary mt-4" href="#">Buy Now</a></div>
-                    </div>
-                    <ul class="list-group list-group-flush product-list">
-                      <li class="list-group-item enable">One End Product</li>
-                      <li class="list-group-item enable">No attribution required</li>
-                      <li class="list-group-item enable">TypeScript</li>
-                      <li class="list-group-item enable">Figma Design Resources</li>
-                      <li class="list-group-item enable">Create Multiple Products</li>
-                      <li class="list-group-item enable">Create a SaaS Project</li>
-                      <li class="list-group-item enable">Resale Product</li>
-                      <li class="list-group-item enable">Separate sale of our UI Elements?</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              <!-- [ sample-page ] end -->
-            </div>
-          </div>
-          <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
-            <div class="row justify-content-center align-items-center">
-              <!-- [ sample-page ] start -->
-              <div class="col-md-6 col-lg-4">
-                <div class="card price-card">
-                  <div class="card-body">
-                    <div class="price-head">
-                      <h5 class="mb-0">Basic</h5>
-                      <p class="text-muted">03 Services</p>
-                      <div class="price-price mt-4">$269 <span class="text-muted"> Lifetime</span></div>
-                      <div class="d-grid"><a class="btn btn-outline-secondary mt-4" href="#">Buy Now</a></div>
-                    </div>
-                    <ul class="list-group list-group-flush product-list">
-                      <li class="list-group-item enable">One End Product</li>
-                      <li class="list-group-item enable">No attribution required</li>
-                      <li class="list-group-item enable">TypeScript</li>
-                      <li class="list-group-item">Figma Design Resources</li>
-                      <li class="list-group-item">Create Multiple Products</li>
-                      <li class="list-group-item">Create a SaaS Project</li>
-                      <li class="list-group-item">Resale Product</li>
-                      <li class="list-group-item">Separate sale of our UI Elements?</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 col-lg-4">
-                <div class="card price-card price-popular">
-                  <div class="card-body">
-                    <div class="price-head">
-                      <span class="badge f-12 bg-success mb-3">Popular</span>
-                      <h5 class="mb-0">Standard</h5>
-                      <p class="text-muted">05 Services</p>
-                      <div class="price-price mt-4">$529 <span class="text-muted"> Lifetime</span></div>
-                      <div class="d-grid"><a class="btn btn-primary mt-4" href="#">Buy Now</a></div>
-                    </div>
-                    <ul class="list-group list-group-flush product-list">
-                      <li class="list-group-item enable">One End Product</li>
-                      <li class="list-group-item enable">No attribution required</li>
-                      <li class="list-group-item enable">TypeScript</li>
-                      <li class="list-group-item enable">Figma Design Resources</li>
-                      <li class="list-group-item enable">Create Multiple Products</li>
-                      <li class="list-group-item">Create a SaaS Project</li>
-                      <li class="list-group-item">Resale Product</li>
-                      <li class="list-group-item">Separate sale of our UI Elements?</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 col-lg-4">
-                <div class="card price-card">
-                  <div class="card-body">
-                    <div class="price-head">
-                      <h5 class="mb-0">Premium</h5>
-                      <p class="text-muted">08 Services</p>
-                      <div class="price-price mt-4">$1299 <span class="text-muted"> Lifetime</span></div>
-                      <div class="d-grid"><a class="btn btn-outline-secondary mt-4" href="#">Buy Now</a></div>
-                    </div>
-                    <ul class="list-group list-group-flush product-list">
-                      <li class="list-group-item enable">One End Product</li>
-                      <li class="list-group-item enable">No attribution required</li>
-                      <li class="list-group-item enable">TypeScript</li>
-                      <li class="list-group-item enable">Figma Design Resources</li>
-                      <li class="list-group-item enable">Create Multiple Products</li>
-                      <li class="list-group-item enable">Create a SaaS Project</li>
-                      <li class="list-group-item enable">Resale Product</li>
-                      <li class="list-group-item enable">Separate sale of our UI Elements?</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              <!-- [ sample-page ] end -->
-            </div>
-          </div>
-        </div>
 
-        <!-- [ Main Content ] end -->
+<body>
+ <!-- [ Main Content ] start -->
+ <div class="container mt-5" style="max-width: 960px;">
+   <div class="row">
+     <div class="col-12">
+       <div class="d-inline-flex flex-column align-items-start">
+         <h3 class="mb-3" style="margin-left: 0; padding-bottom: 10px;">Pricing</h3>
+         <!-- <ul class="nav nav-pills nav-price mb-4" id="pills-tab" role="tablist" style="margin-left: 0;">
+           <li class="nav-item" role="presentation">
+             <button
+               class="nav-link active"
+               id="pills-home-tab"
+               data-bs-toggle="pill"
+               data-bs-target="#pills-home"
+               type="button"
+               role="tab"
+               aria-controls="pills-home"
+               aria-selected="true"
+             >
+               Monthly
+             </button>
+           </li>
+           <li class="nav-item" role="presentation">
+             <button
+               class="nav-link"
+               id="pills-profile-tab"
+               data-bs-toggle="pill"
+               data-bs-target="#pills-profile"
+               type="button"
+               role="tab"
+               aria-controls="pills-profile"
+               aria-selected="false"
+             >
+               Yearly <span class="badge bg-primary ms-2">Save 30%</span>
+             </button>
+           </li>
+         </ul> -->
+       </div>
+     </div>
+   </div>
+
+
+   <div class="tab-content" id="pills-tabContent">
+     <!-- Pricing Cards Start -->
+     <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+       <div class="row justify-content-start align-items-center">
+         <div class="col-md-6 col-lg-4">
+           <div class="card price-card">
+             <div class="card-body">
+               <div class="price-head">
+                 <h5 class="mb-0">One off</h5>
+                 <div class="price-price mt-4">$5 <span class="text-muted">Per Form Session</span></div>
+                 <div class="d-grid"><a class="btn btn-outline-secondary mt-4 disabled" href="#">Checkout</a></div>
+               </div>
+               <ul class="list-group list-group-flush product-list">
+                 <li class="list-group-item enable">AI Visa Form Filler</li>
+                 <li class="list-group-item enable">One visa category</li>
+                 <li class="list-group-item disable">Case/Visa Trackers</li>
+                 <!-- <li class="list-group-item">Figma Design Resources</li> -->
+                 <!-- <li class="list-group-item">Create Multiple Products</li>
+                 <li class="list-group-item">Create a SaaS Project</li>
+                 <li class="list-group-item">Resale Product</li>
+                 <li class="list-group-item">Separate sale of our UI Elements?</li> -->
+               </ul>
+             </div>
+           </div>
+         </div>
+
+
+         <div class="col-md-6 col-lg-4">
+           <div class="card price-card price-popular">
+             <div class="card-body">
+               <div class="price-head">
+                 <span class="badge f-12 bg-success mb-3">Popular</span>
+                 <h5 class="mb-0">Business Starter</h5>
+                 <div class="price-price mt-4">$50 <span class="text-muted">Per Month</span></div>
+                 <div class="d-grid"><a class="btn btn-primary mt-4" href="#" data-bs-toggle="modal" data-bs-target="#orderModal">Checkout</a></div>
+               </div>
+               <ul class="list-group list-group-flush product-list">
+                 <li class="list-group-item enable">AI Visa Form Filler</li>
+                 <li class="list-group-item enable">Up to 5 clients monthly</li>
+                 <li class="list-group-item disable">Case / Visa Trackers</li>
+                 <!-- <li class="list-group-item enable">TypeScript</li>
+                 <li class="list-group-item enable">Figma Design Resources</li> -->
+                 <!-- <li class="list-group-item enable">Create Multiple Products</li>
+                 <li class="list-group-item">Create a SaaS Project</li>
+                 <li class="list-group-item">Resale Product</li>
+                 <li class="list-group-item">Separate sale of our UI Elements?</li> -->
+               </ul>
+             </div>
+           </div>
+         </div>
+
+
+         <div class="col-md-6 col-lg-4">
+           <div class="card price-card">
+             <div class="card-body">
+               <div class="price-head">
+                 <h5 class="mb-0">Business CRM</h5>
+                 <div class="price-price mt-4">$100 <span class="text-muted">Order Now</span></div>
+                 <div class="d-grid"><a class="btn btn-outline-secondary mt-4 disabled" href="#">Checkout</a></div>
+               </div>
+               <ul class="list-group list-group-flush product-list">                 
+                <li class="list-group-item enable">Everthing in Business Starter</li>
+                 <li class="list-group-item enable">Up to 10 clients monthly</li>
+                 <li class="list-group-item disable">Visa Bible Widget</li>
+
+                 <!-- <li class="list-group-item enable">Create Multiple Products</li> -->
+                 <!--<li class="list-group-item enable">Create a SaaS Project</li>
+                 <li class="list-group-item enable">Resale Product</li>
+                 <li class="list-group-item enable">Separate sale of our UI Elements?</li> -->
+               </ul>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+
+<!-- 
+     Yearly Plan Pricing Cards -->
+      <!--<div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
+       <div class="row justify-content-start align-items-center">
+         <div class="col-md-6 col-lg-4">
+           <div class="card price-card">
+             <div class="card-body">
+               <div class="price-head">
+                 <h5 class="mb-0">Basic</h5>
+                 <p class="text-muted">03 Services</p>
+                 <div class="price-price mt-4">$269 <span class="text-muted"> Lifetime</span></div>
+                 <div class="d-grid"><a class="btn btn-outline-secondary mt-4" href="#">Buy Now</a></div>
+               </div>
+               <ul class="list-group list-group-flush product-list">
+                 <li class="list-group-item enable">One End Product</li>
+                 <li class="list-group-item enable">No attribution required</li>
+                 <li class="list-group-item enable">TypeScript</li>
+                 <li class="list-group-item">Figma Design Resources</li>
+                 <li class="list-group-item">Create Multiple Products</li>
+                 <li class="list-group-item">Create a SaaS Project</li>
+                 <li class="list-group-item">Resale Product</li>
+                 <li class="list-group-item">Separate sale of our UI Elements?</li>
+               </ul>
+             </div>
+           </div>
+         </div>
+
+
+         <div class="col-md-6 col-lg-4">
+           <div class="card price-card price-popular">
+             <div class="card-body">
+               <div class="price-head">
+                 <span class="badge f-12 bg-success mb-3">Popular</span>
+                 <h5 class="mb-0">Standard</h5>
+                 <p class="text-muted">05 Services</p>
+                 <div class="price-price mt-4">$529 <span class="text-muted"> Lifetime</span></div>
+                 <div class="d-grid"><a class="btn btn-primary mt-4" href="#" data-bs-toggle="modal" data-bs-target="#orderModal">Buy Now</a></div>
+               </div>
+               <ul class="list-group list-group-flush product-list">
+                 <li class="list-group-item enable">One End Product</li>
+                 <li class="list-group-item enable">No attribution required</li>
+                 <li class="list-group-item enable">TypeScript</li>
+                 <li class="list-group-item enable">Figma Design Resources</li>
+                 <li class="list-group-item enable">Create Multiple Products</li>
+                 <li class="list-group-item">Create a SaaS Project</li>
+                 <li class="list-group-item">Resale Product</li>
+                 <li class="list-group-item">Separate sale of our UI Elements?</li>
+               </ul>
+             </div>
+           </div>
+         </div>
+
+
+         <div class="col-md-6 col-lg-4">
+           <div class="card price-card">
+             <div class="card-body">
+               <div class="price-head">
+                 <h5 class="mb-0">Premium</h5>
+                 <p class="text-muted">08 Services</p>
+                 <div class="price-price mt-4">$1299 <span class="text-muted"> Lifetime</span></div>
+                 <div class="d-grid"><a class="btn btn-outline-secondary mt-4" href="#">Buy Now</a></div>
+               </div>
+               <ul class="list-group list-group-flush product-list">
+                 <li class="list-group-item enable">One End Product</li>
+                 <li class="list-group-item enable">No attribution required</li>
+                 <li class="list-group-item enable">TypeScript</li>
+                 <li class="list-group-item enable">Figma Design Resources</li>
+                 <li class="list-group-item enable">Create Multiple Products</li>
+                 <li class="list-group-item enable">Create a SaaS Project</li>
+                 <li class="list-group-item enable">Resale Product</li>
+                 <li class="list-group-item enable">Separate sale of our UI Elements?</li>
+               </ul>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div> -->
+     <!-- Yearly Plan Pricing Cards End -->
+   </div>
+ </div>
+ <!-- [ Main Content ] end -->
+
+
+ <!-- Order Now Modal -->
+ <div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+     <div class="modal-content">
+       <div class="modal-header">
+         <h5 class="modal-title" id="orderModalLabel">Payments</h5>
+         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+       </div>
+       <div class="modal-body">
+         <p>Your selected plan is $50 monthly. Proceed to payment.</p>
+       </div>
+       <div class="modal-footer">
+        <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button> -->
+         <button type="button" class="btn btn-primary" style="width: 100%; height: 44px;">Go to Payment</button>
+       </div>
+     </div>
+   </div>
+ </div>
+ <footer class="pc-footer" style="border: 0.5px solid #e9e9e9; border-radius: 8px; padding: 10px 20px; margin-left: auto; margin-right: auto; width: 95%; margin-bottom: 30px;">
+  
+  <div class="footer-wrapper container-fluid">
+    <div class="row align-items-center">
+      <div class="col my-1">
+        <p class="m-0" style="color: #4A4A4A; font-family: 'Inter', sans-serif; font-size: 12px;">
+          © 2024 Migraide AI. All Rights Reserved.
+        </p>
+      </div>
+      <div class="col-auto my-1">
+        <ul class="list-inline footer-link mb-0" style="font-family: 'Inter', sans-serif; font-size: 12px;">
+          <li class="list-inline-item">
+            <a href="../index.html" style="color: #4A4A4A;">Support</a>
+          </li>
+          <li class="list-inline-item">
+            <span style="color: #4A4A4A;">•</span>
+          </li>
+          <li class="list-inline-item">
+            <a href="https://phoenixcoded.gitbook.io/able-pro/" target="_blank" style="color: #4A4A4A;">Terms of Use</a>
+          </li>
+          <li class="list-inline-item">
+            <span style="color: #4A4A4A;">•</span>
+          </li>
+          <li class="list-inline-item">
+            <a href="https://phoenixcoded.authordesk.app/" target="_blank" style="color: #4A4A4A;">Privacy Policy</a>
+          </li>
+        </ul>
       </div>
     </div>
-    <!-- [ Main Content ] end -->
-    @@include('../layouts/footer-block.html') @@include('../layouts/footer-js.html') @@include('../layouts/customizer.html')
-  </body>
-  <!-- [Body] end -->
+  </div>
+</footer>
+
+
+ <!-- @@include('../layouts/footer-block.html') -->
+ @@include('../layouts/footer-js.html')
+ @@include('../layouts/customizer.html')
+</body>
+<!-- [Body] end -->
 </html>
+
+

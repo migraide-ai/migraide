@@ -15,8 +15,9 @@
     <!-- [ Main Content ] start -->
     <div class="pc-container">
       <div class="pc-content">
-        @@include('../layouts/breadcrumb.html', {'breadcrumb-item': 'Customer', 'breadcrumb-item-active': 'List'})
-
+        <div class="card-header" style="padding-bottom: 20px;">
+          <h3>Client List</h3>
+        </div>
         <!-- [ Main Content ] start -->
         <div class="row">
           <!-- [ sample-page ] start -->
@@ -30,7 +31,7 @@
                     data-bs-toggle="modal"
                     data-bs-target="#customer-edit_add-modal"
                   >
-                    <i class="ti ti-plus f-18"></i> Add Customer
+                    <i class="ti ti-plus f-18"></i> Add Client
                   </a>
                 </div>
                 <div class="table-responsive">
@@ -38,32 +39,32 @@
                     <thead>
                       <tr>
                         <th>#</th>
-                        <th>Customer Name</th>
+                        <th>Client Name</th>
                         <th>Contact</th>
-                        <th>Orders</th>
-                        <th>Spent</th>
+                        <th>Visa Service</th>
+                        <!-- <th>Spent</th> -->
                         <th>Status</th>
                         <th class="text-center">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
-                        <td>179</td>
+                        <td>1</td>
                         <td>
                           <div class="row">
                             <div class="col-auto">
                               <img src="../assets/images/user/avatar-1.jpg" alt="user-image" class="wid-40 rounded-circle" />
                             </div>
                             <div class="col">
-                              <h6 class="mb-0">Addie Bass</h6>
-                              <p class="text-muted f-12 mb-0">mareva@gmail.com</p>
+                              <h6 class="mb-0">Faith Chris Henry</h6>
+                              <p class="text-muted f-12 mb-0">faith@gmail.com</p>
                             </div>
                           </div>
                         </td>
                         <td>+1 (247) 849-6968</td>
-                        <td>45</td>
-                        <td>$7,634 </td>
-                        <td><span class="badge bg-light-success rounded-pill f-12">Relationship</span> </td>
+                        <td>EB1</td>
+                        <!-- <td>$7,634 </td> -->
+                        <td><span class="badge bg-light-success rounded-pill f-12">Completed</span> </td>
                         <td class="text-center">
                           <ul class="list-inline me-auto mb-0">
                             <li class="list-inline-item align-bottom" data-bs-toggle="tooltip" title="View">
@@ -76,41 +77,66 @@
                                 <i class="ti ti-eye f-18"></i>
                               </a>
                             </li>
-                            <li class="list-inline-item align-bottom" data-bs-toggle="tooltip" title="Edit">
+                            <li class="list-inline-item align-bottom" data-bs-toggle="modal" title="Review">
                               <a
-                                href="#"
+                               href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Your+Visa+Forms+Review&details=Please+join+the+meeting+for+reviewing+your+visa+forms&add=aroh.henry@gmail.com,faith.e.ida@gmail.com&location=https://meet.google.com/&dates=20241009T140000Z/20241009T150000Z" target="_blank"
+
                                 class="avtar avtar-xs btn-link-success btn-pc-default"
                                 data-bs-toggle="modal"
-                                data-bs-target="#customer-edit_add-modal"
+                                data-bs-target="#review-modal"
                               >
-                                <i class="ti ti-edit-circle f-18"></i>
+                              <!-- Trigger Button to Open Modal -->
+                              <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nudge-client-modal">
+                                Open Nudge Client Modal
+                              </button> -->
+                              <!-- Nudge Client Modal -->
+                                  <div class="modal fade" id="review-modal" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" style="width: 350px;">
+                                      <div class="modal-content">
+                                        <!-- Modal Header -->
+                                        <div class="modal-header border-0">
+                                          <h5 class="modal-title">Schedule a Review Session</h5>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <!-- Modal Body -->
+                                        <!-- <div class="modal-body" style="color:">
+                                          <p>Send a nudge to the client to fill out the forms?</p>
+                                        </div> -->
+                                        <!-- Modal Footer -->
+                                        <div class="modal-footer border-0">
+                                          <button type="button" class="btn btn-primary" style="width:100%; height: 44px;" onclick="scheduleGoogleMeet()">Schedule Google Meet</button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                <i class="ti ti-calendar f-18" style></i>
                               </a>
                             </li>
-                            <li class="list-inline-item align-bottom" data-bs-toggle="tooltip" title="Delete">
+                            <!-- <li class="list-inline-item align-bottom" data-bs-toggle="tooltip" title="Delete">
                               <a href="#" class="avtar avtar-xs btn-link-danger btn-pc-default">
                                 <i class="ti ti-trash f-18"></i>
                               </a>
-                            </li>
+                            </li> -->
                           </ul>
                         </td>
                       </tr>
                       <tr>
-                        <td>60</td>
+                        <td>2</td>
                         <td>
                           <div class="row">
                             <div class="col-auto">
                               <img src="../assets/images/user/avatar-2.jpg" alt="user-image" class="wid-40 rounded-circle" />
                             </div>
                             <div class="col">
-                              <h6 class="mb-0">Agnes McGee</h6>
+                              <h6 class="mb-0">Henry Faith Chris</h6>
                               <p class="text-muted f-12 mb-0">heba@gmail.com</p>
                             </div>
                           </div>
                         </td>
                         <td>+1 (247) 849-6968</td>
-                        <td>42</td>
-                        <td>$3,742</td>
-                        <td><span class="badge bg-light-primary rounded-pill f-12">Single</span> </td>
+                        <td>EB1</td>
+                        <!-- <td>$3,742</td> -->
+                        <td><span class="badge bg-light-primary rounded-pill f-12">In Progress</span> </td>
                         <td class="text-center">
                           <ul class="list-inline me-auto mb-0">
                             <li class="list-inline-item align-bottom" data-bs-toggle="tooltip" title="View">
@@ -123,41 +149,65 @@
                                 <i class="ti ti-eye f-18"></i>
                               </a>
                             </li>
-                            <li class="list-inline-item align-bottom" data-bs-toggle="tooltip" title="Edit">
+                            <li class="list-inline-item align-bottom" data-bs-toggle="modal" title="Nudge">
                               <a
                                 href="#"
                                 class="avtar avtar-xs btn-link-success btn-pc-default"
                                 data-bs-toggle="modal"
-                                data-bs-target="#customer-edit_add-modal"
+                                data-bs-target="#nudge-client-modal"
                               >
-                                <i class="ti ti-edit-circle f-18"></i>
+                              <!-- Trigger Button to Open Modal -->
+                              <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nudge-client-modal">
+                                Open Nudge Client Modal
+                              </button> -->
+                              <!-- Nudge Client Modal -->
+                                  <div class="modal fade" id="nudge-client-modal" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" style="width: 350px;">
+                                      <div class="modal-content">
+                                        <!-- Modal Header -->
+                                        <div class="modal-header border-0">
+                                          <h5 class="modal-title">Nudge Client to Fill the Forms</h5>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <!-- Modal Body -->
+                                        <!-- <div class="modal-body" style="color:">
+                                          <p>Send a nudge to the client to fill out the forms?</p>
+                                        </div> -->
+                                        <!-- Modal Footer -->
+                                        <div class="modal-footer border-0">
+                                          <button type="button" class="btn btn-primary" style="width:100%; height: 44px;">Nudge Client</button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                <i class="ti ti-clock f-18" style="color: red;"></i>
                               </a>
                             </li>
-                            <li class="list-inline-item align-bottom" data-bs-toggle="tooltip" title="Delete">
+                            <!-- <li class="list-inline-item align-bottom" data-bs-toggle="tooltip" title="Delete">
                               <a href="#" class="avtar avtar-xs btn-link-danger btn-pc-default">
                                 <i class="ti ti-trash f-18"></i>
                               </a>
-                            </li>
+                            </li> -->
                           </ul>
                         </td>
                       </tr>
                       <tr>
-                        <td>133</td>
+                        <td>3</td>
                         <td>
                           <div class="row">
                             <div class="col-auto">
-                              <img src="../assets/images/user/avatar-3.jpg" alt="user-image" class="wid-40 rounded-circle" />
+                              <img src="../assets/images/user/avatar-2.jpg" alt="user-image" class="wid-40 rounded-circle" />
                             </div>
                             <div class="col">
-                              <h6 class="mb-0">Alberta Robbins</h6>
-                              <p class="text-muted f-12 mb-0">miza@gmail.com</p>
+                              <h6 class="mb-0">Chris Faith Henry</h6>
+                              <p class="text-muted f-12 mb-0">faith@gmail.com</p>
                             </div>
                           </div>
                         </td>
                         <td>+1 (247) 849-6968</td>
-                        <td>20</td>
-                        <td>$885</td>
-                        <td><span class="badge bg-light-danger rounded-pill f-12">Complicated</span> </td>
+                        <td>EB2</td>
+                        <!-- <td>$885</td> -->
+                        <td><span class="badge bg-light-danger rounded-pill f-12">Not Started</span> </td>
                         <td class="text-center">
                           <ul class="list-inline me-auto mb-0">
                             <li class="list-inline-item align-bottom" data-bs-toggle="tooltip" title="View">
@@ -170,25 +220,49 @@
                                 <i class="ti ti-eye f-18"></i>
                               </a>
                             </li>
-                            <li class="list-inline-item align-bottom" data-bs-toggle="tooltip" title="Edit">
+                            <li class="list-inline-item align-bottom" data-bs-toggle="modal" title="Nudge">
                               <a
                                 href="#"
                                 class="avtar avtar-xs btn-link-success btn-pc-default"
                                 data-bs-toggle="modal"
-                                data-bs-target="#customer-edit_add-modal"
+                                data-bs-target="#nudge-client-modal"
                               >
-                                <i class="ti ti-edit-circle f-18"></i>
+                              <!-- Trigger Button to Open Modal -->
+                              <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nudge-client-modal">
+                                Open Nudge Client Modal
+                              </button> -->
+                              <!-- Nudge Client Modal -->
+                                  <div class="modal fade" id="nudge-client-modal" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" style="width: 350px;">
+                                      <div class="modal-content">
+                                        <!-- Modal Header -->
+                                        <div class="modal-header border-0">
+                                          <h5 class="modal-title">Nudge Client to Fill the Forms</h5>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <!-- Modal Body -->
+                                        <!-- <div class="modal-body" style="color:">
+                                          <p>Send a nudge to the client to fill out the forms?</p>
+                                        </div> -->
+                                        <!-- Modal Footer -->
+                                        <div class="modal-footer border-0">
+                                          <button type="button" class="btn btn-primary" style="width:100%; height: 44px;">Nudge Client</button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                <i class="ti ti-clock f-18" style="color: red;"></i>
                               </a>
                             </li>
-                            <li class="list-inline-item align-bottom" data-bs-toggle="tooltip" title="Delete">
+                            <!-- <li class="list-inline-item align-bottom" data-bs-toggle="tooltip" title="Delete">
                               <a href="#" class="avtar avtar-xs btn-link-danger btn-pc-default">
                                 <i class="ti ti-trash f-18"></i>
                               </a>
-                            </li>
+                            </li> -->
                           </ul>
-                        </td>
+                        </td>      
                       </tr>
-                      <tr>
+                      <!-- <tr>
                         <td>60</td>
                         <td>
                           <div class="row">
@@ -469,7 +543,7 @@
                             </li>
                           </ul>
                         </td>
-                      </tr>
+                      </tr> -->
                     </tbody>
                   </table>
                 </div>
@@ -485,7 +559,7 @@
       <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header border-0 pb-0">
-            <h5 class="mb-0">Customer Details</h5>
+            <h5 class="mb-0">Client Details</h5>
             <a href="#" class="avtar avtar-s btn-link-danger btn-pc-default ms-auto" data-bs-dismiss="modal">
               <i class="ti ti-x f-20"></i>
             </a>
@@ -496,16 +570,16 @@
                 <div class="card">
                   <div class="card-body position-relative">
                     <div class="position-absolute end-0 top-0 p-3">
-                      <span class="badge bg-primary">Single</span>
+                      <span class="badge bg-primary">In Progress</span>
                     </div>
                     <div class="text-center mt-3">
                       <div class="chat-avtar d-inline-flex mx-auto">
                         <img class="rounded-circle img-fluid wid-60" src="../assets/images/user/avatar-5.jpg" alt="User image" />
                       </div>
-                      <h5 class="mb-0">Aaron Poole</h5>
-                      <p class="text-muted text-sm">Manufacturing Director</p>
+                      <h5 class="mb-0">Faith Henry Chris</h5>
+                      <p class="text-muted text-sm">Senior Data Consultant</p>
                       <hr class="my-3 border border-secondary-subtle" />
-                      <div class="row g-3">
+                      <!-- <div class="row g-3">
                         <div class="col-4">
                           <h5 class="mb-0">45</h5>
                           <small class="text-muted">Age</small>
@@ -518,24 +592,24 @@
                           <h5 class="mb-0">7634</h5>
                           <small class="text-muted">Visits</small>
                         </div>
-                      </div>
-                      <hr class="my-3 border border-secondary-subtle" />
+                      </div> -->
+                      <!-- <hr class="my-3 border border-secondary-subtle" /> -->
                       <div class="d-inline-flex align-items-center justify-content-between w-100 mb-3">
                         <i class="ti ti-mail"></i>
-                        <p class="mb-0">bo@gmail.com</p>
+                        <p class="mb-0">faithie@gmail.com</p>
                       </div>
                       <div class="d-inline-flex align-items-center justify-content-between w-100 mb-3">
                         <i class="ti ti-phone"></i>
                         <p class="mb-0">+1 (247) 849-6968</p>
                       </div>
-                      <div class="d-inline-flex align-items-center justify-content-between w-100 mb-3">
+                      <!-- <div class="d-inline-flex align-items-center justify-content-between w-100 mb-3">
                         <i class="ti ti-map-pin"></i>
                         <p class="mb-0">Lesotho</p>
-                      </div>
+                      </div> -->
                       <div class="d-inline-flex align-items-center justify-content-between w-100">
                         <i class="ti ti-link"></i>
                         <a href="#" class="link-primary">
-                          <p class="mb-0">https://anshan.dh.url</p>
+                          <p class="mb-0">https://form-url</p>
                         </a>
                       </div>
                     </div>
@@ -552,35 +626,35 @@
                       <li class="list-group-item px-0 pt-0">
                         <div class="row">
                           <div class="col-md-6">
-                            <p class="mb-1 text-muted">Full Name</p>
-                            <h6 class="mb-0">Aaron Poole</h6>
+                            <p class="mb-1 text-muted">Full Names</p>
+                            <h6 class="mb-0">Faith Henry Chris</h6>
                           </div>
-                          <div class="col-md-6">
-                            <p class="mb-1 text-muted">Father Name</p>
+                          <!-- <div class="col-md-6">
+                            <p class="mb-1 text-muted"> Name</p>
                             <h6 class="mb-0">Mr. Ralph Sabatini</h6>
                           </div>
-                        </div>
+                        </div> -->
                       </li>
                       <li class="list-group-item px-0">
                         <div class="row">
                           <div class="col-md-6">
-                            <p class="mb-1 text-muted">Country</p>
-                            <h6 class="mb-0">Lesotho</h6>
+                            <p class="mb-1 text-muted">Visa Service</p>
+                            <h6 class="mb-0">EB1</h6>
                           </div>
                           <div class="col-md-6">
-                            <p class="mb-1 text-muted">Zip Code</p>
-                            <h6 class="mb-0">247 849</h6>
+                            <p class="mb-1 text-muted">Gender</p>
+                            <h6 class="mb-0">Female</h6>
                           </div>
                         </div>
                       </li>
                       <li class="list-group-item px-0 pb-0">
-                        <p class="mb-1 text-muted">Address</p>
-                        <h6 class="mb-0">507 Sulnek Grove, Tudzovgeh, United States - 37173</h6>
+                        <p class="mb-1 text-muted">Date of Birth</p>
+                        <h6 class="mb-0">November 10th, 1997</h6>
                       </li>
                     </ul>
                   </div>
                 </div>
-                <div class="card">
+                <!-- <div class="card">
                   <div class="card-header">
                     <h5>About me</h5>
                   </div>
@@ -590,14 +664,14 @@
                       launke cu mig tujum peodpo.</p
                     >
                   </div>
-                </div>
+                </div> -->
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="modal fade" id="customer-edit_add-modal" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+    <!-- <div class="modal fade" id="customer-edit_add-modal" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header">
@@ -682,7 +756,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <!-- [ Main Content ] end -->
     @@include('../layouts/footer-block.html') @@include('../layouts/footer-js.html')
     <!-- [Page Specific JS] start -->
@@ -692,6 +766,10 @@
         sortable: false,
         perPage: 5
       });
+      function scheduleGoogleMeet() {
+      const url = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Your+Visa+Forms+Review&details=Please+join+the+meeting+for+reviewing+your+visa+forms&add=aroh.henry@gmail.com,faith.e.ida@gmail.com&location=https://meet.google.com/&dates=20241009T140000Z/20241009T150000Z";
+      window.open(url, '_blank');
+    }
     </script>
     <!-- [Page Specific JS] end -->
     @@include('../layouts/customizer.html')
