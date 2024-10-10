@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en">
+  <!-- [Head] start -->
+  <head>
+    <title>Visa Form Processing</title>
+    @@include('../layouts/head-page-meta.html', {'title': 'Form Sections'}) @@include('../layouts/head-css.html')
+    <link rel="stylesheet" href="path/to/bootstrap.css" />
+    <style>
+      /* General card and form styles */
+      .card {
+        background-color: #fff;
+        border-radius: 8px;
+      }
+
+      /* Progress bar */
+      .progress-wrapper {
+        position: relative;
+        margin-bottom: 40px;
+      }
+
+      .progress {
+        height: 10px;
+        border: 1px solid #DDDDDD;
+        border-radius: 5px;
+        background-color: #F2F2F2;
+        width: 100%;
+      }
+
+      .progress-bar {
+        background-color: #4285F4;
+        border-radius: 5px;
+        transition: width 0.4s;
+        height: 100%;
+      }
+
+      .progress-percentage {
+        position: absolute;
+        margin-left: 100px;
+        right: 20px;
+        top: -25px;
+        font-size: 0px;
+        color: #ff000000;
+        font-weight: 500;
+      }
+
+      /* Skeleton loader styling for full-page document simulation */
+      .skeleton {
+        position: relative;
+        overflow: hidden;
+        background-color: #ffffff;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        height: 190px;
+        width: 100%;
+      }
+
+      .skeleton::before {
+        content: '';
+        position:absolute;
+        top: 10;
+        left: -10px;
+        width: 70px;
+        height: 100%;
+        background: #ffffff54;
+        animation: loading 1.0s infinite;
+      }
+
+      @keyframes loading {
+        0% {
+          left: -250px;
+        }
+        100% {
+          left: 100%;
+        }
+      }
+
+      /* Simulating document layout with multiple sections */
+      .skeleton-header,
+      .skeleton-body,
+      .skeleton-footer {
+        background-color: #4c85ff11;
+        margin: 10px;
+        border-radius: 4px;
+      }
+
+      .skeleton-header {
+        height: 10px;
+        justify-content: right;
+        width: 50%;
+        margin-bottom: 10px;
+      }
+
+      .skeleton-body {
+        height: 10px;
+        width: 90%;
+        margin-bottom: 10px;
+      }
+
+      .skeleton-footer {
+        height: 10px;
+        width: 80%;
+      }
+
+      /* Form previews arranged in one line with 6 documents */
+      .form-previews {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 150px)); /* Set fixed width for each column */
+  gap: 50px;
+  justify-items: left;
+  padding-bottom: 30px;
+  max-width: 1200px; /* Set a maximum width for the entire grid */
+  margin: 0 auto; /* Center the grid container */
+}
+
+.file-card {
+  width: 210px; /* Set a fixed width */
+  height: 297px; /* Set a fixed height */
+  overflow: hidden; /* Hide overflow content */
+  background-color: #ffffff;
+  border: 1px solid #a5a4a4;
+  border-radius: 8px;
+}
+
+@media screen and (max-width: 1200px) {
+  .form-previews {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 120px)); /* Adjust for smaller screens */
+    max-width: 1000px; /* Adjust the maximum width */
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .form-previews {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 100px)); /* Adjust for mobile devices */
+    max-width: 700px;
+  }
+}
+
+
+      /* Progressing steps and bar */
+      .processing-bar {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        margin-bottom: 20px;
+        margin-top: 30px;
+        position: relative;
+      }
+
+      .processing-bar span {
+        font-size: 10px;
+        color: #669;
+      }
+
+      .processing-progress {
+        width: 100%;
+        max-width: 150px;
+        height: 5px;
+        background-color: #dedede;
+        border-radius: 5px;
+        margin-left: 220px;
+        position:fixed;
+      }
+
+      .processing-fill {
+        background-color: #7b7b7b;
+        height: 100%;
+        width: 0;
+        border-radius: 5px;
+        transition: width 0.9s ease;
+      }
+
+      /* Continue button aligned to the right */
+      .btn-continue {
+        background-color: #4285F4;
+        color: #fff;
+        border: none;
+        padding: 10px 40px;
+        border-radius: 50px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-top: 40px;
+        float: right;
+      }
+
+      .btn-continue:hover {
+        background-color: #2a6ad7;
+      }
+    </style>
+  </head>
+  <!-- [Head] end -->
+  
+  <!-- [Body] Start -->
+  <body @@bodySetup>
+    @@include('../layouts/layout-vertical.html')
+
+    <!-- [ Main Content ] start -->
+    <div class="pc-container">
+      <div class="pc-content">
+        <!-- Progress bar placed at the top -->
+        <div class="card-header" style="padding-bottom: 20px;">
+          <h3>Visa Form Filling</h3>
+        </div>
+        <div class="progress-wrapper">
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" id="progress-bar" style="width: 75%;"></div>
+          </div>
+          <span class="progress-percentage" id="progress-percentage">75%</span>
+        </div>
+
+        <!-- Processing Page Section -->
+        <div class="processing-section" >
+            <div class="card-header" style="padding-bottom: 10px; border-bottom: 1px solid #E0E0E0; width: 100%;">
+              <h5 style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; color: #333;  padding-right: 30px;">
+                Your forms are being filled out. Do not close or refresh this page.              </h5>
+            </div>
+          <!-- Processing all documents with left-aligned text -->
+          <div class="processing-bar">
+            <span id="processing-text">Processing all documents</span>
+            <div class="processing-progress">
+              <div class="processing-fill" id="processing-fill"></div>
+            </div>
+            <span id="processing-percentage" style="margin-left: 380px; position:fixed; font-size: 10px;">0%</span>
+          </div>
+
+          <!-- Forms preview grid with 6 documents using skeleton loader -->
+          <div class="form-previews">
+            <div class="form-preview skeleton">
+              <div class="skeleton-header" style="justify-content: right;"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-header"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-header"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-footer"></div>
+              <div class="skeleton-body"></div>
+            </div>
+            <div class="form-preview skeleton">
+              <div class="skeleton-header"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-header"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-header"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-footer"></div>
+              <div class="skeleton-body"></div>
+            </div>
+            <div class="form-preview skeleton">
+              <div class="skeleton-header"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-header"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-footer"></div>
+            </div>
+            <div class="form-preview skeleton">
+              <div class="skeleton-header"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-header"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-header"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-footer"></div>
+            </div>
+            <div class="form-preview skeleton">
+              <div class="skeleton-header"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-header"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-header"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-footer"></div>
+              <div class="skeleton-body"></div>
+            </div>
+            <div class="form-preview skeleton">
+              <div class="skeleton-header"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-header"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-header"></div>
+              <div class="skeleton-body"></div>
+              <div class="skeleton-footer"></div>
+              <div class="skeleton-body"></div>
+            </div>
+          </div>
+
+          <!-- Continue Button -->
+          <button class="btn-continue" style="width: 287px; height: 44px;"; onclick="continueToNextStep()">Continue</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- [ Main Content ] end -->
+    @@include('../layouts/footer-block.html') @@include('../layouts/footer-js.html')
+    <!-- [Page Specific JS] start -->
+    <script src="../assets/js/plugins/uppy.min.js"></script>
+    <!-- [ Main Content ] end -->
+    @@include('../layouts/footer-block.html') @@include('../layouts/footer-js.html')
+    <!-- [Page Specific JS] start -->
+    <script src="../assets/js/plugins/uppy.min.js"></script>
+    <script>
+      // Progress states text
+      const progressSteps = [
+        'Processing all documents',
+        'Extracting data from documents',
+        'Cleaning up data collected',
+        'Destroying and deleting document copies',
+        'Matching all form fields with data',
+        'Cross-checking all data',
+        'Form filling done'
+      ];
+
+      let progress = 0;
+      let currentStep = 0;
+      const progressBarFill = document.getElementById('processing-fill');
+      const progressPercentage = document.getElementById('processing-percentage');
+      const processingText = document.getElementById('processing-text');
+
+      function updateProcessingProgress() {
+        if (progress < 100) {
+          progress += 16.67; // increments by ~16.67% for each of the 6 stages
+          currentStep += 1;
+          progressBarFill.style.width = progress + '%';
+          progressPercentage.innerText = Math.floor(progress) + '%';
+          processingText.innerText = progressSteps[currentStep];
+
+          // Randomize the interval timing
+          const randomTime = Math.random() * (2000 - 1000) + 1000; // between 1 and 2 seconds
+          setTimeout(updateProcessingProgress, randomTime);
+        }
+      }
+
+      setTimeout(updateProcessingProgress, 5000); // Start after a delay
+
+      function continueToNextStep() {
+        alert('Proceeding to the next step...');
+        // Add logic to navigate to the next page or form step.
+      }
+    </script>      
+    @@include('../layouts/footer-block.html') 
+    @@include('../layouts/footer-js.html')
+
+    <script>
+      // Function to move to the next page
+      function goToNextPage() {
+        document.getElementById('additional-information-section').style.display = 'none';
+        document.getElementById('visa-checklist-section').style.display = 'block';
+        document.getElementById('progress-bar').style.width = '100%';
+        document.getElementById('progress-percentage').innerText = '100%';
+      }
+
+      // Function to move to the previous page
+      function goToPreviousPage() {
+        document.getElementById('visa-checklist-section').style.display = 'none';
+        document.getElementById('additional-information-section').style.display = 'block';
+        document.getElementById('progress-bar').style.width = '75%';
+        document.getElementById('progress-percentage').innerText = '75%';
+      }
+    </script>
+  </body>
+  <!-- [Body] end -->
+</html>

@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Visa Form Completed</title>
+    @@include('../layouts/head-page-meta.html', {'title': 'Visa Form Completed'}) 
+    @@include('../layouts/head-css.html')
+    <link rel="stylesheet" href="path/to/bootstrap.css" />
+    <style>
+      /* General card and form styles */
+      .card {
+        background-color: #fff;
+        border-radius: 8px;
+      }
+
+      /* Progress bar */
+      .progress-wrapper {
+        position: relative;
+        margin-bottom: 40px;
+      }
+
+      .progress {
+        height: 10px;
+        background-color: #F2F2F2;
+        width: 100%;
+        border-radius: 5px;
+      }
+
+      .progress-bar {
+        background-color: #4285F4;
+        height: 100%;
+        transition: width 0.4s;
+        border-radius: 5px;
+      }
+
+      .progress-percentage {
+        position: absolute;
+        right: 0;
+        top: -25px;
+        font-size: 12px;
+        color: #333;
+        font-weight: 600;
+      }
+
+      /* Success Page Styling */
+      .success-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 50vh; /* Adjust height as per needs */
+      }
+
+      .success-message {
+        text-align: center;
+        margin-top: 40px; /* Space between checkmark and message */
+      }
+
+      .success-message h3 {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #333;
+      }
+
+      .success-message p {
+        font-size: 16px;
+        color: #666;
+        margin-bottom: 40px;
+      }
+
+      .success-checkmark {
+        font-size: 72px;
+        color: #39b54a; /* Green checkmark */
+        margin-bottom: 20px;
+      }
+
+      .new-application-btn {
+        background-color: #4285F4;
+        color: #fff;
+        padding: 10px 40px;
+        border-radius: 50px;
+        font-size: 16px;
+        cursor: pointer;
+        border: none;
+        transition: background-color 0.3s ease;
+      }
+
+      .new-application-btn:hover {
+        background-color: #2a6ad7;
+      }
+
+      /* Progressing steps and bar */
+      .processing-bar {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        margin-bottom: 20px;
+        margin-top: 30px;
+        position: relative;
+      }
+
+      .processing-bar span {
+        font-size: 12px;
+        color: #669;
+      }
+    </style>
+  </head>
+  <!-- [Head] end -->
+  
+  <!-- [Body] Start -->
+  <body @@bodySetup>
+    @@include('../layouts/layout-vertical.html')
+
+    <!-- [ Main Content ] start -->
+    <div class="pc-container">
+      <div class="pc-content">
+        <div class="card-header" style="padding-bottom: 20px;">
+          <h3>Visa Form Filling Completed</h3>
+        </div>
+        <div class="progress-wrapper">
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" id="progress-bar" style="width: 100%;"></div>
+          </div>
+          <span class="progress-percentage" id="progress-percentage">100%</span>
+        </div>
+
+        <div class="processing-section">
+          <div class="card-header">
+            <h5 style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #333; padding-right: 30px;">
+              Visa Form Completed Successfully</h5>            
+            <p style="font-size: 14px; color: #666; margin-top: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+              A copy of the form(s) have been sent to migraide.ai@gmail.com
+            </p>
+            <div class="success-container" style="margin-top: -50px;">
+              <i class="fas fa-check-circle" style="font-size: 80px; color:#39b54a;"></i>
+               <div class="success-message">
+                 <p style="font-size: 14px;">All documents now destroyed and deleted from our database.</p>
+               </div>
+               <button class="new-application-btn" onclick="startNewApplication()">New Application</button>
+             </div>
+          </div>
+
+        <!-- Success Page Section -->
+        
+      </div>
+    </div>
+
+    <script>
+      function startNewApplication() {
+        // Logic to start a new application, redirect to form page, etc.
+        window.location.href = '/new-application-page'; // Redirect to the appropriate page
+      }
+    </script>
+    
+    @@include('../layouts/footer-block.html') 
+    @@include('../layouts/footer-js.html')
+
+  </body>
+  <!-- [Body] end -->
+</html>

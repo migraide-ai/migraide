@@ -1,0 +1,40 @@
+<!doctype html>
+
+
+<html lang="en">
+ <!-- [Head] start -->
+
+
+ <head>
+   @@include('../layouts/head-page-meta.html', {'title': 'Check mail'}) @@include('../layouts/head-css.html')
+ </head>
+ <!-- [Head] end -->
+ <!-- [Body] Start -->
+
+
+ <body @@bodySetup>
+   @@include('../layouts/loader.html')
+   <div class="auth-main">
+     <div class="auth-wrapper v1">
+       <div class="auth-form">
+         <div class="card my-5">
+           <div class="card-body">
+             <div class="mb-4">
+               <h3 class="mb-2"><b>Yo! You got mail</b></h3>
+               <p class="text-muted">We have sent password recovery guide to your email.</p>
+             </div>
+             <div class="d-grid mt-3">
+               <button type="button" class="btn btn-primary">Sign in</button>
+             </div>
+               </div>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+   <!-- [ Main Content ] end -->
+   @@include('../layouts/footer-js.html') @@include('../layouts/customizer.html')
+ </body>
+ <!-- [Body] end -->
+</html>

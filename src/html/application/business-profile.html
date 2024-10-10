@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <!-- [Head] start -->
+
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
+    @@include('../layouts/head-page-meta.html', {'title': 'Add Product'}) @@include('../layouts/head-css.html')
+  
+  </head>
+  <!-- [Head] end -->
+  <!-- [Body] Start -->
+
+  <body @@bodySetup>
+    @@include('../layouts/layout-vertical.html')
+
+    <!-- [ Main Content ] start -->
+    <div class="pc-container">
+      <div class="pc-content">
+        <div class="card-header" style="padding-bottom: 20px;">
+          <h3>Business Profile Setup</h3>
+        </div>
+        <!-- Progress bar placed at the top of both pages -->
+
+        <div class="card" id="additional-information-section" style="border-radius: 8px; border: 1px solid #DDDDDD; padding-top: 0px; ">
+  
+          <!-- Title Section with Underline for "Form controls" -->
+          <div class="card-header" style="padding-bottom: 10px; border-bottom: 1px solid #E0E0E0; width: 100%;">
+            <h5 style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; color: #333;  padding-right: 30px;">
+              Update the following information about your visa consulting business to get started.            </h5>
+          </div>          
+    
+        <!-- [ Main Content ] start -->
+        <div class="row">
+          <!-- [ sample-page ] start -->
+          <div class="col-sm-12">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label class="form-label">Type of Business</label>
+                      <select class="form-select">
+                        <option>Visa Consulting</option>
+                        <option>Visa Attorney / Legal Firm</option>
+                        <option>General Immigration Consulting</option>
+                      </select>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label">Country of Business Operation</label>
+                      <input type="text" class="form-control" placeholder="Country of Business Operation" />
+                    </div>
+                              
+                    <div class="mb-3">
+                      <label class="form-label">Business Phone Number</label>
+                      <input type="text" class="form-control" placeholder="Enter Mobile Number" />
+                    </div>
+                    
+                    <!-- <div class="mb-3">
+                      <label class="form-label">Price</label>
+                      <select class="form-select">
+                        <option>$ 100</option>
+                        <option>$ 200</option>
+                        <option>$ 300</option>
+                        <option>$ 400</option>
+                        <option>$ 500</option>
+                      </select>
+                    </div> -->
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label class="form-label">Approx No. of Clients (monthly)</label>
+                      <select class="form-select">
+                        <option>2 - 5</option>
+                        <option>6 - 10</option>
+                        <option>11 - 20</option>
+                        <option>21 - 50</option>
+                        <option>> 50 </option>
+                      </select>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label">Visa Specialization</label>
+                      <select class="form-select">
+                        <option>EB1</option>
+                        <option>EB2</option>
+                        <option>EB1 & EB2</option>
+                      </select>
+                    </div>
+                    <div class="mb-3"></div>
+                      <label class="form-label">Business Address</label>
+                      <input type="text" class="form-control" placeholder="Enter Business Address" />
+                    </div>
+                    <!-- <div class="mb-3"></div>
+                      <label class="form-label">Summary of Business Activities</label>
+                      <input type="text" class="form-control" placeholder="Enter Business Address" />
+                    </div> -->
+                    <div class="text-end btn-page mt-4">
+                      <a href="/dashboard/index.html">
+                      <button class="btn btn-outline-secondary">Cancel</button>
+                      </a>
+                      <a href="/application/new-user-profile.html">
+                      <button class="btn btn-primary" style="width: 287px; height: 44px;">Complete Setup</button></a>
+                    </div>
+                  </div>
+                </div>
+            </div>
+          </div>
+          <!-- [ sample-page ] end -->
+        </div>
+        <!-- [ Main Content ] end -->
+      </div>
+    </div>
+    <!-- [ Main Content ] end -->
+    @@include('../layouts/footer-block.html') @@include('../layouts/footer-js.html') @@include('../layouts/customizer.html')
+  </body>
+  <!-- [Body] end -->
+</html>
