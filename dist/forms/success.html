@@ -210,9 +210,13 @@
             <!-- <span class="pc-badge">2</span> -->
           </a>
           <ul class="pc-submenu">
-            <li class="pc-item"><a class="pc-link" href="../dashboard/index.html">New Visa Form</a></li>
+            <li class="pc-item"><a class="pc-link" href="../dashboard/index.html">New Form Session</a></li>
             </ul>
+            <!-- <ul class="pc-submenu">
+              <li class="pc-item"><a class="pc-link" href="../dashboard/index.html">Completed Forms</a></li>
+              </ul> -->
         </li>
+
         <li class="pc-item">
           <a href="../forms/form_filler_additional_info.html" class="pc-link">
             <span class="pc-micon">
@@ -589,7 +593,7 @@
             <span class="pc-mtext">Form Validation</span></a
           >
         </li> -->
-        <li class="pc-item"
+        <!-- <li class="pc-item"
           ><a href="../forms/success.html" class="pc-link">
             <span class="pc-micon">
               <svg class="pc-icon">
@@ -598,7 +602,7 @@
             </span>
             <span class="pc-mtext">Success</span></a
           ></li
-        >
+        > -->
 
         <!-- <li class="pc-item pc-caption">
           <label>table</label>
@@ -798,7 +802,7 @@
             <span class="pc-mtext">File manager</span></a
           >
         </li> -->
-        <li class="pc-item">
+        <!-- <li class="pc-item">
           <a href="../application/form_session.html" class="pc-link">
             <span class="pc-micon">
               <svg class="pc-icon">
@@ -807,7 +811,7 @@
             </span>
             <span class="pc-mtext">Form Filling Process</span></a
           >
-        </li>
+        </li> -->
         <!-- <li class="pc-item pc-hasmenu">
           <a href="#!" class="pc-link">
             <span class="pc-micon">
@@ -829,7 +833,7 @@
             <use xlink:href="#custom-flag"></use>
           </svg>
         </li> -->
-        <li class="pc-item pc-hasmenu">
+        <!-- <li class="pc-item pc-hasmenu">
           <a href="#!" class="pc-link">
             <span class="pc-micon">
               <svg class="pc-icon">
@@ -838,7 +842,7 @@
             </span>
             <span class="pc-mtext">Authentication</span><span class="pc-arrow"><i data-feather="chevron-right"></i></span
           ></a>
-          <ul class="pc-submenu">
+          <ul class="pc-submenu"> -->
             <!-- <li class="pc-item pc-hasmenu">
               <a href="#!" class="pc-link"
                 >Authentication 1<span class="pc-arrow"><i data-feather="chevron-right"></i></span
@@ -865,14 +869,14 @@
                 <li class="pc-item"><a class="pc-link" target="_blank" href="../pages/code-verification-v2.html">code verification</a></li>
               </ul>
             </li> -->
-            <li class="pc-item">
+            <!-- <li class="pc-item">
               <a href="../pages/register.html" target="_blank" class="pc-link">Sign Up</a>
             </li>
             <li class="pc-item"></li>
               <a href="../pages/login.html" target="_blank" class="pc-link">Log In</a>
             </li>
           </ul>
-        </li>
+        </li> -->
         <!-- <li class="pc-item pc-hasmenu">
           <a href="#!" class="pc-link">
             <span class="pc-micon">
@@ -905,7 +909,7 @@
             </li>
           </ul>
         </li> -->
-        <li class="pc-item"
+        <!-- <li class="pc-item"
           ><a href="../pages/contact-us.html" class="pc-link" target="_blank">
             <span class="pc-micon">
               <svg class="pc-icon">
@@ -914,7 +918,7 @@
             </span>
             <span class="pc-mtext">Contact us</span>
           </a>
-        </li>
+        </li> -->
  
         <!-- <li class="pc-item pc-hasmenu">
           <a href="#!" class="pc-link">
@@ -1032,7 +1036,7 @@
 <!-- [Mobile Media Block end] -->
 <div class="ms-auto">
   <ul class="list-unstyled">
-    <li class="dropdown pc-h-item">
+    <!-- <li class="dropdown pc-h-item">
       <a
         class="pc-head-link dropdown-toggle arrow-none me-0"
         data-bs-toggle="dropdown"
@@ -1064,7 +1068,7 @@
           </svg>
           <span>Default</span>
         </a>
-      </div>
+      </div> -->
     </li>
     <!-- <li class="dropdown pc-h-item">
       <a
@@ -1475,14 +1479,15 @@
             <h5 style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #333; padding-right: 30px;">
               Visa Form Completed Successfully</h5>            
             <p style="font-size: 14px; color: #666; margin-top: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-              A copy of the form(s) have been sent to migraide.ai@gmail.com
+              A copy of the form(s) have been sent to your registered email.
             </p>
             <div class="success-container" style="margin-top: -50px;">
               <i class="fas fa-check-circle" style="font-size: 80px; color:#39b54a;"></i>
                <div class="success-message">
                  <p style="font-size: 14px;">All documents now destroyed and deleted from our database.</p>
                </div>
-               <button class="new-application-btn" onclick="startNewApplication()">New Application</button>
+               <a href="/dashboard/index.html">
+               <button class="new-application-btn" style="width:287px; height:44px;">Finish</button></a>
              </div>
           </div>
 
@@ -1491,12 +1496,12 @@
       </div>
     </div>
 
-    <script>
+    <!-- <script>
       function startNewApplication() {
         // Logic to start a new application, redirect to form page, etc.
-        window.location.href = '/new-application-page'; // Redirect to the appropriate page
+        window.location.href = 'index.html'; // Redirect to the appropriate page
       }
-    </script>
+    </script> -->
     
     <footer class="pc-footer" style="border: 1px solid #E0E0E0; border-radius: 8px; padding: 10px 20px; margin-left: auto; margin-right: 75px; width: 100%; max-width: 1100px;">
   

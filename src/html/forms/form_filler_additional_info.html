@@ -1,647 +1,698 @@
 <!doctype html>
 <html lang="en">
-  <!-- [Head] start -->
-  <head>
-    <title>Multi-step Form</title>
-    @@include('../layouts/head-page-meta.html', {'title': 'Form Sections'}) @@include('../layouts/head-css.html')
-    <link rel="stylesheet" href="path/to/bootstrap.css" />
-    <style>
-      /* Card and Form Styles */
-      .card {
-        background-color: #fff;
-        border-radius: 8px;
-        /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
-        /* padding: 30px 20px 50px 20px; */
-      }
+ <!-- [Head] start -->
+ <head>
+   <title>Multi-step Form</title>
+   @@include('../layouts/head-page-meta.html', {'title': 'Form Sections'}) @@include('../layouts/head-css.html')
+   <link rel="stylesheet" href="path/to/bootstrap.css" />
+   <style>
+     /* Card and Form Styles */
+     .card {
+       background-color: #fff;
+       border-radius: 8px;
+     }
 
-      /* Progress bar */
-      .progress-wrapper {
-        position: relative;
-        margin-bottom: 40px;
-      }
 
-      .progress {
-        height: 10px;
-        border: 1px solid #DDDDDD;
-        border-radius: 5px;
-        background-color: #F2F2F2;
-      }
+     /* Progress bar */
+     .progress-wrapper {
+       position: relative;
+       margin-bottom: 40px;
+     }
 
-      .progress-bar {
-        background-color: #4285F4;
-        border-radius: 5px;
-        transition: width 0.4s;
-      }
 
-      .progress-percentage {
-        position: absolute;
-        right: 20px;
-        top: -25px;
-        font-size: 14px;
-        color: #000;
-        font-weight: 500;
-      }
+     .progress {
+       height: 10px;
+       border: 1px solid #DDDDDD;
+       border-radius: 5px;
+       background-color: #F2F2F2;
+     }
 
-      /* Styling for form input fields */
-      .form-control {
-        background-color: #FFFFFF;
-        border: 1px solid #DDDDDD;
-        border-radius: 5px;
-        padding: 10px;
-        margin-bottom: 20px;
-      }
 
-      .form-control:focus {
-        border-color: #4285F4;
-        box-shadow: none;
-      }
+     .progress-bar {
+       background-color: #4285F4;
+       border-radius: 5px;
+       transition: width 0.4s;
+     }
 
-      .form-label {
-        font-weight: 500;
-        color: #333333;
-        margin-bottom: 10px;
-      }
 
-      /* Styling the submit button */
-      .btn-primary {
-        background-color: #4285F4;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 287px;
-        height: 44px;
-      }
+     .progress-percentage {
+       position: absolute;
+       right: 20px;
+       top: -25px;
+       font-size: 14px;
+       color: #000;
+       font-weight: 500;
+     }
 
-      .btn-primary:focus {
-        box-shadow: none;
-      }
 
-      .btn-secondary {
-        background-color: #C7C7C7;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        width: 287px;
-        height: 44px;
-      }
+     /* Styling for form input fields */
+     .form-control {
+       background-color: #FFFFFF;
+       border: 1px solid #DDDDDD;
+       border-radius: 5px;
+       padding: 10px;
+       margin-bottom: 20px;
+     }
 
-      .btn-secondary:focus {
-        box-shadow: none;
-      }
 
-      /* Heading */
-      h5, h3 {
-        font-family: 'Inter', sans-serif;
-        font-size: 28px;
-        font-weight: 600;
-      }
+     .form-control:focus {
+       border-color: #4285F4;
+       box-shadow: none;
+     }
 
-      .description-text {
-        margin-top: 30px; /* Adds 30px space between heading and description */
-        color: #666666;
-        font-size: 16px;
-      }
-    </style>
-  </head>
-  <!-- [Head] end -->
-  
+
+     .form-label {
+       font-weight: 500;
+       color: #333333;
+       margin-bottom: 10px;
+     }
+
+
+     /* Styling the submit button */
+     .btn-primary {
+       background-color: #4285F4;
+       border: none;
+       padding: 10px 20px;
+       border-radius: 5px;
+       display: inline-flex;
+       align-items: center;
+       justify-content: center;
+       width: 287px;
+       height: 44px;
+     }
+
+
+     .btn-primary:focus {
+       box-shadow: none;
+     }
+
+
+     .btn-secondary {
+       background-color: #C7C7C7;
+       border: none;
+       padding: 10px 20px;
+       border-radius: 5px;
+       width: 287px;
+       height: 44px;
+     }
+
+
+     .btn-secondary:focus {
+       box-shadow: none;
+     }
+
+
+     /* Heading */
+     h5, h3 {
+       font-family: 'Inter', sans-serif;
+       font-size: 28px;
+       font-weight: 600;
+     }
+
+
+     .description-text {
+       margin-top: 30px; /* Adds 30px space between heading and description */
+       color: #666666;
+       font-size: 16px;
+     }
+
+
+     /* Alert message styling */
+     .alert-message {
+       position: fixed;
+       top: 80px;
+       right: 20px;
+       background-color: #dc3545;
+       color: white;
+       padding: 10px 20px;
+       border-radius: 25px;
+       display: none;
+       z-index: 1000;
+       display: flex;
+       align-items: center;
+       gap: 10px;
+       box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+     }
+     .alert-message .icon {
+       width: 24px;
+       height: 24px;
+       background-color: white;
+       color: #dc3545;
+       border-radius: 50%;
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       font-weight: bold;
+     }
+   </style>
+ </head>
+ <!-- [Head] end -->
   <!-- [Body] Start -->
-  <body @@bodySetup>
-    @@include('../layouts/layout-vertical.html')
+ <body @@bodySetup>
+   @@include('../layouts/layout-vertical.html')
 
-    <!-- [ Main Content ] start -->
-    <div class="pc-container">
-      <div class="pc-content">
-        <div class="card-header" style="padding-bottom: 20px;">
-          <h3>Getting Started</h3>
-        </div>
-        <!-- Progress bar placed at the top of both pages -->
-        <div class="progress-wrapper">
-          <div class="progress">
-            <div class="progress-bar" role="progressbar" id="progress-bar" style="width: 25%;"></div>
-          </div>
-          <span class="progress-percentage" id="progress-percentage">25%</span>
-        </div>  
+
+   <!-- [ Main Content ] start -->
+   <div class="pc-container">
+     <div class="pc-content">
+       <div class="card-header" style="padding-bottom: 20px;">
+         <h3>Getting Started</h3>
+       </div>
+       <!-- Progress bar placed at the top of both pages -->
+       <div class="progress-wrapper">
+         <div class="progress">
+           <div class="progress-bar" role="progressbar" id="progress-bar" style="width: 25%;"></div>
+         </div>
+         <span class="progress-percentage" id="progress-percentage">25%</span>
+       </div> 
+      
+       <!-- Second Page: Visa Document Checklist (Initially hidden) -->
+     <div style="padding-bottom:30px;">
+       <div class="card" id="visa-checklist-section" >
+         <div class="card-header" style="padding-bottom: 10px; border-bottom: 1px solid #E0E0E0; width: 100%;">
+           <h5 style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; color: #333;  padding-right: 30px;">
+              To get started, select the forms you want to fill out & upload the following credentials.            </h5>
+         </div>
+         <div style="margin-left: 20px; margin-top: 20px;">
+         <div class="form-check-group" style="font-family: 'Inter', sans-serif; font-size: 14px; color: #333;">
+           <div class="form-check" style="margin-bottom: 10px; display: flex; align-items: center;">
+             <input class="form-check-input" type="checkbox" id="formI140" value="I-140" checked style="width: 20px; height: 20px; border-radius: 5px; border: 1px solid #DDDDDD; background-color: #FFFFFF; cursor: pointer; appearance: none; display: inline-block; position: relative; vertical-align: middle; margin-right: 10px;" onclick="this.style.backgroundColor=this.checked ? '#4285F4' : '#FFFFFF'; this.style.borderColor=this.checked ? '#4285F4' : '#DDDDDD';">
+             <label class="form-check-label" for="formI140">
+               <a href="https://example.com/formI140" target="_blank" style="text-decoration: none; color: #4285F4;">Form I-140</a>
+             </label>
+           </div>
+         <div><div class="form-check-group" style="font-family: 'Inter', sans-serif; font-size: 14px; color: #333;">
+           <div class="form-check" style="margin-bottom: 10px; display: flex; align-items: center;">
+             <input class="form-check-input" type="checkbox" id="formI140" value="I-140" checked style="width: 20px; height: 20px; border-radius: 5px; border: 1px solid #DDDDDD; background-color: #FFFFFF; cursor: pointer; appearance: none; display: inline-block; position: relative; vertical-align: middle; margin-right: 10px;" onclick="this.style.backgroundColor=this.checked ? '#4285F4' : '#FFFFFF'; this.style.borderColor=this.checked ? '#4285F4' : '#DDDDDD';">
+             <label class="form-check-label" for="formI140">
+               <a href="https://example.com/formI140" target="_blank" style="text-decoration: none; color: #4285F4;">Form I-140</a>
+             </label>
+           </div>
         
-        <!-- Second Page: Visa Document Checklist (Initially hidden) -->
-      <div style="padding-bottom:30px;">
-        <div class="card" id="visa-checklist-section" >
-          <div class="card-header" style="padding-bottom: 10px; border-bottom: 1px solid #E0E0E0; width: 100%;">
-            <h5 style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; color: #333;  padding-right: 30px;">
-               To get started, select the forms you want to fill out & upload the following credentials.            </h5>
-          </div> 
-          <div style="margin-left: 20px; margin-top: 20px;">
-          <div class="form-check-group" style="font-family: 'Inter', sans-serif; font-size: 14px; color: #333;">
-            <div class="form-check" style="margin-bottom: 10px; display: flex; align-items: center;">
-              <input class="form-check-input" type="checkbox" id="formI140" value="I-140" style="width: 20px; height: 20px; border-radius: 5px; border: 1px solid #DDDDDD; background-color: #FFFFFF; cursor: pointer; appearance: none; display: inline-block; position: relative; vertical-align: middle; margin-right: 10px;" onclick="this.style.backgroundColor=this.checked ? '#4285F4' : '#FFFFFF'; this.style.borderColor=this.checked ? '#4285F4' : '#DDDDDD';">
-              <label class="form-check-label" for="formI140">
-                <a href="https://example.com/formI140" target="_blank" style="text-decoration: none; color: #4285F4;">Form I-140</a>
-              </label>
-            </div>
-          <div><div class="form-check-group" style="font-family: 'Inter', sans-serif; font-size: 14px; color: #333;">
-            <div class="form-check" style="margin-bottom: 10px; display: flex; align-items: center;">
-              <input class="form-check-input" type="checkbox" id="formI140" value="I-140" style="width: 20px; height: 20px; border-radius: 5px; border: 1px solid #DDDDDD; background-color: #FFFFFF; cursor: pointer; appearance: none; display: inline-block; position: relative; vertical-align: middle; margin-right: 10px;" onclick="this.style.backgroundColor=this.checked ? '#4285F4' : '#FFFFFF'; this.style.borderColor=this.checked ? '#4285F4' : '#DDDDDD';">
-              <label class="form-check-label" for="formI140">
-                <a href="https://example.com/formI140" target="_blank" style="text-decoration: none; color: #4285F4;">Form I-140</a>
-              </label>
-            </div>
+           <div class="form-check" style="margin-bottom: 10px; display: flex; align-items: center;">
+             <input class="form-check-input" type="checkbox" id="formI907" value="I-907" checked style="width: 20px; height: 20px; border-radius: 5px; border: 1px solid #DDDDDD; background-color: #FFFFFF; cursor: pointer; appearance: none; display: inline-block; position: relative; vertical-align: middle; margin-right: 10px;" onclick="this.style.backgroundColor=this.checked ? '#4285F4' : '#FFFFFF'; this.style.borderColor=this.checked ? '#4285F4' : '#DDDDDD';">
+             <label class="form-check-label" for="formI907">
+               <a href="https://example.com/formI907" target="_blank" style="text-decoration: none; color: #4285F4;">Form I-907</a>
+             </label>
+           </div>
+        
+           <div class="form-check" style="margin-bottom: 10px; display: flex; align-items: center;">
+             <input class="form-check-input" type="checkbox" id="formG1145" value="G-1145" checked style="width: 20px; height: 20px; border-radius: 5px; border: 1px solid #DDDDDD; background-color: #FFFFFF; cursor: pointer; appearance: none; display: inline-block; position: relative; vertical-align: middle; margin-right: 10px;" onclick="this.style.backgroundColor=this.checked ? '#4285F4' : '#FFFFFF'; this.style.borderColor=this.checked ? '#4285F4' : '#DDDDDD';">
+             <label class="form-check-label" for="formG1145">
+               <a href="https://example.com/formG1145" target="_blank" style="text-decoration: none; color: #4285F4;">Form G-1145</a>
+             </label>
+           </div>
+        
+           <div class="form-check" style="margin-bottom: 10px; display: flex; align-items: center;">
+             <input class="form-check-input" type="checkbox" id="formG1450" value="G-1450" checked style="width: 20px; height: 20px; border-radius: 5px; border: 1px solid #DDDDDD; background-color: #FFFFFF; cursor: pointer; appearance: none; display: inline-block; position: relative; vertical-align: middle; margin-right: 10px;" onclick="this.style.backgroundColor=this.checked ? '#4285F4' : '#FFFFFF'; this.style.borderColor=this.checked ? '#4285F4' : '#DDDDDD';">
+             <label class="form-check-label" for="formG1450">
+               <a href="https://example.com/formG1450" target="_blank" style="text-decoration: none; color: #4285F4;">Form G-1450</a>
+             </label>
+           </div>
+         </div>
+         </div>
+         </div>
           
-            <div class="form-check" style="margin-bottom: 10px; display: flex; align-items: center;">
-              <input class="form-check-input" type="checkbox" id="formI907" value="I-907" style="width: 20px; height: 20px; border-radius: 5px; border: 1px solid #DDDDDD; background-color: #FFFFFF; cursor: pointer; appearance: none; display: inline-block; position: relative; vertical-align: middle; margin-right: 10px;" onclick="this.style.backgroundColor=this.checked ? '#4285F4' : '#FFFFFF'; this.style.borderColor=this.checked ? '#4285F4' : '#DDDDDD';">
-              <label class="form-check-label" for="formI907">
-                <a href="https://example.com/formI907" target="_blank" style="text-decoration: none; color: #4285F4;">Form I-907</a>
-              </label>
-            </div>
-          
-            <div class="form-check" style="margin-bottom: 10px; display: flex; align-items: center;">
-              <input class="form-check-input" type="checkbox" id="formG1145" value="G-1145" style="width: 20px; height: 20px; border-radius: 5px; border: 1px solid #DDDDDD; background-color: #FFFFFF; cursor: pointer; appearance: none; display: inline-block; position: relative; vertical-align: middle; margin-right: 10px;" onclick="this.style.backgroundColor=this.checked ? '#4285F4' : '#FFFFFF'; this.style.borderColor=this.checked ? '#4285F4' : '#DDDDDD';">
-              <label class="form-check-label" for="formG1145">
-                <a href="https://example.com/formG1145" target="_blank" style="text-decoration: none; color: #4285F4;">Form G-1145</a>
-              </label>
-            </div>
-          
-            <div class="form-check" style="margin-bottom: 10px; display: flex; align-items: center;">
-              <input class="form-check-input" type="checkbox" id="formG1450" value="G-1450" style="width: 20px; height: 20px; border-radius: 5px; border: 1px solid #DDDDDD; background-color: #FFFFFF; cursor: pointer; appearance: none; display: inline-block; position: relative; vertical-align: middle; margin-right: 10px;" onclick="this.style.backgroundColor=this.checked ? '#4285F4' : '#FFFFFF'; this.style.borderColor=this.checked ? '#4285F4' : '#DDDDDD';">
-              <label class="form-check-label" for="formG1450">
-                <a href="https://example.com/formG1450" target="_blank" style="text-decoration: none; color: #4285F4;">Form G-1450</a>
-              </label>
-            </div>
-          </div>
-          </div>
-          </div>
-            
-   <!-- File Uploader Section -->
-          <div style="font-family: 'Inter', sans-serif; padding: 20px; background-color: #fff; border-radius: 8px; border: 1px dashed #666; margin-top: 30px; margin-bottom: 30px; width: 50%;">
-            <p style="font-size: 14px; color: #666; margin-bottom: 20px;">Kindly upload the following files to initiate the automated form filling.</p>
+         <!-- File Uploader Section -->
+         <div style="font-family: 'Inter', sans-serif; padding: 20px; background-color: #fff; border-radius: 8px; border: 1px dashed #666; margin-top: 30px; margin-bottom: 30px; width: 50%;">
+           <p style="font-size: 14px; color: #666; margin-bottom: 20px;">Kindly upload the following files to initiate the automated form filling.</p>
 
-            
-            <!-- First Upload Field (Success Scenario) -->
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background-color: #F8F8F8; border: 1px solid #E0E0E0; border-radius: 8px; margin-bottom: 15px;">
-                <span id="passport-file-label" style="font-size: 16px; font-weight: 500; color: #333;">Passport data page for main applicant</span>
-                <input type="file" id="passport-upload" style="display: none;" onchange="uploadFile('passport')">
-                <button id="passport-upload-btn" style="background-color: #4285F4; color: #fff; border: none; padding: 10px 40px; border-radius: 25px; cursor: pointer; transition: background-color 0.3s ease; font-size: 16px;" 
-                        onclick="document.getElementById('passport-upload').click()">Upload file</button>
-            </div>
-            <!-- Progress Bar for First File (Success) -->
-            <div id="passport-progress-bar" style="height: 8px; background-color: #E0E0E0; border-radius: 5px; margin-top: 10px; margin-bottom: 10px; overflow: hidden; position: relative; width: 100%; display: none;">
-              <div id="passport-progress-fill" style="height: 100%; background-color: #4CAF50; width: 0%; transition: width 2s ease;"></div> <!-- Green for success -->
-            </div>
-            
 
-            <!-- Second Upload Field (Failed Scenario) -->
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background-color: #F8F8F8; border: 1px solid #E0E0E0; border-radius: 8px; margin-bottom: 15px;">
-                <span style="font-size: 16px; font-weight: 500; color: #333;">Birth certificates for all main applicants</span>
-                <input type="file" id="birth-cert-upload" style="display: none;" onchange="uploadFile('birth-cert')">
-                <button id="birth-cert-upload-btn" style="background-color: #4285F4; color: #fff; border: none; padding: 10px 40px; border-radius: 25px; cursor: pointer; transition: background-color 0.3s ease; font-size: 16px;" 
-                        onclick="document.getElementById('birth-cert-upload').click()">Upload file</button>
-            </div>
-            <!-- Progress Bar for Second File (Failed) -->
-            <div id="birth-cert-progress-bar" style="height: 8px; background-color: #E0E0E0; border-radius: 5px; margin-top: 10px; margin-bottom: 10px; overflow: hidden; position: relative; width: 100%; display: none;">
-                <div id="birth-cert-progress-fill" style="height: 100%; background-color: #4A90E2; width: 0%; transition: width 2s ease;"></div>
-            </div>
-            <!-- Error Message for Failed Upload (Visible only on failure) -->
-            <div id="birth-cert-error-message" style="display: none; color: #FF0000; margin-top: 10px;">File incorrect. This is not a birth certificate. Please upload the correct file.</div>
+ 
+      <!-- Passport data page for main applicant (Required) -->
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background-color: #F8F8F8; border: 1px solid #E0E0E0; border-radius: 8px; margin-bottom: 15px;">
+       <span id="passport-file-label" style="font-size: 16px; font-weight: 500; color: #333;">Passport data page for main applicant <span style="color: red;">*</span></span>
+       <input type="file" id="passport-upload" required style="display: none;" onchange="uploadFile('passport')">
+       <button id="passport-upload-btn" style="background-color: #4285F4; color: #fff; border: none; padding: 10px 40px; border-radius: 25px; cursor: pointer; transition: background-color 0.3s ease; font-size: 16px;"
+       onclick="document.getElementById('passport-upload').click()">Upload file</button>
+     </div>
 
-            <!-- Third Upload Field (Error Scenario) -->
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background-color: #F8F8F8; border: 1px solid #E0E0E0; border-radius: 8px; margin-bottom: 15px;">
-                <span style="font-size: 16px; font-weight: 500; color: #333;">Proof of Address for main applicant</span>
-                <input type="file" id="address-proof-upload" style="display: none;" onchange="uploadFile('address-proof')">
-                <button id="address-proof-upload-btn" style="background-color: #4285F4; color: #fff; border: none; padding: 10px 40px; border-radius: 25px; cursor: pointer; transition: background-color 0.3s ease; font-size: 16px;" 
-                        onclick="document.getElementById('address-proof-upload').click()">Upload file</button>
-            </div>
-            <!-- Progress Bar for Third File -->
-            <div id="address-proof-progress-bar" style="height: 8px; background-color: #E0E0E0; border-radius: 5px; margin-top: 10px; margin-bottom: 10px; overflow: hidden; position: relative; width: 100%; display: none;">
-                <div id="address-proof-progress-fill" style="height: 100%; background-color: #4A90E2; width: 100%; transition: width 5s ease;"></div>
-            </div>
-            <!-- Error Message for Third Upload (Visible only on failure) -->
-            <div id="address-proof-error-message" style="display: none; color: #FF0000; margin-top: 10px;">File incorrect. This is not a valid proof of address. Please upload the correct file.</div>
-          </div>
-          </div> 
-          <div class="text-end" style="margin-bottom: 20px; margin-right: 30px; padding-bottom: 30px;">
-            <button type="button" class="btn btn-primary" 
-                    style="background-color: #4285F4; border: none; padding: 10px 20px; font-size: 16px; font-family: 'Inter', sans-serif; 
-                    border-radius: 50px; width: 287px; height: 44px; text-align: center; transition: background-color 0.3s ease;"
-                    onmouseover="this.style.backgroundColor='#2a6ad7';" 
-                    onmouseout="this.style.backgroundColor='#4285F4';"
-                    onclick="goToNextPage()">
-              Continue
-            </button>
-          </div>
-    </div>
 
-    <!-- Title Section with Underline for "Form controls" -->
-<div class="card" id="additional-information-section" style="border-radius: 8px; border: 1px solid #DDDDDD; padding-top: 0px; display: none;">
-    <div class="card-header" style="padding-bottom: 10px; border-bottom: 1px solid #E0E0E0; width: 100%;">
-      <h5 style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; color: #333;  padding-right: 30px;">
-        Oops! your visa forms require some additional information not available on any documents we are able to collect.
-      </h5>
-    </div>          
-  
-    <div class="card-body margin-top: 20px;">
-      <!-- Row 1: Part 1, Questions 5-6 -->
-      <div class="row">
-        <div class="col-md-6">
-          <div class="mb-3">
-            <label class="form-label" for="part1-5">Are you a nonprofit organization that is organized as tax-exempt or a governmental research organization?</label>
-            <select class="form-control" id="part1-5" name="part1-5">
-              <option value="" disabled selected>Select</option>
-              <option value="yes">Yes</option>
-              <option value="no">No</option>
-            </select>
-          </div>
-        </div>
-    
-        <div class="col-md-6">
-          <div class="mb-3">
-            <label class="form-label" for="part1-6">Do you currently employ 25 or fewer full-time equivalent employees in the United States, including affiliates and subsidiaries?</label>
-            <select class="form-control" id="part1-6" name="part1-6">
-              <option value="" disabled selected>Select</option>
-              <option value="yes">Yes</option>
-              <option value="no">No</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    
-      <!-- Row 2: Part 1, Questions 7-8 -->
-      <div class="row">
-        <div class="col-md-6">
-          <div class="mb-3">
-            <label class="form-label" for="part1-7">Do you have a U.S. Social Security Number?</label>
-            <select class="form-control" id="part1-7" name="part1-7">
-              <option value="" disabled selected>Select</option>
-              <option value="yes">Yes (Provide SSN)</option>
-              <option value="no">No</option>
-            </select>
-          </div>
-        </div>
-    
-        <div class="col-md-6">
-          <div class="mb-3">
-            <label class="form-label" for="part1-8">Do you have a USCIS Online Account Number?</label>
-            <select class="form-control" id="part1-8" name="part1-8">
-              <option value="" disabled selected>Select</option>
-              <option value="yes">Yes (Provide account number)</option>
-              <option value="no">No</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    
-      <!-- Row 3: Part 2, Questions 1a - 2b -->
-      <div class="row">
-        <div class="col-md-6">
-          <div class="mb-3">
-            <label class="form-label" for="part2-1">What category does this petition fall under?</label>
-            <select class="form-control" id="part2-1" name="part2-1">
-              <option value="" disabled selected>Select category</option>
-              <option value="extraordinary_ability">Alien of extraordinary ability</option>
-              <option value="professor_researcher">Outstanding professor or researcher</option>
-              <option value="executive_manager">Multinational executive or manager</option>
-              <option value="advanced_degree">Member of the professions with an advanced degree</option>
-              <option value="skilled_worker">Skilled worker</option>
-              <option value="professional">Professional</option>
-              <option value="other_worker">Other worker</option>
-              <option value="niw">National Interest Waiver (NIW)</option>
-            </select>
-          </div>
-        </div>
-    
-        <div class="col-md-6">
-          <div class="mb-3">
-            <label class="form-label" for="part2-2a">Is this petition an amendment of a previously filed petition?</label>
-            <select class="form-control" id="part2-2a" name="part2-2a">
-              <option value="" disabled selected>Select</option>
-              <option value="yes">Yes (Provide previous petition receipt number)</option>
-              <option value="no">No</option>
-            </select>
-          </div>
-        </div>
-    
-        <div class="col-md-6">
-          <div class="mb-3">
-            <label class="form-label" for="part2-2b">Are you filing for a Schedule A, Group I or II designation?</label>
-            <select class="form-control" id="part2-2b" name="part2-2b">
-              <option value="" disabled selected>Select</option>
-              <option value="yes">Yes</option>
-              <option value="no">No</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    
-      <!-- Row 4: Part 3, Questions 8-9 -->
-      <div class="row">
-        <div class="col-md-6">
-          <div class="mb-3">
-            <label class="form-label" for="part3-8">What is the Alien Registration Number (A-Number) of the person for whom you are filing?</label>
-            <select class="form-control" id="part3-8" name="part3-8">
-              <option value="" disabled selected>Select</option>
-              <option value="provide_anumber">Provide A-Number</option>
-              <option value="no_anumber">No A-Number</option>
-            </select>
-          </div>
-        </div>
-    
-        <div class="col-md-6">
-          <div class="mb-3">
-            <label class="form-label" for="part3-9">Does the person for whom you are filing have a U.S. Social Security Number?</label>
-            <select class="form-control" id="part3-9" name="part3-9">
-              <option value="" disabled selected>Select</option>
-              <option value="yes">Yes (Provide SSN)</option>
-              <option value="no">No</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    
-      <!-- Row 5: Part 4, Questions 1a-1c, 6b -->
-      <div class="row">
-        <div class="col-md-6">
-          <div class="mb-3">
-            <label class="form-label" for="part4-1a-1c">Where will the person apply for a visa?</label>
-            <select class="form-control" id="part4-1a-1c" name="part4-1a-1c">
-              <option value="" disabled selected>Select</option>
-              <option value="consulate_abroad">U.S. Embassy or Consulate abroad (Provide city and country)</option>
-              <option value="adjustment_us">Adjustment of status within the U.S.</option>
-            </select>
-          </div>
-        </div>
-    
-        <div class="col-md-6">
-          <div class="mb-3">
-            <label class="form-label" for="part4-6b">Do you want USCIS to request a duplicate labor certification from the Department of Labor (DOL)?</label>
-            <select class="form-control" id="part4-6b" name="part4-6b">
-              <option value="" disabled selected>Select</option>
-              <option value="yes">Yes</option>
-              <option value="no">No</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    
-      <!-- Row 6: Part 5, Questions 1b and 12 -->
-      <div class="row">
-        <div class="col-md-6">
-          <div class="mb-3">
-            <label class="form-label" for="part5-1b">Are you filing this petition as self or an employer?</label>
-            <select class="form-control" id="part5-1b" name="part5-1b">
-              <option value="" disabled selected>Select</option>
-              <option value="self">Self</option>
-              <option value="employer">Employer</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-        </div>
-    
-        <div class="col-md-6">
-          <div class="mb-3">
-            <label class="form-label" for="part5-12">What is your annual income?</label>
-            <input type="number" class="form-control" id="part5-12" name="part5-12" placeholder="Enter annual income">
-          </div>
-        </div>
-      </div>
-    
-        <!-- Part 7: Spouse or Child Information -->
-  <div class="row">
-    <!-- Part 7: Question 2 -->
-    <div class="col-md-6">
-      <div class="mb-3">
-        <label class="form-label" for="part7-2">Is the spouse or child of the person applying for an adjustment of status or visa?</label>
-        <select class="form-control" id="part7-2" name="part7-2">
-          <option value="" disabled selected>Select</option>
-          <option value="yes">Yes (Provide details)</option>
-          <option value="no">No</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- Part 7: Question 4 -->
-    <div class="col-md-6">
-      <div class="mb-3">
-        <label class="form-label" for="part7-4">Additional information about the spouse or child (Optional):</label>
-        <textarea class="form-control" id="part7-4" name="part7-4" rows="3" placeholder="Provide additional information"></textarea>
-      </div>
-    </div>
-
-    <!-- Part 7: Question 5 -->
-    <div class="col-md-6">
-      <div class="mb-3">
-        <label class="form-label" for="part7-5">Provide any additional information about the spouse or child’s visa or adjustment of status:</label>
-        <textarea class="form-control" id="part7-5" name="part7-5" rows="3" placeholder="Provide additional information"></textarea>
-      </div>
-    </div>
-
-    <!-- Part 7: Question 6 -->
-    <div class="col-md-6">
-      <div class="mb-3">
-        <label class="form-label" for="part7-6">Is there any other additional information about the spouse or child?</label>
-        <textarea class="form-control" id="part7-6" name="part7-6" rows="3" placeholder="Provide additional information"></textarea>
-      </div>
-    </div>
-
-    <!-- Part 7: Question 10 -->
-    <div class="col-md-6">
-      <div class="mb-3">
-        <label class="form-label" for="part7-10">Are there any other details about the spouse or child’s visa or adjustment of status that you need to mention?</label>
-        <textarea class="form-control" id="part7-10" name="part7-10" rows="3" placeholder="Provide additional details"></textarea>
-      </div>
-    </div>
-
-    <!-- Part 7: Question 11 -->
-    <div class="col-md-6">
-      <div class="mb-3">
-        <label class="form-label" for="part7-11">Have any petitions for the spouse or child been filed in the past?</label>
-        <select class="form-control" id="part7-11" name="part7-11">
-          <option value="" disabled selected>Select</option>
-          <option value="yes">Yes</option>
-          <option value="no">No</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- Part 7: Question 12 -->
-    <div class="col-md-6">
-      <div class="mb-3">
-        <label class="form-label" for="part7-12">Provide any other additional information about the spouse or child:</label>
-        <textarea class="form-control" id="part7-12" name="part7-12" rows="3" placeholder="Provide additional information"></textarea>
-      </div>
-    </div>
-  </div>
-
-  <!-- Part 9: Request for Additional Evidence -->
-  <div class="row">
-    <!-- Part 9: Question 2 -->
-    <div class="col-md-6">
-      <div class="mb-3">
-        <label class="form-label" for="part9-2">Are you requesting additional evidence or details for this petition?</label>
-        <select class="form-control" id="part9-2" name="part9-2">
-          <option value="" disabled selected>Select</option>
-          <option value="yes">Yes (Provide additional details)</option>
-          <option value="no">No</option>
-        </select>
-      </div>
-    </div>
-  </div>
-
-  <!-- Part 10: Additional Supporting Documentation -->
-  <div class="row">
-    <!-- Part 10: Question 2 -->
-    <div class="col-md-6">
-      <div class="mb-3">
-        <label class="form-label" for="part10-2">Do you need to provide any additional supporting documentation?</label>
-        <select class="form-control" id="part10-2" name="part10-2">
-          <option value="" disabled selected>Select</option>
-          <option value="yes">Yes (Specify the documents)</option>
-          <option value="no">No</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- Part 10: Questions 3-7 -->
-    <div class="col-md-6">
-      <div class="mb-3">
-        <label class="form-label" for="part10-3-7">Are there any further remarks or clarifications you would like to provide for this petition?</label>
-        <select class="form-control" id="part10-3-7" name="part10-3-7">
-          <option value="" disabled selected>Select</option>
-          <option value="yes">Yes (Specify the remarks)</option>
-          <option value="no">No</option>
-        </select>
-      </div>
-    </div>
-  </div>
+<!-- Progress Bar for Passport Upload -->
+<div id="passport-progress-bar" style="height: 8px; background-color: #E0E0E0; border-radius: 5px; margin-top: 10px; margin-bottom: 10px; overflow: hidden; position: relative; width: 100%; display: none;">
+ <div id="passport-progress-fill" style="height: 100%; background-color: #4A90E2; width: 0%; transition: width 2s ease;"></div>
 </div>
 
-    
 
-    
-      <!-- Continue Button -->
-       <!-- Back Button -->
- <!-- Container for the Buttons -->
+   <!-- Passport data page of spouse (if any) -->
+   <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background-color: #F8F8F8; border: 1px solid #E0E0E0; border-radius: 8px; margin-bottom: 15px;">
+     <span id="spouse-passport-file-label" style="font-size: 16px; font-weight: 500; color: #333;">Passport data page of spouse (if any)</span>
+     <input type="file" id="spouse-passport-upload" style="display: none;" onchange="uploadFile('spouse-passport')">
+     <button id="spouse-passport-upload-btn" style="background-color: #4285F4; color: #fff; border: none; padding: 10px 40px; border-radius: 25px; cursor: pointer; transition: background-color 0.3s ease; font-size: 16px;"
+     onclick="document.getElementById('spouse-passport-upload').click()">Upload file</button>
+</div>
+
+
+<!-- Progress Bar for Spouse Passport Upload -->
+<div id="spouse-passport-progress-bar" style="height: 8px; background-color: #E0E0E0; border-radius: 5px; margin-top: 10px; margin-bottom: 10px; overflow: hidden; position: relative; width: 100%; display: none;">
+ <div id="spouse-passport-progress-fill" style="height: 100%; background-color: #4A90E2; width: 0%; transition: width 2s ease;"></div>
+</div>
+
+
+   <!-- Passport data page of children (if any) -->
+   <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background-color: #F8F8F8; border: 1px solid #E0E0E0; border-radius: 8px; margin-bottom: 15px;">
+     <span id="children-passport-file-label" style="font-size: 16px; font-weight: 500; color: #333;">Passport data page of children (if any)</span>
+     <input type="file" id="children-passport-upload" style="display: none;" onchange="uploadFile('children-passport')">
+     <button id="children-passport-upload-btn" style="background-color: #4285F4; color: #fff; border: none; padding: 10px 40px; border-radius: 25px; cursor: pointer; transition: background-color 0.3s ease; font-size: 16px;"
+     onclick="document.getElementById('children-passport-upload').click()">Upload file</button>
+</div>
+<!-- Progress Bar for Children Passport Upload -->
+<div id="children-passport-progress-bar" style="height: 8px; background-color: #E0E0E0; border-radius: 5px; margin-top: 10px; margin-bottom: 10px; overflow: hidden; position: relative; width: 100%; display: none;">
+ <div id="children-passport-progress-fill" style="height: 100%; background-color: #4A90E2; width: 0%; transition: width 2s ease;"></div>
+</div>
+
+
+           <!-- I-94 for main applicant -->
+           <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background-color: #F8F8F8; border: 1px solid #E0E0E0; border-radius: 8px; margin-bottom: 15px;">
+             <span id="i94-file-label" style="font-size: 16px; font-weight: 500; color: #333;">Form I-94 for main applicant</span>
+             <input type="file" id="i94-upload" style="display: none;" onchange="uploadFile('i94')">
+             <button id="i94-upload-btn" style="background-color: #4285F4; color: #fff; border: none; padding: 10px 40px; border-radius: 25px; cursor: pointer; transition: background-color 0.3s ease; font-size: 16px;"
+             onclick="document.getElementById('i94-upload').click()">Upload file</button>
+           </div>
+
+
+           <!-- Progress Bar for I-94 Upload -->
+           <div id="i94-progress-bar" style="height: 8px; background-color: #E0E0E0; border-radius: 5px; margin-top: 10px; margin-bottom: 10px; overflow: hidden; position: relative; width: 100%; display: none;">
+             <div id="i94-progress-fill" style="height: 100%; background-color: #4A90E2; width: 0%; transition: width 2s ease;"></div>
+           </div>
+   <!-- CV and Resume -->
+   <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background-color: #F8F8F8; border: 1px solid #E0E0E0; border-radius: 8px; margin-bottom: 15px;">
+     <span id="cv-resume-file-label" style="font-size: 16px; font-weight: 500; color: #333;">CV and Resume</span>
+     <input type="file" id="cv-resume-upload" style="display: none;" onchange="uploadFile('cv-resume')">
+     <button id="cv-resume-upload-btn" style="background-color: #4285F4; color: #fff; border: none; padding: 10px 40px; border-radius: 25px; cursor: pointer; transition: background-color 0.3s ease; font-size: 16px;"
+     onclick="document.getElementById('cv-resume-upload').click()">Upload file</button>
+</div>
+<!-- Progress Bar for CV and Resume Upload -->
+<div id="cv-resume-progress-bar" style="height: 8px; background-color: #E0E0E0; border-radius: 5px; margin-top: 10px; margin-bottom: 10px; overflow: hidden; position: relative; width: 100%; display: none;">
+ <div id="cv-resume-progress-fill" style="height: 100%; background-color: #4A90E2; width: 0%; transition: width 2s ease;"></div>
+</div>
+           <!-- Third Upload Field (Error Scenario) -->
+           <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background-color: #F8F8F8; border: 1px solid #E0E0E0; border-radius: 8px; margin-bottom: 15px;">
+               <span style="font-size: 16px; font-weight: 500; color: #333;">Proof of Address for main applicant</span>
+               <input type="file" id="address-proof-upload" style="display: none;" onchange="uploadFile('address-proof')">
+               <button id="address-proof-upload-btn" style="background-color: #4285F4; color: #fff; border: none; padding: 10px 40px; border-radius: 25px; cursor: pointer; transition: background-color 0.3s ease; font-size: 16px;"
+                       onclick="document.getElementById('address-proof-upload').click()">Upload file</button>
+           </div>
+           <!-- Progress Bar for Third File -->
+           <div id="address-proof-progress-bar" style="height: 8px; background-color: #E0E0E0; border-radius: 5px; margin-top: 10px; margin-bottom: 10px; overflow: hidden; position: relative; width: 100%; display: none;">
+               <div id="address-proof-progress-fill" style="height: 100%; background-color: #4A90E2; width: 100%; transition: width 5s ease;"></div>
+           </div>
+           <!-- Error Message for Third Upload (Visible only on failure) -->
+           <div id="address-proof-error-message" style="display: none; color: #FF0000; margin-top: 10px;">File incorrect. This is not a valid proof of address. Please upload the correct file.</div>
+         </div>
+         </div>
+         <div class="text-end" style="margin-bottom: 20px; margin-right: 30px; padding-bottom: 30px;">
+           <button type="button" class="btn btn-primary"
+                   style="background-color: #4285F4; border: none; padding: 10px 20px; font-size: 16px; font-family: 'Inter', sans-serif;
+                   border-radius: 50px; width: 287px; height: 44px; text-align: center; transition: background-color 0.3s ease;"
+                   onmouseover="this.style.backgroundColor='#2a6ad7';"
+                   onmouseout="this.style.backgroundColor='#4285F4';"
+                   onclick="goToNextPage()">
+             Continue
+           </button>
+         </div>
+         </div>
+
+
+   <!-- Title Section with Underline for "Form controls" -->
+   <div class="card" id="additional-information-section" style="border-radius: 8px; border: 1px solid #DDDDDD; padding-top: 0px; display: none;">
+     <div class="card-header" style="padding-bottom: 10px; border-bottom: 1px solid #E0E0E0; width: 100%;">
+       <h5 style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; color: #333;">
+         Oops! your visa forms require some additional information not available on any documents we are able to collect.
+       </h5>
+     </div>       
+  
+     <div class="card-body">
+       <!-- Row 1: Part 1, Questions 5-6 -->
+       <div class="row">
+         <div class="col-md-6">
+           <div class="mb-3">
+             <label class="form-label" for="part1-5">Are you a nonprofit organization that is organized as tax-exempt or a governmental research organization?</label>
+             <select class="form-control" id="part1-5" name="part1-5">
+               <option value="" disabled selected>Select</option>
+               <option value="yes">Yes</option>
+               <option value="no">No</option>
+             </select>
+           </div>
+         </div>
+  
+         <div class="col-md-6">
+           <div class="mb-3">
+             <label class="form-label" for="part1-6">Do you currently employ 25 or fewer full-time equivalent employees in the United States, including affiliates and subsidiaries?</label>
+             <select class="form-control" id="part1-6" name="part1-6">
+               <option value="" disabled selected>Select</option>
+               <option value="yes">Yes</option>
+               <option value="no">No</option>
+             </select>
+           </div>
+         </div>
+       </div>
+  
+       <!-- Row 2: Part 1, Questions 7-8 -->
+       <div class="row">
+         <div class="col-md-6">
+           <div class="mb-3">
+             <label class="form-label" for="part1-7">Do you have a U.S. Social Security Number?</label>
+             <select class="form-control" id="part1-7" name="part1-7">
+               <option value="" disabled selected>Select</option>
+               <option value="yes">Yes (Provide SSN)</option>
+               <option value="no">No</option>
+             </select>
+           </div>
+         </div>
+  
+         <div class="col-md-6">
+           <div class="mb-3">
+             <label class="form-label" for="part1-8">Do you have a USCIS Online Account Number?</label>
+             <select class="form-control" id="part1-8" name="part1-8">
+               <option value="" disabled selected>Select</option>
+               <option value="yes">Yes (Provide account number)</option>
+               <option value="no">No</option>
+             </select>
+           </div>
+         </div>
+       </div>
+  
+       <!-- Row 3: Part 2, Questions 1a - 2b -->
+       <div class="row">
+         <div class="col-md-6">
+           <div class="mb-3">
+             <label class="form-label" for="part2-1">What category does this petition fall under?</label>
+             <select class="form-control" id="part2-1" name="part2-1">
+               <option value="" disabled selected>Select category</option>
+               <option value="extraordinary_ability">Alien of extraordinary ability</option>
+               <option value="professor_researcher">Outstanding professor or researcher</option>
+               <option value="executive_manager">Multinational executive or manager</option>
+               <option value="advanced_degree">Member of the professions with an advanced degree</option>
+               <option value="skilled_worker">Skilled worker</option>
+               <option value="professional">Professional</option>
+               <option value="other_worker">Other worker</option>
+               <option value="niw">National Interest Waiver (NIW)</option>
+             </select>
+           </div>
+         </div>
+  
+         <div class="col-md-6">
+           <div class="mb-3">
+             <label class="form-label" for="part2-2a">Is this petition an amendment of a previously filed petition?</label>
+             <select class="form-control" id="part2-2a" name="part2-2a">
+               <option value="" disabled selected>Select</option>
+               <option value="yes">Yes (Provide previous petition receipt number)</option>
+               <option value="no">No</option>
+             </select>
+           </div>
+         </div>
+       </div>
+  
+       <!-- Row 4: Part 3, Questions 8-9 -->
+       <div class="row">
+         <div class="col-md-6">
+           <div class="mb-3">
+             <label class="form-label" for="part3-8">What is the Alien Registration Number (A-Number) of the person for whom you are filing?</label>
+             <select class="form-control" id="part3-8" name="part3-8">
+               <option value="" disabled selected>Select</option>
+               <option value="provide_anumber">Provide A-Number</option>
+               <option value="no_anumber">No A-Number</option>
+             </select>
+           </div>
+         </div>
+  
+         <div class="col-md-6">
+           <div class="mb-3">
+             <label class="form-label" for="part3-9">Does the person for whom you are filing have a U.S. Social Security Number?</label>
+             <select class="form-control" id="part3-9" name="part3-9">
+               <option value="" disabled selected>Select</option>
+               <option value="yes">Yes (Provide SSN)</option>
+               <option value="no">No</option>
+             </select>
+           </div>
+         </div>
+       </div>
+  
+       <!-- Row 5: Part 4, Questions 1a-1c, 6b -->
+       <div class="row">
+         <div class="col-md-6">
+           <div class="mb-3">
+             <label class="form-label" for="part4-1a-1c">Where will the person apply for a visa?</label>
+             <select class="form-control" id="part4-1a-1c" name="part4-1a-1c">
+               <option value="" disabled selected>Select</option>
+               <option value="consulate_abroad">U.S. Embassy or Consulate abroad (Provide city and country)</option>
+               <option value="adjustment_us">Adjustment of status within the U.S.</option>
+             </select>
+           </div>
+         </div>
+  
+         <div class="col-md-6">
+           <div class="mb-3">
+             <label class="form-label" for="part4-6b">Do you want USCIS to request a duplicate labor certification from the Department of Labor (DOL)?</label>
+             <select class="form-control" id="part4-6b" name="part4-6b">
+               <option value="" disabled selected>Select</option>
+               <option value="yes">Yes</option>
+               <option value="no">No</option>
+             </select>
+           </div>
+         </div>
+       </div>
+  
+       <!-- Row 6: Part 5, Questions 1b and 12 -->
+       <div class="row">
+         <div class="col-md-6">
+           <div class="mb-3">
+             <label class="form-label" for="part5-1b">Are you filing this petition as self or an employer?</label>
+             <select class="form-control" id="part5-1b" name="part5-1b">
+               <option value="" disabled selected>Select</option>
+               <option value="self">Self</option>
+               <option value="employer">Employer</option>
+               <option value="other">Other</option>
+             </select>
+           </div>
+         </div>
+  
+         <div class="col-md-6">
+           <div class="mb-3">
+             <label class="form-label" for="part5-12">What is your annual income?</label>
+             <input type="number" class="form-control" id="part5-12" name="part5-12" placeholder="Enter annual income">
+           </div>
+         </div>
+       </div>
+  
+       <!-- Part 7: Spouse or Child Information -->
+       <div class="row">
+         <div class="col-md-6">
+           <div class="mb-3">
+             <label class="form-label" for="part7-2">Is the spouse or child of the person applying for an adjustment of status or visa?</label>
+             <select class="form-control" id="part7-2" name="part7-2">
+               <option value="" disabled selected>Select</option>
+               <option value="yes">Yes (Provide details)</option>
+               <option value="no">No</option>
+             </select>
+           </div>
+         </div>
+  
+         <div class="col-md-6">
+           <div class="mb-3">
+             <label class="form-label" for="part7-4">Additional information about the spouse or child (Optional):</label>
+             <textarea class="form-control" id="part7-4" name="part7-4" rows="3" placeholder="Provide additional information"></textarea>
+           </div>
+         </div>
+  
+         <div class="col-md-6">
+           <div class="mb-3">
+             <label class="form-label" for="part7-5">Provide any additional information about the spouse or child’s visa or adjustment of status:</label>
+             <textarea class="form-control" id="part7-5" name="part7-5" rows="3" placeholder="Provide additional information"></textarea>
+           </div>
+         </div>
+  
+         <div class="col-md-6">
+           <div class="mb-3">
+             <label class="form-label" for="part7-6">Is there any other additional information about the spouse or child?</label>
+             <textarea class="form-control" id="part7-6" name="part7-6" rows="3" placeholder="Provide additional information"></textarea>
+           </div>
+         </div>
+  
+         <div class="col-md-6">
+           <div class="mb-3">
+             <label class="form-label" for="part7-10">Are there any other details about the spouse or child’s visa or adjustment of status that you need to mention?</label>
+             <textarea class="form-control" id="part7-10" name="part7-10" rows="3" placeholder="Provide additional details"></textarea>
+           </div>
+         </div>
+  
+         <div class="col-md-6">
+           <div class="mb-3">
+             <label class="form-label" for="part7-11">Have any petitions for the spouse or child been filed in the past?</label>
+             <select class="form-control" id="part7-11" name="part7-11">
+               <option value="" disabled selected>Select</option>
+               <option value="yes">Yes</option>
+               <option value="no">No</option>
+             </select>
+           </div>
+         </div>
+         <div class="col-md-6">
+           <div class="mb-3">
+             <label class="form-label" for="part10-3-7">Are there any further remarks or clarifications you would like to provide for this petition?</label>
+             <select class="form-control" id="part10-3-7" name="part10-3-7">
+               <option value="" disabled selected>Select</option>
+               <option value="yes">Yes (Specify the remarks)</option>
+               <option value="no">No</option>
+             </select>
+           </div>
+         </div>
+       </div>
+</div>
+
+
+  
+
+
+  
+     <!-- Continue Button -->
+      <!-- Back Button -->
+<!-- Container for the Buttons -->
 <div style="display: flex; justify-content: space-between; align-items: center; margin: 20px 30px; padding-bottom: 30px;">
 
-  <!-- Back Button -->
-  <button type="button" class="btn btn-primary"
-    style="background-color: #E0E0E0; color: #333; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; transition: background-color 0.3s ease; font-size: 16px; width: 287px; height: 44px;" 
-    onmouseover="this.style.backgroundColor='#c7c7c7';"
-    onmouseout="this.style.backgroundColor='#E0E0E0';"
-    onclick="goToPreviousPage()">Back</button>
 
-  <!-- Continue Button -->
-  <a href="/application/form_session.html">
-    <button type="button" class="btn btn-primary" 
-      style="background-color: #4285F4; border: none; padding: 10px 20px; font-size: 16px; font-family: 'Inter', sans-serif; 
-      border-radius: 50px; width: 287px; height: 44px; text-align: center; transition: background-color 0.3s ease;"
-      onmouseover="this.style.backgroundColor='#2a6ad7';" 
-      onmouseout="this.style.backgroundColor='#4285F4';"
-      onclick="goToNextPage()">
-    Continue
-  </button></a>
+ <!-- Back Button -->
+ <button type="button" class="btn btn-primary"
+   style="background-color: #E0E0E0; color: #333; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; transition: background-color 0.3s ease; font-size: 16px; width: 287px; height: 44px;"
+   onmouseover="this.style.backgroundColor='#c7c7c7';"
+   onmouseout="this.style.backgroundColor='#E0E0E0';"
+   onclick="goToPreviousPage()">Back</button>
+
+
+ <!-- Continue Button -->
+ <a href="/application/form_session.html">
+   <button type="button" class="btn btn-primary"
+     style="background-color: #4285F4; border: none; padding: 10px 20px; font-size: 16px; font-family: 'Inter', sans-serif;
+     border-radius: 50px; width: 287px; height: 44px; text-align: center; transition: background-color 0.3s ease;"
+     onmouseover="this.style.backgroundColor='#2a6ad7';"
+     onmouseout="this.style.backgroundColor='#4285F4';"
+     onclick="goToNextPage()">
+   Continue
+ </button></a>
 </div>
 
+
+ </div>
+ </div>
   </div>
-  </div>
-  
-  </div>
-  
-</div>
-<script>
-function uploadFile(fileType) {
-  let progressBarFill, progressBar, fileInfoLabel, uploadButton, errorMessage;
-  
-  if (fileType === 'passport') {
-    progressBarFill = document.getElementById('passport-progress-fill');
-    progressBar = document.getElementById('passport-progress-bar');
-    fileInfoLabel = document.getElementById('passport-file-label');
-    uploadButton = document.getElementById('passport-upload-btn');
-    errorMessage = null;
-
-    // Set the progress bar fill color for the passport upload
-    progressBarFill.style.backgroundColor = '#4CAF50'; // Green color for success
-} else if (fileType === 'birth-cert') {
-    progressBarFill = document.getElementById('birth-cert-progress-fill');
-    progressBar = document.getElementById('birth-cert-progress-bar');
-    fileInfoLabel = null;
-    uploadButton = document.getElementById('birth-cert-upload-btn');
-    errorMessage = document.getElementById('birth-cert-error-message');
-
-    // Set the progress bar fill color for the birth certificate upload
-    progressBarFill.style.backgroundColor = '#FF0000'; // Red color for failure
-} else if (fileType === 'address-proof') {
-    progressBarFill = document.getElementById('address-proof-progress-fill');
-    progressBar = document.getElementById('address-proof-progress-bar');
-    fileInfoLabel = null;
-    uploadButton = document.getElementById('address-proof-upload-btn');
-    errorMessage = document.getElementById('address-proof-error-message');
-
-    // Set the progress bar fill color for the address proof upload
-    progressBarFill.style.backgroundColor = '#FF0000'; // Red color for failure
-}
+ </div>
 
 
-  const fileInput = document.getElementById(`${fileType}-upload`);
-  const file = fileInput.files[0];
-  
-  if (file) {
-    // Show progress bar and start upload
-    progressBar.style.display = 'block';
-    progressBarFill.style.width = '0%';
-
-    // Simulate upload progress
-    setTimeout(() => {
+ <!-- Alert Message -->
+ <div class="alert-message" id="alert-message">
+   <span class="icon">!</span>
+   <span>Please upload Passport data page of main applicant.</span>
+ </div>
+ <script>
+   function uploadFile(fileType) {
+     let progressBarFill, progressBar, fileInfoLabel, uploadButton;
       if (fileType === 'passport') {
-        progressBarFill.style.width = '100%'; // Success for passport
-        fileInfoLabel.textContent = file.name; // Display file name
-        uploadButton.textContent = "Change file"; // Change button to "Change file"
-        uploadButton.style.backgroundColor = '#4CAF50'; // Change button color to green
-      } else if (fileType === 'birth-cert') {
-        progressBarFill.style.width = '50%'; // Fail for birth cert
-        errorMessage.style.display = 'block'; // Show error message
-        setTimeout(() => {
-          errorMessage.style.display = 'none'; // Hide error message after 3 seconds
-        }, 3000);
-      } else if (fileType === 'address-proof') {
-        progressBarFill.style.width = '50%'; // Fail for address proof
-        errorMessage.style.display = 'block'; // Show error message
-        setTimeout(() => {
-          errorMessage.style.display = 'none'; // Hide error message after 3 seconds
-        }, 3000);
-      }
-      progressBar.style.display = 'none'; // Hide progress bar after upload is complete
-    }, 2000);
-  }
-}
-</script>
+       progressBarFill = document.getElementById('passport-progress-fill');
+       progressBar = document.getElementById('passport-progress-bar');
+       fileInfoLabel = document.getElementById('passport-file-label');
+       uploadButton = document.getElementById('passport-upload-btn');
+     } else if (fileType === 'i94') {
+       progressBarFill = document.getElementById('i94-progress-fill');
+       progressBar = document.getElementById('i94-progress-bar');
+       fileInfoLabel = document.getElementById('i94-file-label');
+       uploadButton = document.getElementById('i94-upload-btn');
+     } else if (fileType === 'spouse-passport') {
+       progressBarFill = document.getElementById('spouse-passport-progress-fill');
+       progressBar = document.getElementById('spouse-passport-progress-bar');
+       fileInfoLabel = document.getElementById('spouse-passport-file-label');
+       uploadButton = document.getElementById('spouse-passport-upload-btn');
+     } else if (fileType === 'children-passport') {
+       progressBarFill = document.getElementById('children-passport-progress-fill');
+       progressBar = document.getElementById('children-passport-progress-bar');
+       fileInfoLabel = document.getElementById('children-passport-file-label');
+       uploadButton = document.getElementById('children-passport-upload-btn');
+     }
+      const fileInput = document.getElementById(fileType + '-upload');
+     const file = fileInput.files[0];
+      if (file) {
+       // Show progress bar and start upload
+       progressBar.style.display = 'block';
+       progressBarFill.style.width = '0%';
+        // Simulate upload progress
+       setTimeout(() => {
+         progressBarFill.style.width = '100%'; // Success for all file types
+         if (fileInfoLabel) {
+           fileInfoLabel.textContent = file.name; // Display file name
+         }
+         uploadButton.textContent = "Change file"; // Change button to "Change file"
+         uploadButton.style.backgroundColor = '#4CAF50'; // Change button color to green
+          progressBar.style.display = 'none'; // Hide progress bar after upload is complete
+       }, 2000);
+     }
+   }
+    // Function to move to the next page
+   function goToNextPage() {
+     const passportFile = document.getElementById('passport-upload').files[0];
+      if (!passportFile) {
+       console.log("Passport not uploaded. Showing alert."); // Debug message
+       showAlert();
+       return; // Stop the function if the required file is not uploaded
+     }
+      console.log("Passport uploaded. Proceeding to the next page...");
+      // Proceed to the next page if the file is uploaded
+     document.getElementById('visa-checklist-section').style.display = 'none';
+     const nextSection = document.getElementById('additional-information-section');
+      if (nextSection) {
+       nextSection.style.display = 'block';
+       console.log("Next section displayed successfully.");
+     } else {
+       console.error("Next section (additional-information-section) not found.");
+     }
+      document.getElementById('progress-bar').style.width = '50%';
+     document.getElementById('progress-percentage').innerText = '50%';
+   }
+    // Function to show custom alert message
+   function showAlert() {
+     const alertMessage = document.getElementById('alert-message');
+     alertMessage.style.display = 'flex'; // Show the alert
+     setTimeout(function() {
+       alertMessage.style.display = 'none'; // Hide the alert after 3 seconds
+     }, 3000);
+   }
+    // Function to move to the previous page
+   function goToPreviousPage() {
+     document.getElementById('additional-information-section').style.display = 'none';
+     document.getElementById('visa-checklist-section').style.display = 'block';
+     document.getElementById('progress-bar').style.width = '25%';
+     document.getElementById('progress-percentage').innerText = '25%';
+   }
+    // Ensure alert message is hidden initially
+   document.addEventListener('DOMContentLoaded', function() {
+     const alertMessage = document.getElementById('alert-message');
+     if (alertMessage) {
+       alertMessage.style.display = 'none';
+     }
+   });
+ </script>
+ 
 
-       
-          </div>
-        </div>
-      </div>
-    </div>
 
-    @@include('../layouts/footer-block.html') 
-    @@include('../layouts/footer-js.html')
+   @@include('../layouts/footer-block.html')
+   @@include('../layouts/footer-js.html')
 
-    <script>
-      // Function to move to the next page
-      function goToNextPage() {
-        document.getElementById('visa-checklist-section').style.display = 'none';
-        document.getElementById('additional-information-section').style.display = 'block';
-        document.getElementById('progress-bar').style.width = '50%';
-        document.getElementById('progress-percentage').innerText = '50%';
-      }
 
-      // Function to move to the previous page
-      function goToPreviousPage() {
-        document.getElementById('additional-information-section').style.display = 'none';
-        document.getElementById('visa-checklist-section').style.display = 'block';
-        document.getElementById('progress-bar').style.width = '25%';
-        document.getElementById('progress-percentage').innerText = '25%';
-      }
-    </script>
-  </body>
-  <!-- [Body] end -->
+   <script>
+     // Function to update the checkbox styles when the page loads
+     window.onload = function() {
+       const checkboxes = document.querySelectorAll('.form-check-input');
+  
+       checkboxes.forEach((checkbox) => {
+         // Set the default styles for the checked state
+         if (checkbox.checked) {
+           checkbox.style.backgroundColor = '#4285F4';
+           checkbox.style.borderColor = '#4285F4';
+         }
+       });
+     };
+   </script>
+  
+ </body>
+ <!-- [Body] end -->
 </html>
+
+

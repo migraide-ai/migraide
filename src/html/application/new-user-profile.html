@@ -1,156 +1,194 @@
 <!doctype html>
 <html lang="en">
-  <!-- [Head] start -->
-
-  <head>
-    <link rel="stylesheet" href="../assets/css/plugins/datepicker-bs5.min.css" />
-
-    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
-    @@include('../layouts/head-page-meta.html', {'title': 'Add Product'}) @@include('../layouts/head-css.html')
+ <!-- [Head] start -->
+ <head>
+   <link rel="stylesheet" href="../assets/css/plugins/datepicker-bs5.min.css" />
+   <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
+   @@include('../layouts/head-page-meta.html', {'title': 'Add Product'}) @@include('../layouts/head-css.html')
   
-  </head>
-  <!-- [Head] end -->
-  <!-- [Body] Start -->
+   <style>
+     .alert-message {
+       position: fixed;
+       top: 80px;
+       right: 20px;
+       background-color: #28a745;
+       color: white;
+       padding: 10px 20px;
+       border-radius: 25px;
+       display: none;
+       z-index: 1000;
+       display: flex;
+       align-items: center;
+       gap: 10px;
+       box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+     }
+     .alert-message .icon {
+       width: 24px;
+       height: 24px;
+       background-color: white;
+       color: #28a745;
+       border-radius: 50%;
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       font-weight: bold;
+     }
+     .check-icon {
+       width: 24px;
+       height: 24px;
+       background: white;
+       border-radius: 50%;
+       display: flex;
+       align-items: center;
+       justify-content: center;
+     }
+     .check-icon::before {
+       content: '\2713';
+       color: #28a745;
+       font-size: 18px;
+       font-weight: bold;
+     }
+   </style>
+ </head>
+ <!-- [Head] end -->
+ <!-- [Body] Start -->
+ <body @@bodySetup>
+   @@include('../layouts/layout-vertical.html')
+   <!-- [ Main Content ] start -->
+   <div class="pc-container">
+     <div class="pc-content">
+       <div class="card-header" style="padding-bottom: 20px; position: relative; display: flex; justify-content: space-between; align-items: center;">
+         <h3>Client Profile Setup</h3>
+       </div>
+       <!-- Progress bar placed at the top of both pages -->
+       <div class="card" id="additional-information-section" style="border-radius: 8px; border: 1px solid #DDDDDD; padding-top: 0px; ">
+         <!-- Title Section with Underline for "Form controls" -->
+         <div class="card-header" style="padding-bottom: 10px; border-bottom: 1px solid #E0E0E0; width: 100%;">
+           <h5 style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; color: #333;  padding-right: 30px;">
+             Add a client to initialize their visa form filling session.            </h5>
+         </div>         
+       <!-- [ Main Content ] start -->
+       <div class="row">
+         <!-- [ sample-page ] start -->
+         <div class="col-sm-12">
+             <div class="card-body">
+               <form id="clientForm">
+                 <div class="row">
+                   <div class="col-md-12" style="display: flex; gap: 20px;">
+                     <div class="mb-3" style="width: 33%;">
+                       <label class="form-label">First Name</label>
+                       <input type="text" class="form-control" id="firstName" placeholder="Enter First Name" pattern="[A-Za-z]+" title="Only letters are allowed" required />
+                     </div>
+                     <div class="mb-3" style="width: 33%;">
+                       <label class="form-label">Middle Name(s)</label>
+                       <input type="text" class="form-control" id="middleName" placeholder="Enter Middle Name" pattern="[A-Za-z]+" title="Only letters are allowed" required />
+                     </div>
+                     <div class="mb-3" style="width: 33%;">
+                       <label class="form-label">Last Name</label>
+                       <input type="text" class="form-control" id="lastName" placeholder="Enter Last Name" pattern="[A-Za-z]+" title="Only letters are allowed" required />
+                     </div>
+                   </div>
+               </div>
+               <div class="row">
+                 <div class="col-md-12" style="display: flex; gap: 20px;">
+                   <div class="mb-3" style="width: 33%;">
+                     <label class="form-label">Email Address</label>
+                     <input type="email" class="form-control" id="email" placeholder="Enter Client's Email" required />
+                   </div>
+                   <div class="mb-3" style="width:33%">
+                     <label class="form-label">Client Phone Number</label>
+                     <input type="tel" class="form-control" id="phoneNumber" placeholder="Enter Client's Phone" pattern="[0-9]{10,15}" title="Only numbers are allowed, between 10 to 15 digits" required />
+                   </div>
+                   <div class="mb-3" style="width:33%">
+                       <label class="form-label">Date of Birth</label>
+                       <div>
+                       <input type="date" class="form-control" id="dob" placeholder="Enter Client DOB" required />
+                       </div>
+                     </div>
+                 </div>
+                   <div class="col-md-12" style="display: flex; gap: 20px;">
+                     <div class="mb-3" style="width: 33%;">
+                       <label class="form-label">Client's Profession</label>
+                       <input type="text" class="form-control" id="profession" placeholder="Enter Client's Profession" pattern="[A-Za-z ]+" title="Only letters and spaces are allowed" required />
+                     </div>
+                     <div class="mb-3" style="width:33%">
+                       <label class="form-label">Visa Services</label>
+                       <select class="form-select" id="visaServices" required>
+                         <option value="">Select a service</option>
+                         <option>EB1</option>
+                         <option>EB2</option>
+                         <option>EB1 & EB2</option>
+                       </select>
+                     </div>
+                     <div class="mb-3" style="width:33%">
+                       <label class="form-label">Client Gender</label>
+                       <select class="form-select" id="gender" required>
+                         <option value="">Select gender</option>
+                         <option>Male</option>
+                         <option>Female</option>
+                       </select>
+                     </div>
+                   </div>
+             </div>
+                 <div class="text-end btn-page mt-4">
+                   <button class="btn btn-outline-secondary" id="cancelButton" type="button">Cancel</button>
+                   <button id="initializeButton" class="btn btn-primary" type="button" style="width: 287px; height: 44px;">Initialize Form Filling</button>
+                 </div>
+               </form>
+             </div>
+         </div>
+         <!-- [ sample-page ] end -->
+       </div>
+       <!-- [ Main Content ] end -->
+     </div>
+   </div>
+   <!-- [ Main Content ] end -->
+   @@include('../layouts/footer-block.html') @@include('../layouts/footer-js.html') @@include('../layouts/customizer.html')
+   <script src="../assets/js/plugins/datepicker-full.min.js"></script>
+   <script>
+     // Ensure DOM elements are loaded before adding event listeners
+     document.addEventListener('DOMContentLoaded', function() {
+       // Form validation and submission
+       document.getElementById('initializeButton').addEventListener('click', function() {
+         // Perform additional validation if needed
+         const formFields = ['firstName', 'middleName', 'lastName', 'email', 'phoneNumber', 'dob', 'profession', 'visaServices', 'gender'];
+         let valid = true;
 
-  <body @@bodySetup>
-    @@include('../layouts/layout-vertical.html')
 
-    <!-- [ Main Content ] start -->
-    <div class="pc-container">
-      <div class="pc-content">
-        <div class="card-header" style="padding-bottom: 20px;">
-          <h3>Client Profile Setup</h3>
-        </div>
-        <!-- Progress bar placed at the top of both pages -->
+         formFields.forEach(function(fieldId) {
+           const field = document.getElementById(fieldId);
+           if (!field.checkValidity()) {
+             valid = false;
+             field.reportValidity();
+           }
+         });
 
-        <div class="card" id="additional-information-section" style="border-radius: 8px; border: 1px solid #DDDDDD; padding-top: 0px; ">
-  
-          <!-- Title Section with Underline for "Form controls" -->
-          <div class="card-header" style="padding-bottom: 10px; border-bottom: 1px solid #E0E0E0; width: 100%;">
-            <h5 style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; color: #333;  padding-right: 30px;">
-              Add a client to initialize their visa form filling session.            </h5>
-          </div>          
-    
-        <!-- [ Main Content ] start -->
-        <div class="row">
-          <!-- [ sample-page ] start -->
-          <div class="col-sm-12">
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-md-12" style="display: flex; gap: 20px;">
-                    <div class="mb-3" style="width: 33%;">
-                      <label class="form-label">First Name</label>
-                      <input type="text" class="form-control" placeholder="Enter First Name" />
-                    </div>
-                    <div class="mb-3" style="width: 33%;">
-                      <label class="form-label">Middle Name(s)</label>
-                      <input type="text" class="form-control" placeholder="Enter Middle Name" />
-                    </div>
-                    <div class="mb-3" style="width: 33%;">
-                      <label class="form-label">Last Name</label>
-                      <input type="text" class="form-control" placeholder="Enter Last Name" />
-                    </div>
-                  </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12" style="display: flex; gap: 20px;">
-                  <div class="mb-3" style="width: 33%;">
-                    <label class="form-label">Email Address</label>
-                    <input type="text" class="form-control" placeholder="Enter Client's Email" />
-                  </div>
-                  <div class="mb-3" style="width:33%">
-                    <label class="form-label">Client Phone Number</label>
-                    <input type="text" class="form-control" placeholder="Enter Client's Phone" />
-                  </div>
-                  <div class="mb-3" style="width:33%">
-                      <label class="form-label">Date of Birth</label>
-                      <div>
-                      <input type="text" class="form-control" id="pc-datepicker-1" placeholder="Enter Client DOB" />
-                      </div>
-                    </div>
-                </div>
-                  <div class="col-md-12" style="display: flex; gap: 20px;">
-                    <div class="mb-3" style="width: 33%;">
-                      <label class="form-label">Client's Profession</label>
-                      <input type="text" class="form-control" placeholder="Enter Client's Profession" />
-                    </div>
-                    <div class="mb-3" style="width:33%">
-                      <label class="form-label">Visa Services</label>
-                      <select class="form-select">
-                        <option>EB1</option>
-                        <option>EB2</option>
-                        <option>EB1 & EB2</option>
-                      </select>
-                    </div>
-                    <div class="mb-3" style="width:33%">
-                      <label class="form-label">Client Gender</label>
-                      <select class="form-select">
-                        <option>Male</option>
-                        <option>Female</option>
-                      </select>
-                    </div>
-                  </div>
-            </div>
-                
-                    <!-- <div class="mb-3">
-                      <label class="form-label">Visa Specialization</label>
-                      <select class="form-select">
-                        <option>EB1</option>
-                        <option>EB2</option>
-                      </select>
-                    </div> -->
-                    
 
-                
-                    <!-- <div class="mb-3"></div>
-                      <label class="form-label">Summary of Business Activities</label>
-                      <input type="text" class="form-control" placeholder="Enter Business Address" />
-                    </div> -->
-                    
-                    <!-- <div class="mb-3">
-                      <label class="form-label">Price</label>
-                      <select class="form-select">
-                        <option>$ 100</option>
-                        <option>$ 200</option>
-                        <option>$ 300</option>
-                        <option>$ 400</option>
-                        <option>$ 500</option>
-                      </select>
-                    </div> -->
+         if (valid) {
+           showAlert();
+         }
+       });
 
-                    <!-- <div class="mb-3"></div>
-                      <label class="form-label">Summary of Business Activities</label>
-                      <input type="text" class="form-control" placeholder="Enter Business Address" />
-                    </div> -->
-                    <div class="text-end btn-page mt-4">
 
-                      <button class="btn btn-outline-secondary">Cancel</button>
-                    <a href="/application/client-list.html">
-                      <button class="btn btn-primary" style="width: 287px; height: 44px;">Initialize Form Filling</button></a>
-                    </div>
-                  </div>
-                </div>
-            </div>
-          </div>
-          <!-- [ sample-page ] end -->
-        </div>
-        <!-- [ Main Content ] end -->
-      </div>
-    </div>
-    
-    <!-- [ Main Content ] end -->
-    @@include('../layouts/footer-block.html') @@include('../layouts/footer-js.html') @@include('../layouts/customizer.html')
-    <script src="../assets/js/plugins/datepicker-full.min.js"></script>
-
-    <script>
-      // minimum setup
-      (function () {
-        const d_week = new Datepicker(document.querySelector('#pc-datepicker-1'), {
-          buttonClass: 'btn'
-        });
-      })();
-      </script>
-  </body>
-  <!-- [Body] end -->
+       // Show alert message and redirect
+       function showAlert() {
+         let alertMessage = document.querySelector('.alert-message');
+         if (!alertMessage) {
+           alertMessage = document.createElement('div');
+           alertMessage.className = 'alert-message';
+           alertMessage.innerHTML = '<span class="check-icon"></span> Client added successfully';
+           document.body.appendChild(alertMessage);
+         }
+         alertMessage.style.display = 'flex';
+         setTimeout(function () {
+           alertMessage.style.display = 'none';
+           // Redirect after displaying alert
+           window.location.href = '/application/client-list.html'; // Changed to window.location.href
+         }, 1000);
+       }
+     });
+   </script>
+ </body>
+ <!-- [Body] end -->
 </html>

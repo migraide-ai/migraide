@@ -129,14 +129,15 @@
             <h5 style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #333; padding-right: 30px;">
               Visa Form Completed Successfully</h5>            
             <p style="font-size: 14px; color: #666; margin-top: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-              A copy of the form(s) have been sent to migraide.ai@gmail.com
+              A copy of the form(s) have been sent to your registered email.
             </p>
             <div class="success-container" style="margin-top: -50px;">
               <i class="fas fa-check-circle" style="font-size: 80px; color:#39b54a;"></i>
                <div class="success-message">
                  <p style="font-size: 14px;">All documents now destroyed and deleted from our database.</p>
                </div>
-               <button class="new-application-btn" onclick="startNewApplication()">New Application</button>
+               <a href="/dashboard/index.html">
+               <button class="new-application-btn" style="width:287px; height:44px;">Finish</button></a>
              </div>
           </div>
 
@@ -145,12 +146,12 @@
       </div>
     </div>
 
-    <script>
+    <!-- <script>
       function startNewApplication() {
         // Logic to start a new application, redirect to form page, etc.
-        window.location.href = '/new-application-page'; // Redirect to the appropriate page
+        window.location.href = 'index.html'; // Redirect to the appropriate page
       }
-    </script>
+    </script> -->
     
     @@include('../layouts/footer-block.html') 
     @@include('../layouts/footer-js.html')
