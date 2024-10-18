@@ -1,0 +1,6 @@
+convert in file backend integration to register.js
+
+modified login.html along side signin.python to add local storage
+remember to cleasr local storage when user has logged out
+
+for dashboard update GET request and change post to elif
