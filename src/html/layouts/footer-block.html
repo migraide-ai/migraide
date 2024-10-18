@@ -9,13 +9,16 @@
   </div>
   
   <div class="footer-wrapper container-fluid">
-    <div class="row align-items-center">
-      <div class="col my-1">
+    <div class="row align-items-center text-center text-md-left">
+      <!-- Footer text for mobile alignment -->
+      <div class="col-12 col-md my-1">
         <p class="m-0" style="color: #4A4A4A; font-family: 'Inter', sans-serif; font-size: 12px;">
           © 2024 Migraide AI. All Rights Reserved.
         </p>
       </div>
-      <div class="col-auto my-1">
+
+      <!-- Footer links, stacked on mobile -->
+      <div class="col-12 col-md-auto my-1">
         <ul class="list-inline footer-link mb-0" style="font-family: 'Inter', sans-serif; font-size: 12px;">
           <li class="list-inline-item">
             <a href="../index.html" style="color: #4A4A4A;">Support</a>
@@ -36,4 +39,32 @@
       </div>
     </div>
   </div>
+
+  <style>
+    @media (max-width: 768px) {
+      /* Ensure padding is responsive */
+      footer.pc-footer {
+        padding: 10px;
+        margin-right: 20px;
+        margin-left: 20px;
+      }
+
+      /* Align items in the center for smaller screens */
+      .footer-wrapper .row {
+        text-align: center;
+      }
+
+      /* Stack footer links vertically on mobile */
+      .footer-link .list-inline-item {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      /* Remove bullet points and inline separators for small screens */
+      .footer-link .list-inline-item span {
+        display: none;
+      }
+    }
+  </style>
+
 </footer>

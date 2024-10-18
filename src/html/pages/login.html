@@ -1,92 +1,152 @@
 <!doctype html>
 <html lang="en">
- <!-- [Head] start -->
- <head>
-   @@include('../layouts/head-page-meta.html', {'title': 'Login'})
-   @@include('../layouts/head-css.html')
-   <style>
-     .password-toggle {
-       cursor: pointer;
-     }
-   </style>
- </head>
- <!-- [Head] end -->
- <!-- [Body] Start -->
- <body @@bodySetup>
-   @@include('../layouts/loader.html')
-   <div class="auth-main">
-     <div class="auth-wrapper v1">
-       <div class="auth-form">
-         <div class="card my-5">
-           <div class="card-body">
-             <div class="text-center mb-5">
-               <a href="#"><img src="../assets/images/widget/logo-dark.svg" alt="img" /></a>
-             </div>
-            
-             <div class="d-flex justify-content-between align-items-center mb-4">
-               <h4 class="f-w-500 mb-0">Login</h4>
-               <h6 class="f-w-400 mb-0 text-secondary">
-                 <a href="register.html" class="link-primary">Don't have an Account?</a>
-               </h6>
-             </div>
+<!-- [Head] start -->
+
+<head>
+  <meta charset="utf-8">
+  @@include('../layouts/head-page-meta.html', {'title': 'Login'})
+  @@include('../layouts/head-css.html')
+  <style>
+    .password-toggle {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<!-- [Head] end -->
+<!-- [Body] Start -->
+
+<body @@bodySetup>
+  @@include('../layouts/loader.html')
+  <div class="auth-main">
+    <div class="auth-wrapper v1">
+      <div class="auth-form">
+        <div class="card my-5">
+          <div class="card-body">
+            <div class="text-center mb-5">
+              <a href="#"><img src="../assets/images/widget/logo-dark.svg" alt="img" /></a>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h4 class="f-w-500 mb-0">Login</h4>
+              <h6 class="f-w-400 mb-0 text-secondary">
+                <a href="register.html" class="link-primary">Don't have an Account?</a>
+              </h6>
+            </div>
 
 
-             <div class="mb-3">
-               <label for="floatingInput" class="form-label">Email Address</label>
-               <input type="email" class="form-control" id="floatingInput" placeholder="Email Address" />
-             </div>
+            <div class="mb-3">
+              <label for="emailInput" class="form-label">Email Address</label>
+              <input type="email" class="form-control" id="emailInput" placeholder="Email Address" />
+            </div>
 
 
-             <!-- Password Field with Toggle Eye Icon -->
-             <div class="mb-3 position-relative">
-               <label for="floatingInput1" class="form-label">Password</label>
-               <div class="input-group">
-                 <input type="password" class="form-control" id="floatingInput1" placeholder="Password" />
-                 <span class="input-group-text password-toggle" onclick="togglePassword()">
-                   <i id="togglePasswordIcon" class="bi bi-eye-slash"></i>
-                 </span>
-               </div>
-             </div>
+            <!-- Password Field with Toggle Eye Icon -->
+            <div class="mb-3 position-relative">
+              <label for="passwordInput" class="form-label">Password</label>
+              <div class="input-group">
+                <input type="password" class="form-control" id="passwordInput" placeholder="Password" />
+                <span class="input-group-text password-toggle" onclick="togglePassword()">
+                  <i id="togglePasswordIcon" class="bi bi-eye-slash"></i>
+                </span>
+              </div>
+            </div>
 
 
-             <div class="d-flex mt-1 justify-content-between align-items-center">
-               <div class="form-check">
-                 <input class="form-check-input input-primary" type="checkbox" id="customCheckc1" checked="" />
-                 <label class="form-check-label text-muted" for="customCheckc1">Remember me?</label>
-               </div>
-               <h6 class="text-secondary f-w-400 mb-0">
-                 <a href="forgot-password-v1.html"> Forgot Password? </a>
-               </h6>
-             </div>
+            <div class="d-flex mt-1 justify-content-between align-items-center">
+              <div class="form-check">
+                <input class="form-check-input input-primary" type="checkbox" id="customCheckc1" checked="" />
+                <label class="form-check-label text-muted" for="customCheckc1">Remember me?</label>
+              </div>
+              <h6 class="text-secondary f-w-400 mb-0">
+                <a href="forgot-password-v1.html"> Forgot Password? </a>
+              </h6>
+            </div>
 
 
-             <div class="d-grid mt-4">
-               <button type="button" class="btn btn-primary" style="width: 100%; height: 44px;">Login</button>
-             </div>
-           </div>
-         </div>
-       </div>
-     </div>
-   </div>
-   <!-- [ Main Content ] end -->
-   @@include('../layouts/footer-js.html') @@include('../layouts/customizer.html')
+            <div class="d-grid mt-4">
+              <button type="button" class="btn btn-primary" id="login-button"
+                style="width: 100%; height: 44px;">Login</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- [ Main Content ] end -->
+  @@include('../layouts/footer-js.html') @@include('../layouts/customizer.html')
 
 
-   <script>
-     function togglePassword() {
-       const passwordInput = document.getElementById('floatingInput1');
-       const toggleIcon = document.getElementById('togglePasswordIcon');
-       if (passwordInput.type === 'password') {
-         passwordInput.type = 'text';
-         toggleIcon.classList.replace('bi-eye-slash', 'bi-eye');
-       } else {
-         passwordInput.type = 'password';
-         toggleIcon.classList.replace('bi-eye', 'bi-eye-slash');
-       }
-     }
-   </script>
-   <!-- Include Bootstrap Icons (if not already included) -->
-   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css" rel="stylesheet">
- </body>
- <!-- [Body] end -->
+  <script>
+    function togglePassword() {
+      const passwordInput = document.getElementById('passwordInput');
+      const toggleIcon = document.getElementById('togglePasswordIcon');
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.classList.replace('bi-eye-slash', 'bi-eye');
+      } else {
+        passwordInput.type = 'password';
+        toggleIcon.classList.replace('bi-eye', 'bi-eye-slash');
+      }
+    }
+
+
+    document.getElementById('login-button').addEventListener('click', async function () {
+      const email = document.getElementById('emailInput').value;
+      const password = document.getElementById('passwordInput').value;
+
+
+      // Validate input fields
+      if (!email || !password) {
+        alert('Please fill in both email and password.');
+        return;
+      }
+
+
+      // Define the backend endpoint URL
+      const endpoint = 'http://127.0.0.1:5000/signin'; // Corrected to /signin
+
+
+      // Prepare the data to be sent in the request
+      const requestData = {
+        email: email,
+        password: password,
+      };
+
+
+      try {
+        // Make the POST request to the backend
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestData),
+        });
+
+
+        if (response.ok) {
+          const responseData = await response.json();
+          // Handle successful sign-in here (e.g., save token, redirect)
+          console.log('Sign-in successful:', responseData);
+          alert('Sign-in successful');
+          // Redirect to a different page, for example
+          window.location.href = '../dashboard/index.html';
+        } else {
+          // Handle sign-in failure
+          const errorData = await response.json();
+          console.error('Sign-in failed:', errorData);
+          alert('Sign-in failed. ' + (errorData.message || 'Please check your credentials.'));
+        }
+      } catch (error) {
+        console.error('Error occurred:', error);
+        alert('An error occurred while signing in. Please try again later.');
+      }
+    });
+  </script>
+  <!-- Include Bootstrap Icons (if not already included) -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css"
+    rel="stylesheet">
+</body>
+<!-- [Body] end -->
+
 </html>
