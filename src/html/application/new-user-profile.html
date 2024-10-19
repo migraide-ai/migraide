@@ -78,15 +78,15 @@
                    <div class="col-md-12" style="display: flex; gap: 20px;">
                      <div class="mb-3" style="width: 33%;">
                        <label class="form-label">First Name</label>
-                       <input type="text" class="form-control" id="firstName" placeholder="Enter First Name" pattern="[A-Za-z]+" title="Only letters are allowed" required />
+                       <input type="text" class="form-control" id="first_name" placeholder="Enter First Name" pattern="[A-Za-z]+" title="Only letters are allowed" required />
                      </div>
                      <div class="mb-3" style="width: 33%;">
                        <label class="form-label">Middle Name(s)</label>
-                       <input type="text" class="form-control" id="middleName" placeholder="Enter Middle Name" pattern="[A-Za-z]+" title="Only letters are allowed" required />
+                       <input type="text" class="form-control" id="middle_name" placeholder="Enter Middle Name" pattern="[A-Za-z]+" title="Only letters are allowed" required />
                      </div>
                      <div class="mb-3" style="width: 33%;">
                        <label class="form-label">Last Name</label>
-                       <input type="text" class="form-control" id="lastName" placeholder="Enter Last Name" pattern="[A-Za-z]+" title="Only letters are allowed" required />
+                       <input type="text" class="form-control" id="last_name" placeholder="Enter Last Name" pattern="[A-Za-z]+" title="Only letters are allowed" required />
                      </div>
                    </div>
                </div>
@@ -98,7 +98,7 @@
                    </div>
                    <div class="mb-3" style="width:33%">
                      <label class="form-label">Client Phone Number</label>
-                     <input type="tel" class="form-control" id="phoneNumber" placeholder="Enter Client's Phone" pattern="[0-9]{10,15}" title="Only numbers are allowed, between 10 to 15 digits" required />
+                     <input type="tel" class="form-control" id="phone" placeholder="Enter Client's Phone" pattern="[0-9]{10,15}" title="Only numbers are allowed, between 10 to 15 digits" required />
                    </div>
                    <div class="mb-3" style="width:33%">
                        <label class="form-label">Date of Birth</label>
@@ -114,7 +114,7 @@
                      </div>
                      <div class="mb-3" style="width:33%">
                        <label class="form-label">Visa Services</label>
-                       <select class="form-select" id="visaServices" required>
+                       <select class="form-select" id="visa_service" required>
                          <option value="">Select a service</option>
                          <option>EB1</option>
                          <option>EB2</option>
@@ -152,7 +152,7 @@
        // Form validation and submission
        document.getElementById('initializeButton').addEventListener('click', function() {
          // Perform additional validation if needed
-         const formFields = ['firstName', 'middleName', 'lastName', 'email', 'phoneNumber', 'dob', 'profession', 'visaServices', 'gender'];
+         const formFields = ['first_name', 'middle_name', 'last_name', 'email', 'phone', 'dob', 'profession', 'visa_service', 'gender'];
          let valid = true;
 
 
@@ -166,11 +166,45 @@
 
 
          if (valid) {
-           showAlert();
+           submitForm();
          }
        });
 
+  // Function to submit form data to the backend
+  function submitForm() {
+    const formData = {
+      first_name: document.getElementById('firstName').value,
+      middle_name: document.getElementById('middleName').value,
+      last_name: document.getElementById('lastName').value,
+      email: document.getElementById('email').value,
+      phone: document.getElementById('phoneNumber').value,
+      dob: document.getElementById('dob').value,
+      profession: document.getElementById('profession').value,
+      visa_service: document.getElementById('visaServices').value,
+      gender: document.getElementById('gender').value
+    };
 
+    fetch('http://127.0.0.1:5000/add_client', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === 'success') {
+        showAlert();
+      } else {
+        console.error('Error:', data.message);
+        alert('Error: ' + data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('An error occurred while adding the client. Please try again later.');
+    });
+  }
        // Show alert message and redirect
        function showAlert() {
          let alertMessage = document.querySelector('.alert-message');
