@@ -96,7 +96,7 @@
 
        // Prepare the data to be sent in the request
        const requestData = {
-         email: email,
+         email_address: email,
          password: password,
        };
 
@@ -109,7 +109,7 @@
            },
            body: JSON.stringify(requestData),
          });
-
+         console.log(response);
          if (response.ok) {
            const responseData = await response.json();
            // Handle successful sign-in here (e.g., save token, redirect)

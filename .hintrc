@@ -10,6 +10,13 @@
         "document-title": "off"
       }
     ],
-    "no-inline-styles": "off"
+    "no-inline-styles": "off",
+    "axe/aria": [
+      "default",
+      {
+        "aria-required-parent": "off",
+        "aria-required-children": "off"
+      }
+    ]
   }
 }

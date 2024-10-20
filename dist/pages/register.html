@@ -27,7 +27,20 @@
 <link rel="stylesheet" href="../assets/css/style.css" id="main-style-link" />
 <script src="../assets/js/tech-stack.js"></script>
 <link rel="stylesheet" href="../assets/css/style-preset.css" />
+<style>
+.auth-option .disabled-label {
+  opacity: 0.6; /* Makes the label appear faded */
+  cursor: not-allowed; /* Indicates it's disabled */
+}
 
+.disabled-text {
+  color: #bababa; /* Grey color for text */
+}
+
+.disabled-svg {
+  fill: #bababa; /* Grey color for the SVG icon */
+}
+</style>
   </head>
   <!-- [Head] end -->
   <!-- [Body] Start -->
@@ -49,7 +62,7 @@
               <a href="#"><img src="../assets/images/widget/logo-dark.svg" alt="img" /></a>
             </div>
             <div class="col-auto my-1">
-              <h5 class="m-0 text-muted f-w-500">Step <b class="h5" id="auth-active-slide">1</b> to 4</h5>
+              <h5 class="m-0 text-muted f-w-500">Step <b class="h5" id="auth-active-slide">1</b> to 3</h5>
             </div>
           </div>
           <div class="card my-5">
@@ -94,7 +107,7 @@
                   >
                   </a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                   <a
                     class="nav-link"
                     id="auth-tab-4"
@@ -106,7 +119,7 @@
                     aria-selected="true"
                   >
                   </a>
-                </li>
+                </li> -->
                 <!-- <li class="nav-item">
                   <a
                     class="nav-link"
@@ -141,12 +154,12 @@
                   </div>
                   <div class="mb-3">
                     <label class="form-label">Enter your work email to continue</label>
-                    <input type="email" class="form-control" placeholder="Email" />
+                    <input type="email" class="form-control" id="email" placeholder="Email" required/>
                   </div>
                   <div class="row g-3">
                     
                       <div class="d-grid">
-                        <button class="btn btn-primary" style="width: 100%;" onClick="change_tab('#auth-2')">Continue</button>
+                        <button class="btn btn-primary" style="width: 100%;" onclick="validateEmail()">Continue</button>
                       </div>
                     
                   </div>
@@ -159,7 +172,7 @@
                   <div class="row mb-4 g-3">
                     <div class="col-sm-6">
                       <div class="auth-option">
-                        <input type="radio" class="btn-check" name="options" id="option1"  />
+                        <input type="radio" class="btn-check" name="options" id="option1" disabled />
                         <label class="auth-megaoption" for="option1">
                           <svg class="pc-icon">
                             <use xlink:href="#custom-user"></use>
@@ -183,12 +196,12 @@
                   <div class="row g-3">
                     <div class="col-sm-6">
                       <div class="d-grid">
-                        <button class="btn btn-outline-secondary" onClick="change_tab('#auth-1')">Back</button>
+                        <button class="btn btn-outline-secondary" onclick="change_tab('#auth-1')">Back</button>
                       </div>
                     </div>
                     <div class="col-sm-6">
                       <div class="d-grid">
-                        <button class="btn btn-primary" onClick="change_tab('#auth-3')">Continue</button>
+                        <button class="btn btn-primary" onclick="change_tab('#auth-3')">Continue</button>
                       </div>
                     </div>
                   </div>
@@ -202,68 +215,45 @@
                     <div class="col-sm-6">
                       <div class="mb-3">
                         <label class="form-label">First name</label>
-                        <input type="text" class="form-control" placeholder="First name" />
+                        <input type="text" class="form-control" id="firstName" placeholder="First name" required />
                       </div>
                     </div>
                     <div class="col-sm-6">
                       <div class="mb-3">
                         <label class="form-label">Last name</label>
-                        <input type="text" class="form-control" placeholder="Last name" />
+                        <input type="text" class="form-control" id="lastName" placeholder="Last name" required />
                       </div>
                     </div>
                     <div class="col-12">
                       <div class="mb-3">
                         <label class="form-label">Name of Business</label>
-                        <input type="text" class="form-control" placeholder="Business Name" />
+                        <input type="text" class="form-control" id="businessName" placeholder="Business Name" required />
                       </div>
                     </div>
                     <div class="col-12">
                       <div class="mb-3">
                         <label class="form-label">Password</label>
-                        <input type="password" class="form-control" placeholder="Password" />
+                        <input type="password" class="form-control" id="password" placeholder="Password" required />
                       </div>
                     </div>
                     <div class="col-12">
                       <div class="mb-3">
                         <label class="form-label">Confirm Password</label>
-                        <input type="password" class="form-control" placeholder="Confirm Password" />
+                        <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password" required />
                       </div>
                     </div>
                   </div>
                   <div class="row g-3">
                     <div class="col-sm-6">
                       <div class="d-grid">
-                        <button class="btn btn-outline-secondary" onClick="change_tab('#auth-2')">Back</button>
+                        <button class="btn btn-outline-secondary" onclick="change_tab('#auth-2')">Back</button>
                       </div>
                     </div>
                     <div class="col-sm-6">
                       <div class="d-grid">
-                        <button class="btn btn-primary" onClick="change_tab('#auth-4')">Continue</button>
+                        <button class="btn btn-primary auth-conf" onclick="validateAndSubmit()">Submit</button>
                       </div>
                     </div>
-                  </div>
-                </div>
-                <div class="tab-pane" id="auth-4" role="tabpanel" aria-labelledby="auth-tab-4">
-                  <div class="text-center">
-                    <h3 class="text-center mb-3">Please confirm your email</h3>
-                    <p class="mb-4">Lorem Ipsum is simply dummy text of the printing and typesetting industry of Lorem Ipsum.</p>
-                  </div>
-                  <div class="row my-4 text-center">
-                    <div class="col">
-                      <input type="number" class="form-control text-center code-input" placeholder="0" />
-                    </div>
-                    <div class="col">
-                      <input type="number" class="form-control text-center code-input" placeholder="0" />
-                    </div>
-                    <div class="col">
-                      <input type="number" class="form-control text-center code-input" placeholder="0" />
-                    </div>
-                    <div class="col">
-                      <input type="number" class="form-control text-center code-input" placeholder="0" />
-                    </div>
-                  </div>
-                  <div class="d-grid">
-                    <button class="btn btn-primary auth-conf">Continue</button>
                   </div>
                 </div>
               </div>
@@ -387,120 +377,99 @@
    
     <!-- [JavaScript to handle registration] -->
     <script>
-      document.querySelector('.auth-conf').addEventListener('click', function () {
-        Swal.fire({
-          icon: 'success',
-          title: 'Account created successfully'
-        });
-      });
-
       function change_tab(tab_name) {
-        var someTabTriggerEl = document.querySelector('a[href="' + tab_name + '"]');
-        document.querySelector('#auth-active-slide').innerHTML = someTabTriggerEl.getAttribute('data-slide-index');
-        var actTab = new bootstrap.Tab(someTabTriggerEl);
+        var tabTriggerEl = document.querySelector('a[href="' + tab_name + '"]');
+        document.querySelector('#auth-active-slide').innerHTML = tabTriggerEl.getAttribute('data-slide-index');
+        var actTab = new bootstrap.Tab(tabTriggerEl);
         actTab.show();
       }
-
-      const inputElements = [...document.querySelectorAll('input.code-input')];
-
-      inputElements.forEach((ele, index) => {
-        ele.addEventListener('keydown', (e) => {
-          // if the keycode is backspace & the current field is empty
-          // focus the input before the current. Then the event happens
-          // which will clear the "before" input box.
-          if (e.keyCode === 8 && e.target.value === '') inputElements[Math.max(0, index - 1)].focus();
-        });
-        ele.addEventListener('input', (e) => {
-          // take the first character of the input
-          // this actually breaks if you input an emoji like 👨‍👩‍👧‍👦....
-          // but I'm willing to overlook insane security code practices.
-          const [first, ...rest] = e.target.value;
-          e.target.value = first ?? ''; // first will be undefined when backspace was entered, so set the input to ""
-          const lastInputBox = index === inputElements.length - 1;
-          const didInsertContent = first !== undefined;
-          if (didInsertContent && !lastInputBox) {
-            // continue to input the rest of the string
-            inputElements[index + 1].focus();
-            inputElements[index + 1].value = rest.join('');
-            inputElements[index + 1].dispatchEvent(new Event('input'));
-          }
-        });
-      });
-
-      async function registerUser() {
-        const email = document.querySelector("input[type='email']").value;
-        const firstName = document.querySelector("input[placeholder='First name']").value;
-        const lastName = document.querySelector("input[placeholder='Last name']").value;
-        const businessName = document.querySelector("input[placeholder='Business Name']").value;
-        const password = document.querySelector("input[placeholder='Password']").value;
-        const confirmPassword = document.querySelector("input[placeholder='Confirm Password']").value;
-        const userType = document.querySelector("#option1").checked ? "individual" : "business";
-
-        if (password !== confirmPassword) {
-          alert("Passwords do not match!");
+    
+      function validateEmail() {
+        const email = document.querySelector("#email").value.trim();
+        if (email === "") {
+          Swal.fire({
+            icon: 'error',
+            title: 'Email Required',
+            text: 'Please enter your email address to continue.'
+          });
+        } else {
+          change_tab("#auth-2");
+        }
+      }
+    
+      async function validateAndSubmit() {
+        console.log("I am here");
+        const email = document.querySelector("#email").value.trim();
+        const firstName = document.querySelector("#firstName").value.trim();
+        const lastName = document.querySelector("#lastName").value.trim();
+        const businessName = document.querySelector("#businessName").value.trim();
+        const password = document.querySelector("#password").value.trim();
+        const confirmPassword = document.querySelector("#confirmPassword").value.trim();
+        const userType = document.querySelector("#option2").checked ? "business" : "individual";
+    
+        if (!firstName || !lastName || !businessName || !password || !confirmPassword) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Missing Information',
+            text: 'Please fill in all the fields before submitting.'
+          });
           return;
         }
-
-        // Add a console.log() to see the data before it gets sent
-        console.log("Form Data:", {
-          email,
-          firstName,
-          lastName,
-          businessName,
-          password,
-          userType
-        });
-
-        const formData = new FormData();
-        formData.append("email", email);
-        formData.append("first_name", firstName);
-        formData.append("last_name", lastName);
-        formData.append("password", password);
-        formData.append("business_user", userType === "business" ? "true" : "false");
-        if (userType === "business") {
-          formData.append("business_name", businessName);
+    
+        if (password !== confirmPassword) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Password Mismatch',
+            text: 'The passwords do not match. Please check and try again.'
+          });
+          return;
         }
-
+    
+        // Create form data to submit to the server
+        const formData = {
+          email: email,
+          first_name: firstName,
+          last_name: lastName,
+          business_name: businessName,
+          password: password,
+          business_user: userType === "business" ? "true" : "false"
+        };
+    console.log(formData);
         try {
           const response = await fetch('http://127.0.0.1:5000/register', {
             method: 'POST',
-            body: formData,
+            headers: {
+              'Content-Type': 'text/plain'
+            },
+            body: JSON.stringify(formData),
+            mode: 'no-cors'
           });
-
-          // Log the response to see if it's OK
-          console.log("Server Response:", response);
-
+    
           const result = await response.json();
-          console.log("Parsed Response:", result); // Log parsed response
-
-          if (result.status === "success") {
+    console.log(result);
+          if (response.ok && result.status === "success") {
             Swal.fire({
               icon: 'success',
-              title: 'Account created successfully',
+              title: 'Account Created',
               text: result.message
             });
           } else {
             Swal.fire({
               icon: 'error',
               title: 'Error',
-              text: result.message
+              text: result.message || 'There was an error while creating your account.'
             });
           }
         } catch (error) {
-          console.error('Error:', error);
           Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: 'Could not connect to server'
+            text: 'Could not connect to the server. Please try again later.'
           });
         }
       }
-
-      document.querySelector('.auth-conf').addEventListener('click', function () {
-        console.log("Continue button clicked"); // Add this to see if the event is triggered
-        registerUser();
-      });
     </script>
+    
 
     <script src="../assets/js/plugins/sweetalert2.all.min.js"></script>
     <script src="../assets/js/plugins/popper.min.js"></script>
