@@ -17,6 +17,12 @@
         "aria-required-parent": "off",
         "aria-required-children": "off"
       }
+    ],
+    "axe/forms": [
+      "default",
+      {
+        "select-name": "off"
+      }
     ]
   }
 }

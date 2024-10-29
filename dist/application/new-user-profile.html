@@ -103,7 +103,7 @@
         <img src="../assets/images/widget/logo-dark.svg" class="img-fluid logo-lg" alt="logo" />
       </a>
     </div>
-    <div class="navbar-content">
+    <!-- <div class="navbar-content">
       <div class="card pc-user-card">
         <div class="card-body">
           <div class="d-flex align-items-center">
@@ -112,8 +112,8 @@
             </div>
             <div class="flex-grow-1 ms-3 me-2">
               <h6 class="mb-0">Terranouva</h6>
-              <!-- <small>Consultant</small> -->
-            </div>
+              <small>Consultant</small> -->
+            <!-- </div>
             <a class="btn btn-icon btn-link-secondary avtar" data-bs-toggle="collapse" href="#pc_sidebar_userlink">
               <svg class="pc-icon">
                 <use xlink:href="#custom-sort-outline"></use>
@@ -137,8 +137,9 @@
             </div>
           </div>
         </div>
-      </div>
-
+      </div> -->
+ 
+ 
       <ul class="pc-navbar">
         <!-- <li class="pc-item pc-caption">
           <label>User Dashboard</label>
@@ -979,9 +980,11 @@
       </ul>
     </div>
   </div>
-</nav>
-<!-- [ Sidebar Menu ] end -->
- <!-- [ Header Topbar ] start -->
+ </nav>
+ <!-- [ Sidebar Menu ] end -->
+ 
+ 
+  <!-- [ Header Topbar ] start -->
 <header class="pc-header">
   <div class="header-wrapper"> <!-- [Mobile Media Block] start -->
 <div class="me-auto pc-mob-drp">
@@ -1865,94 +1868,139 @@
 
    <script src="../assets/js/plugins/datepicker-full.min.js"></script>
    <script>
-     // Ensure DOM elements are loaded before adding event listeners
-     document.addEventListener('DOMContentLoaded', function() {
-       // Form validation and submission
-       document.getElementById('initializeButton').addEventListener('click', function() {
-         // Perform additional validation if needed
-         const formFields = ['first_name', 'middle_name', 'last_name', 'email', 'phone', 'dob', 'profession', 'visa_service', 'gender'];
-         let valid = true;
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('initializeButton').addEventListener('click', function() {
+        const formFields = ['first_name', 'middle_name', 'last_name', 'email', 'phone', 'dob', 'profession', 'visa_service', 'gender'];
+        let valid = true;
+  
+        formFields.forEach(function(fieldId) {
+          const field = document.getElementById(fieldId);
+          if (!field.checkValidity()) {
+            valid = false;
+            field.reportValidity();
+          }
+        });
+  
+        if (valid) {
+          submitForm();
+        }
+      });
 
+      function submitForm() {
+        const formData = {
+          first_name: document.getElementById('first_name').value,
+          middle_name: document.getElementById('middle_name').value,
+          last_name: document.getElementById('last_name').value,
+          email_address: document.getElementById('email').value,
+          phone_number: document.getElementById('phone').value,
+          date_of_birth: document.getElementById('dob').value,
+          clients_profession: document.getElementById('profession').value,
+          visa_services: document.getElementById('visa_service').value,
+          client_gender: document.getElementById('gender').value
+        };
+  
+        const accessToken = localStorage.getItem('accessToken');
+  
+        if (!accessToken) {
+          alert('Please log in to continue.');
+          window.location.href = '../login.html';
+          return;
+        }
+  
+        fetch('http://127.0.0.1:5000/add_client', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`
+          },
+          body: JSON.stringify(formData)
+        })
+        .then(response => {
+          if (response.status === 401) {
+            throw new Error("Session expired or not found. Please log in again.");
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data.msg === 'Client added successfully') {
+            showAlert('Client added successfully');
+            sendNudge(formData.email_address);  // Call sendNudge after successful client addition
+          } else {
+            alert('Error: ' + data.msg);
+          }
+        })
+        .catch(error => {
+          if (error.message.includes("Session expired")) {
+            alert(error.message);
+            window.location.href = '../pages/login.html';
+          } else {
+            alert('An error occurred: ' + error.message);
+          }
+        });
+      }
 
-         formFields.forEach(function(fieldId) {
-           const field = document.getElementById(fieldId);
-           if (!field.checkValidity()) {
-             valid = false;
-             field.reportValidity();
-           }
-         });
+      function sendNudge(emailAddress) {
+        const accessToken = localStorage.getItem('accessToken');
+        if (!accessToken) {
+          alert('Please log in to continue.');
+          window.location.href = '../login.html';
+          return;
+        }
 
+        fetch('http://127.0.0.1:5000/send_nudge', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`
+          },
+          body: JSON.stringify({ email_address: emailAddress })
+        })
+        .then(response => {
+          if (response.status === 401) {
+            throw new Error("Session expired or not found. Please log in again.");
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data.msg === 'Nudge sent successfully') {
+            showAlert('Client added successfully');
+            redirectAfterSuccess();
+          } else {
+            alert('Error: ' + data.msg);
+          }
+        })
+        .catch(error => {
+          if (error.message.includes("Session expired")) {
+            alert(error.message);
+            window.location.href = '../pages/login.html';
+          } else {
+            alert('An error occurred: ' + error.message);
+          }
+        });
+      }
 
-         if (valid) {
-           submitForm();
-         }
-       });
+      function showAlert(message) {
+        let alertMessage = document.querySelector('.alert-message');
+        if (!alertMessage) {
+          alertMessage = document.createElement('div');
+          alertMessage.className = 'alert-message';
+          alertMessage.innerHTML = `<span class="check-icon"></span> Client added successfully`;
+          document.body.appendChild(alertMessage);
+        } else {
+          alertMessage.innerHTML = `<span class="check-icon"></span> Client added successfully`;
+        }
+        alertMessage.style.display = 'flex';
+        setTimeout(function () {
+          alertMessage.style.display = 'none';
+        }, 1000);
+      }
 
-  // Function to submit form data to the backend
-  function submitForm() {
-    const formData = {
-      first_name: document.getElementById('first_name').value,
-      middle_name: document.getElementById('middle_name').value,
-      last_name: document.getElementById('last_name').value,
-      email: document.getElementById('email').value,
-      phone: document.getElementById('phone').value,
-      dob: document.getElementById('dob').value,
-      profession: document.getElementById('profession').value,
-      visa_service: document.getElementById('visa_service').value,
-      gender: document.getElementById('gender').value
-    };
-
-fetch('http://127.0.0.1:5000/add_client', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify(formData)
-})
-.then(response => {
-  if (response.status === 401) {
-    throw new Error("Session expired or not found. Please log in again.");
-  }
-  return response.json();
-})
-.then(data => {
-  if (data.status === 'success') {
-    showAlert();
-  } else {
-    console.error('Error:', data.message);
-    alert('Error: ' + data.message);
-  }
-})
-.catch(error => {
-  console.error('Error:', error);
-  if (error.message.includes("Session expired")) {
-    alert(error.message);
-    // Redirect to login page if the session is expired
-    window.location.href = '../pages/login.html';
-  } else {
-    alert('An error occurred: ' + error.message);
-  }
-});
-
-  }
-       // Show alert message and redirect
-       function showAlert() {
-         let alertMessage = document.querySelector('.alert-message');
-         if (!alertMessage) {
-           alertMessage = document.createElement('div');
-           alertMessage.className = 'alert-message';
-           alertMessage.innerHTML = '<span class="check-icon"></span> Client added successfully';
-           document.body.appendChild(alertMessage);
-         }
-         alertMessage.style.display = 'flex';
-         setTimeout(function () {
-           alertMessage.style.display = 'none';
-           // Redirect after displaying alert
-           window.location.href = '/application/client-list.html'; // Changed to window.location.href
-         }, 1000);
-       }
-     });
-   </script>
- </body>
- <!-- [Body] end -->
+      function redirectAfterSuccess() {
+        setTimeout(function () {
+          window.location.href = '/application/client-list.html'; // Redirect after success
+        }, 2000);
+      }
+    });
+  </script>
+</body>
 </html>

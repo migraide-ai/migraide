@@ -69,66 +69,72 @@
    @@include('../layouts/footer-js.html') @@include('../layouts/customizer.html')
 
    <script>
-     function togglePassword() {
-       const passwordInput = document.getElementById('passwordInput');
-       const toggleIcon = document.getElementById('togglePasswordIcon');
-       if (passwordInput.type === 'password') {
-         passwordInput.type = 'text';
-         toggleIcon.classList.replace('bi-eye-slash', 'bi-eye');
-       } else {
-         passwordInput.type = 'password';
-         toggleIcon.classList.replace('bi-eye', 'bi-eye-slash');
-       }
-     }
-
-     document.getElementById('login-button').addEventListener('click', async function() {
-       const email = document.getElementById('emailInput').value;
-       const password = document.getElementById('passwordInput').value;
-
-       // Validate input fields
-       if (!email || !password) {
-         alert('Please fill in both email and password.');
-         return;
-       }
-
-       // Define the backend endpoint URL
-       const endpoint = 'http://127.0.0.1:5000/signin'; // Corrected to /signin
-
-       // Prepare the data to be sent in the request
-       const requestData = {
-         email_address: email,
-         password: password,
-       };
-
-       try {
-         // Make the POST request to the backend
-         const response = await fetch(endpoint, {
-           method: 'POST',
-           headers: {
-             'Content-Type': 'application/json',
-           },
-           body: JSON.stringify(requestData),
-         });
-         console.log(response);
-         if (response.ok) {
-           const responseData = await response.json();
-           // Handle successful sign-in here (e.g., save token, redirect)
-           console.log('Sign-in successful:', responseData);
-           alert('Sign-in successful');
-           // Redirect to a different page, for example
-           window.location.href = '../dashboard/index.html';
-         } else {
-           // Handle sign-in failure
-           const errorData = await response.json();
-           console.error('Sign-in failed:', errorData);
-           alert('Sign-in failed. ' + (errorData.message || 'Please check your credentials.'));
-         }
-       } catch (error) {
-         console.error('Error occurred:', error);
-         alert('An error occurred while signing in. Please try again later.');
-       }
-     });
-   </script>
+    function togglePassword() {
+      const passwordInput = document.getElementById('passwordInput');
+      const toggleIcon = document.getElementById('togglePasswordIcon');
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.classList.replace('bi-eye-slash', 'bi-eye');
+      } else {
+        passwordInput.type = 'password';
+        toggleIcon.classList.replace('bi-eye', 'bi-eye-slash');
+      }
+    }
+  
+    document.getElementById('login-button').addEventListener('click', async function() {
+      const email = document.getElementById('emailInput').value;
+      const password = document.getElementById('passwordInput').value;
+  
+      // Validate input fields
+      if (!email || !password) {
+        alert('Please fill in both email and password.');
+        return;
+      }
+  
+      // Define the backend endpoint URL
+      const endpoint = 'http://127.0.0.1:5000/sign_in'; // Ensure this matches your backend endpoint
+  
+      // Prepare the data to be sent in the request
+      const requestData = {
+        email_address: email,
+        password: password,
+      };
+  
+      try {
+        // Make the POST request to the backend
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestData),
+        });
+  
+        if (response.ok) {
+          const responseData = await response.json();
+  
+          // Save the token in localStorage (or sessionStorage)
+          localStorage.setItem('accessToken', responseData.access_token);
+  
+          // Handle successful sign-in here
+          console.log('Sign-in successful:', responseData);
+          alert('Sign-in successful');
+  
+          // Redirect to a different page, for example
+          window.location.href = '../dashboard/index.html';
+        } else {
+          // Handle sign-in failure
+          const errorData = await response.json();
+          console.error('Sign-in failed:', errorData);
+          alert('Sign-in failed. ' + (errorData.message || 'Please check your credentials.'));
+        }
+      } catch (error) {
+        console.error('Error occurred:', error);
+        alert('An error occurred while signing in. Please try again later.');
+      }
+    });
+  </script>
+  
    <!-- Include Bootstrap Icons (if not already included) -->
    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css" rel="stylesheet">
  </body>

@@ -1,222 +1,248 @@
 <!doctype html>
 <html lang="en">
- <!-- [Head] start -->
- <head>
-   <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
-   @@include('../layouts/head-page-meta.html', {'title': 'Add Product'}) @@include('../layouts/head-css.html')
+<!-- [Head] start -->
+<head>
+  <meta charset="utf-8">
+  <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
+  </head>@@include('../layouts/head-page-meta.html', {'title': 'Add Product'}) @@include('../layouts/head-css.html')
 
 
-   <style>
-     .alert-message {
-       position: fixed;
-       top: 80px;
-       right: 20px;
-       background-color: #28a745;
-       color: white;
-       padding: 10px 20px;
-       border-radius: 25px;
-       display: none;
-       z-index: 1000;
-       display: flex;
-       align-items: center;
-       gap: 10px;
-       box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-     }
-     .alert-message .icon {
-       width: 24px;
-       height: 24px;
-       background-color: white;
-       color: #28a745;
-       border-radius: 50%;
-       display: flex;
-       align-items: center;
-       justify-content: center;
-       font-weight: bold;
-     }
-     .check-icon {
-       width: 24px;
-       height: 24px;
-       background: white;
-       border-radius: 50%;
-       display: flex;
-       align-items: center;
-       justify-content: center;
-     }
-     .check-icon::before {
-       content: '\2713';
-       color: #28a745;
-       font-size: 18px;
-       font-weight: bold;
-     }
-   </style>
- </head>
- <!-- [Head] end -->
- <!-- [Body] Start -->
- <body @@bodySetup>
-   @@include('../layouts/layout-vertical.html')
 
 
-   <!-- [ Main Content ] start -->
-   <div class="pc-container">
-     <div class="pc-content">
-       <div class="card-header" style="padding-bottom: 20px;">
-         <h3>Business Profile Setup</h3>
-       </div>
-       <!-- Progress bar placed at the top of both pages -->
+  <style>
+    .alert-message {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      background-color: #28a745;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 25px;
+      display: none;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .alert-message .icon {
+      width: 24px;
+      height: 24px;
+      background-color: white;
+      color: #28a745;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+    .check-icon {
+      width: 24px;
+      height: 24px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .check-icon::before {
+      content: '\2713';
+      color: #28a745;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<!-- [Head] end -->
+<!-- [Body] Start -->
+<body @@bodySetup>
+  @@include('../layouts/layout-vertical.html')
 
 
-       <div class="card" id="additional-information-section" style="border-radius: 8px; border: 1px solid #DDDDDD; padding-top: 0px; ">
 
 
-         <!-- Title Section with Underline for "Form controls" -->
-         <div class="card-header" style="padding-bottom: 10px; border-bottom: 1px solid #E0E0E0; width: 100%;">
-           <h5 style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; color: #333;  padding-right: 30px;">
-             Update the following information about your visa consulting business to get started.
-           </h5>
-         </div>         
+  <!-- [ Main Content ] start -->
+  <div class="pc-container">
+    <div class="pc-content">
+      <div class="card-header" style="padding-bottom: 20px;">
+        <h3>Business Profile Setup</h3>
+      </div>
+      <!-- Progress bar placed at the top of both pages -->
 
 
-       <!-- [ Main Content ] start -->
-       <div class="row">
-         <!-- [ sample-page ] start -->
-         <div class="col-sm-12">
-             <div class="card-body">
-               <div class="row">
-                 <div class="col-md-6">
-                   <div class="mb-3">
-                     <label class="form-label">Type of Business</label>
-                     <select class="form-select" id="business_type" required>
-                       <option value="">Select a type</option>
-                       <option>Visa Consulting</option>
-                       <option>Visa Attorney / Legal Firm</option>
-                       <option>General Immigration Consulting</option>
-                     </select>
-                   </div>
-                   <div class="mb-3">
-                     <label class="form-label">Country of Business Operation</label>
-                     <input type="text" class="form-control" id="country" placeholder="Country of Business Operation" required />
-                   </div>
-                   <div class="mb-3">
-                     <label class="form-label">Business Phone Number</label>
-                     <input type="tel" class="form-control" id="phone" placeholder="Enter Mobile Number" pattern="[0-9]{10,15}" title="Only numbers are allowed, between 10 to 15 digits" required />
-                   </div>
-                 </div>
-                 <div class="col-md-6">
-                   <div class="mb-3">
-                     <label class="form-label">Approx No. of Clients (monthly)</label>
-                     <select class="form-select" id="nclients" required>
-                       <option value="">Select an option</option>
-                       <option>1 - 10</option>
-                       <option>11 - 50</option>
-                       <option>51 - 100</option>
-                       <option>101 - 500</option>
-                       <option>> 500</option>
-                     </select>
-                   </div>
-                   <div class="mb-3">
-                     <label class="form-label">Visa Specialization</label>
-                     <select class="form-select" id="visa_spec" required>
-                       <option value="">Select a specialization</option>
-                       <option>EB1</option>
-                       <option>EB2</option>
-                       <option>EB1 & EB2</option>
-                     </select>
-                   </div>
-                   <div class="mb-3">
-                     <label class="form-label">Business Address</label>
-                     <input type="text" class="form-control" id="address" placeholder="Enter Business Address" required />
-                   </div>
-                   <div class="text-end btn-page mt-4">
-                     <a href="/dashboard/index.html">
-                     <button class="btn btn-outline-secondary" type="button">Cancel</button>
-                     </a href="/application/new-user-profile.html">
-                     <button id="completeSetupButton" class="btn btn-primary" type="button" style="width: 287px; height: 44px;">Complete Setup</button>
-                   </div>
-                 </div>
-               </div>
-           </div>
-         </div>
-         <!-- [ sample-page ] end -->
-       </div>
-       <!-- [ Main Content ] end -->
-     </div>
-   </div>
-   <!-- [ Main Content ] end -->
-   @@include('../layouts/footer-block.html') @@include('../layouts/footer-js.html') @@include('../layouts/customizer.html')
 
 
-   <script>
+      <div class="card" id="additional-information-section" style="border-radius: 8px; border: 1px solid #DDDDDD; padding-top: 0px; ">
+
+
+
+
+        <!-- Title Section with Underline for "Form controls" -->
+        <div class="card-header" style="padding-bottom: 10px; border-bottom: 1px solid #E0E0E0; width: 100%;">
+          <h5 style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; color: #333;  padding-right: 30px;">
+            Update the following information about your visa consulting business to get started.
+          </h5>
+        </div>        
+
+
+
+
+      <!-- [ Main Content ] start -->
+      <div class="row">
+        <!-- [ sample-page ] start -->
+        <div class="col-sm-12">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="form-label">Type of Business</label>
+                    <select class="form-select" id="business_type" required>
+                      <option value="">Select a type</option>
+                      <option>Visa Consulting</option>
+                      <option>Visa Attorney / Legal Firm</option>
+                      <option>General Immigration Consulting</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Country of Business Operation</label>
+                    <input type="text" class="form-control" id="country" placeholder="Country of Business Operation" required />
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Business Phone Number</label>
+                    <input type="tel" class="form-control" id="phone" placeholder="Enter Mobile Number" pattern="[0-9]{10,15}" title="Only numbers are allowed, between 10 to 15 digits" required />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="form-label">Approx No. of Clients (monthly)</label>
+                    <select class="form-select" id="nclients" required>
+                      <option value="">Select an option</option>
+                      <option>1 - 10</option>
+                      <option>11 - 50</option>
+                      <option>51 - 100</option>
+                      <option>101 - 500</option>
+                      <option>> 500</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Visa Specialization</label>
+                    <select class="form-select" id="visa_spec" required>
+                      <option value="">Select a specialization</option>
+                      <option>EB1</option>
+                      <option>EB2</option>
+                      <option>EB1 & EB2</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Business Address</label>
+                    <input type="text" class="form-control" id="address" placeholder="Enter Business Address" required />
+                  </div>
+                  <div class="text-end btn-page mt-4">
+                    <a href="/dashboard/index.html">
+                    <button class="btn btn-outline-secondary" type="button">Cancel</button>
+                    </a href="/application/new-user-profile.html">
+                    <button id="completeSetupButton" class="btn btn-primary" type="button" style="width: 287px; height: 44px;">Complete Setup</button>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+        <!-- [ sample-page ] end -->
+      </div>
+      <!-- [ Main Content ] end -->
+    </div>
+  </div>
+  <!-- [ Main Content ] end -->
+  @@include('../layouts/footer-block.html') @@include('../layouts/footer-js.html') @@include('../layouts/customizer.html')
+  <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Form validation and submission
-      document.getElementById('completeSetupButton').addEventListener('click', function() {
-        // Perform validation
-        const formFields = ['business_type', 'country', 'phone', 'nclients', 'visa_spec', 'address'];
-        let valid = true;
-        formFields.forEach(function(fieldId) {
-          const field = document.getElementById(fieldId);
-          if (field && !field.checkValidity()) {
-            valid = false;
-            field.reportValidity();
-          }
-        });
-        
-        if (valid) {
-          submitForm();
-        }
-      });
-  
-      // Function to submit form data to the backend
-      function submitForm() {
-        const formData = new FormData();
-formData.append('business_type', document.getElementById('business_type').value);
-formData.append('country', document.getElementById('country').value);
-formData.append('phone', document.getElementById('phone').value);
-formData.append('nclients', document.getElementById('nclients').value);
-formData.append('visa_spec', document.getElementById('visa_spec').value);
-formData.append('address', document.getElementById('address').value);
+        // Form validation and submission
+        document.getElementById('completeSetupButton').addEventListener('click', function() {
+            // Perform validation
+            const formFields = ['business_type', 'country', 'phone', 'nclients', 'visa_spec', 'address'];
+            let valid = true;
+            formFields.forEach(function(fieldId) {
+                const field = document.getElementById(fieldId);
+                if (field && !field.checkValidity()) {
+                    valid = false;
+                    field.reportValidity(); // Highlight invalid field
+                }
+            });
 
-fetch('http://127.0.0.1:5000/business_information', {
-  method: 'POST',
-  body: formData
-})
-        .then(response => response.json())
-        .then(data => {
-          if (data.status === 'success') {
-            showAlert('Business profile updated successfully', true);
-          } else {
-            showAlert('Error: ' + data.message, false);
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          showAlert('An error occurred while updating the business profile. Please try again later.', false);
+            if (valid) {
+                submitForm(); // If the form is valid, submit it
+            }
         });
-      }
-      
-  
-      // Show alert message and redirect if successful
-      function showAlert(message, isSuccess) {
-        let alertMessage = document.querySelector('.alert-message');
-        if (!alertMessage) {
-          alertMessage = document.createElement('div');
-          alertMessage.className = 'alert-message';
-          document.body.appendChild(alertMessage);
+
+        // Function to submit form data to the backend
+        function submitForm() {
+            const formData = {
+                business_type: document.getElementById('business_type').value,
+                country: document.getElementById('country').value,
+                phone_number: document.getElementById('phone').value,
+                number_of_clients: document.getElementById('nclients').value,
+                visa_specialization: document.getElementById('visa_spec').value,
+                business_address: document.getElementById('address').value
+            };
+
+            // Retrieve the token from localStorage
+            const accessToken = localStorage.getItem('accessToken');
+
+            if (!accessToken) {
+                console.error('Access token is missing! Redirecting to login.');
+                alert('Please log in to continue.');
+                window.location.href = '../login.html';  // Redirect to login page if the token is missing
+                return;
+            }
+
+            fetch('http://127.0.0.1:5000/add_business_details', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`  // Including the access token in the header
+                },
+                body: JSON.stringify(formData)  // Convert the formData to JSON
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.msg) {
+                    showAlert('Business profile updated successfully', true);
+                } else {
+                    showAlert('Error: ' + data.message, false);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('An error occurred while updating the business profile. Please try again later.', false);
+            });
         }
-        alertMessage.innerHTML = `<span class="check-icon"></span> ${message}`;
-        alertMessage.style.backgroundColor = isSuccess ? '#28a745' : '#dc3545';
-        alertMessage.style.color = 'white';
-        alertMessage.style.display = 'flex';
-        setTimeout(function () {
-          alertMessage.style.display = 'none';
-          if (isSuccess) {
-            // Redirect after displaying alert
-            window.location.href = '../dashboard/index.html';
-          }
-        }, 2000);
-      }
+
+        // Show alert message and redirect if successful
+        function showAlert(message, isSuccess) {
+            let alertMessage = document.querySelector('.alert-message');
+            if (!alertMessage) {
+                alertMessage = document.createElement('div');
+                alertMessage.className = 'alert-message';
+                document.body.appendChild(alertMessage);
+            }
+            alertMessage.innerHTML = `<span class="check-icon"></span> ${message}`;
+            alertMessage.style.backgroundColor = isSuccess ? '#28a745' : '#dc3545'; // Green for success, red for error
+            alertMessage.style.color = 'white';
+            alertMessage.style.display = 'flex';
+
+            setTimeout(function () {
+                alertMessage.style.display = 'none';
+                if (isSuccess) {
+                    // Redirect after displaying alert
+                    window.location.href = '../application/new-user-profile.html';
+                }
+            }, 2000); // Show alert for 2 seconds
+        }
     });
 </script>
-</body>
-<!-- [Body] end -->
-</html>
+
+
+   </body>
+   <!-- [Body] end -->
+   </html>

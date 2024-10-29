@@ -325,8 +325,37 @@
       const progressPercentage = document.getElementById('progress-percentage');
       const processingText = document.getElementById('processing-text');
       const formPreviews = document.getElementById('form-previews');
+      async function fillI140Form() {
+        try {
+          // Get user email from localStorage or another source
+          const userEmail = localStorage.getItem('userEmail'); // Adjust based on how you store the email
+          
+          const response = await fetch('http://127.0.0.1:5000/fill_i140_pdf', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email: userEmail
+            })
+          });
+      
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to fill I-140 form');
+          }
+      
+          const data = await response.json();
+          console.log('Form filled successfully:', data);
+          return true;
+        } catch (error) {
+          console.error('Error filling I-140 form:', error);
+          alert('Error filling form: ' + error.message);
+          return false;
+        }
+      }
 
-      function updateProcessingProgress() {
+  async function updateProcessingProgress() {
         if (progress < 100) {
           progress += 16.67;
           currentStep += 1;
@@ -338,6 +367,9 @@
           setTimeout(updateProcessingProgress, randomTime);
           
         } else {
+          const success = await fillI140Form();
+    
+    if (success) {
           // When progress reaches 100%, replace skeletons with clickable thumbnails
           replaceSkeletonWithThumbnails();
           const headerText = document.querySelector('.card-header h5');
@@ -349,6 +381,12 @@
           continueButton.style.backgroundColor = '#4285F4'; 
           continueButton.style.color = '#fff';
         }
+        else {
+          const headerText = document.querySelector('.card-header h5');
+          headerText.innerText = "There was an error processing your forms. Please try again.";
+          headerText.style.color = '#dc3545';
+        }
+      }
       }
 
       function replaceSkeletonWithThumbnails() {

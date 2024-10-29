@@ -3,7 +3,8 @@
   <!-- [Head] start -->
 
   <head>
-    @@include('../layouts/head-page-meta.html',) @@include('../layouts/head-css.html')
+      <meta charset="utf-8">
+    </head>@@include('../layouts/head-page-meta.html',) @@include('../layouts/head-css.html')
   </head>
   <!-- [Head] end -->
   <!-- [Body] Start -->
@@ -21,15 +22,17 @@
       <!-- [ sample-page ] start -->
       <div class="col-12 file-manger-wrapper">
         <!-- Hi Faith Text Group -->
-        <a class="h5 text-hover-primary d-block" data-bs-toggle="collapse" href="#collapseFilefilter" role="button" aria-expanded="false">
-          <div style="font-size: 35px; font-family: 'Inter', sans-serif; margin-bottom: 30px;">
-            Hi Henry &#x1F44B;&#x1F3FE;
-          </div>
-        </a>
+       
+<a class="h5 text-hover-primary d-block" data-bs-toggle="collapse" href="#collapseFilefilter" role="button" aria-expanded="false">
+  <div id="greeting" style="font-size: 35px; font-family: 'Inter', sans-serif; margin-bottom: 30px;">
+    Hi <span id="firstNamePlaceholder">I'm Lincoln</span> &#x1F44B;&#x1F3FE; <!-- Default "there" will be replaced dynamically -->
+  </div>
+</a>
+
     
         <!-- Our AI Agent Text Group -->
         <a style="font-size: 18px; font-family: 'Inter', sans-serif; font-weight: 300; display: block; margin-bottom: 50px;">
-          Our AI agent will securely & efficiently fill out <span style="font-weight: 700;">ALL</span> your EB1 & EB2 visa forms in 5 minutes.
+          An AI visa form agent that will securely & efficiently fill out <span style="font-weight: 700;">ALL</span> your EB1 & EB2 visa forms in 60 seconds.
         </a>
         <!-- How It Works Text Group -->
         <a class="h5 text-hover-primary d-block" data-bs-toggle="collapse" href="#collapseFilefilter" role="button" aria-expanded="false">
@@ -1151,7 +1154,57 @@
     @@include('../layouts/footer-block.html') @@include('../layouts/customizer.html')
     <!-- [Page Specific JS] start -->
     <script src="../assets/js/plugins/apexcharts.min.js"></script>
+    
     <script src="../assets/js/pages/dashboard-default.js"></script>
+   
+    <script>
+      // Function to fetch user data and update the greeting
+      async function fetchUserData() {
+        try {
+          const response = await fetch("/dashboard", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json"
+            }
+          });
+    
+          // Check if the response is okay
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+    
+          // Parse the JSON data from the response
+          const data = await response.json();
+    
+          // Check if the status is success
+          if (data.status === "success") {
+            // Update the greeting with the first name
+            document.getElementById("greeting").innerHTML = `Hi ${data.first_name} &#x1F44B;&#x1F3FE;`;
+          } else {
+            // Handle the case where there's an error
+            console.error("Error fetching user data:", data.message);
+          }
+    
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
+    
+      // Call the function to fetch user data when the page loads
+      window.onload = fetchUserData;
+    </script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    
     <!-- [Page Specific JS] end -->
     @@include('../layouts/footer-js.html')
   </body>

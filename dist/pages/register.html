@@ -173,7 +173,7 @@
                     <div class="col-sm-6">
                       <div class="auth-option">
                         <input type="radio" class="btn-check" name="options" id="option1" disabled />
-                        <label class="auth-megaoption" for="option1">
+                        <label class="auth-megaoption disabled" for="option1" style="opacity: 0.5; cursor: not-allowed;">
                           <svg class="pc-icon">
                             <use xlink:href="#custom-user"></use>
                           </svg>
@@ -183,7 +183,7 @@
                     </div>
                     <div class="col-sm-6">
                       <div class="auth-option">
-                        <input type="radio" class="btn-check" name="options" id="option2" checked/>
+                        <input type="radio" class="btn-check" name="options" id="option2" checked />
                         <label class="auth-megaoption" for="option2">
                           <svg class="pc-icon">
                             <use xlink:href="#custom-home"></use>
@@ -193,6 +193,7 @@
                       </div>
                     </div>
                   </div>
+                     
                   <div class="row g-3">
                     <div class="col-sm-6">
                       <div class="d-grid">
@@ -398,7 +399,6 @@
       }
     
       async function validateAndSubmit() {
-        console.log("I am here");
         const email = document.querySelector("#email").value.trim();
         const firstName = document.querySelector("#firstName").value.trim();
         const lastName = document.querySelector("#lastName").value.trim();
@@ -406,7 +406,7 @@
         const password = document.querySelector("#password").value.trim();
         const confirmPassword = document.querySelector("#confirmPassword").value.trim();
         const userType = document.querySelector("#option2").checked ? "business" : "individual";
-    
+      
         if (!firstName || !lastName || !businessName || !password || !confirmPassword) {
           Swal.fire({
             icon: 'error',
@@ -415,7 +415,7 @@
           });
           return;
         }
-    
+      
         if (password !== confirmPassword) {
           Swal.fire({
             icon: 'error',
@@ -424,40 +424,41 @@
           });
           return;
         }
-    
+      
         // Create form data to submit to the server
         const formData = {
-          email: email,
+          email_address: email,
           first_name: firstName,
           last_name: lastName,
           business_name: businessName,
           password: password,
           business_user: userType === "business" ? "true" : "false"
         };
-    console.log(formData);
+      
+        console.log(formData);  // Debug to ensure correct form data
+      
         try {
           const response = await fetch('http://127.0.0.1:5000/register', {
             method: 'POST',
             headers: {
-              'Content-Type': 'text/plain'
+              'Content-Type': 'application/json'
             },
             body: JSON.stringify(formData),
-            mode: 'no-cors'
           });
-    
+      
           const result = await response.json();
-    console.log(result);
-          if (response.ok && result.status === "success") {
+      
+          if (response.ok) {
             Swal.fire({
               icon: 'success',
               title: 'Account Created',
-              text: result.message
+              text: result.msg
             });
           } else {
             Swal.fire({
               icon: 'error',
               title: 'Error',
-              text: result.message || 'There was an error while creating your account.'
+              text: result.msg || 'There was an error while creating your account.'
             });
           }
         } catch (error) {
@@ -467,7 +468,7 @@
             text: 'Could not connect to the server. Please try again later.'
           });
         }
-      }
+      }      
     </script>
     
 

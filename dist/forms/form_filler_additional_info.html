@@ -198,7 +198,7 @@
         <img src="../assets/images/widget/logo-dark.svg" class="img-fluid logo-lg" alt="logo" />
       </a>
     </div>
-    <div class="navbar-content">
+    <!-- <div class="navbar-content">
       <div class="card pc-user-card">
         <div class="card-body">
           <div class="d-flex align-items-center">
@@ -207,8 +207,8 @@
             </div>
             <div class="flex-grow-1 ms-3 me-2">
               <h6 class="mb-0">Terranouva</h6>
-              <!-- <small>Consultant</small> -->
-            </div>
+              <small>Consultant</small> -->
+            <!-- </div>
             <a class="btn btn-icon btn-link-secondary avtar" data-bs-toggle="collapse" href="#pc_sidebar_userlink">
               <svg class="pc-icon">
                 <use xlink:href="#custom-sort-outline"></use>
@@ -232,8 +232,9 @@
             </div>
           </div>
         </div>
-      </div>
-
+      </div> -->
+ 
+ 
       <ul class="pc-navbar">
         <!-- <li class="pc-item pc-caption">
           <label>User Dashboard</label>
@@ -1074,9 +1075,11 @@
       </ul>
     </div>
   </div>
-</nav>
-<!-- [ Sidebar Menu ] end -->
- <!-- [ Header Topbar ] start -->
+ </nav>
+ <!-- [ Sidebar Menu ] end -->
+ 
+ 
+  <!-- [ Header Topbar ] start -->
 <header class="pc-header">
   <div class="header-wrapper"> <!-- [Mobile Media Block] start -->
 <div class="me-auto pc-mob-drp">
@@ -1648,11 +1651,11 @@
            </div>
    <!-- CV and Resume -->
    <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background-color: #F8F8F8; border: 1px solid #E0E0E0; border-radius: 8px; margin-bottom: 15px;">
-     <span id="cv-resume-file-label" style="font-size: 16px; font-weight: 500; color: #333;">CV and Resume</span>
-     <input type="file" id="cv-resume-upload" style="display: none;" onchange="uploadFile('cv-resume')">
-     <button id="cv-resume-upload-btn" style="background-color: #4285F4; color: #fff; border: none; padding: 10px 40px; border-radius: 25px; cursor: pointer; transition: background-color 0.3s ease; font-size: 16px;"
-     onclick="document.getElementById('cv-resume-upload').click()">Upload file</button>
-</div>
+    <span id="cv-resume-file-label" style="font-size: 16px; font-weight: 500; color: #333;"> CV/Resume for main applicant <span style="color: red;">*</span></span>
+    <input type="file" id="cv-resume-upload" required style="display: none;" onchange="uploadFile('cv-resume')">
+    <button id="cv-resume-upload-btn" style="background-color: #4285F4; color: #fff; border: none; padding: 10px 40px; border-radius: 25px; cursor: pointer; transition: background-color 0.3s ease; font-size: 16px;"
+    onclick="document.getElementById('cv-resume-upload').click()">Upload file</button>
+  </div>
 <!-- Progress Bar for CV and Resume Upload -->
 <div id="cv-resume-progress-bar" style="height: 8px; background-color: #E0E0E0; border-radius: 5px; margin-top: 10px; margin-bottom: 10px; overflow: hidden; position: relative; width: 100%; display: none;">
  <div id="cv-resume-progress-fill" style="height: 100%; background-color: #4A90E2; width: 0%; transition: width 2s ease;"></div>

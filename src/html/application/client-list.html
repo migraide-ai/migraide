@@ -6,6 +6,7 @@
     @@include('../layouts/head-page-meta.html', {'title': 'Customer List'}) @@include('../layouts/head-css.html')
   </head>
   <!-- [Head] end -->
+  
   <!-- [Body] Start -->
   <body @@bodySetup>
     @@include('../layouts/layout-vertical.html')
@@ -31,54 +32,19 @@
                   <table class="table table-hover" id="pc-dt-simple">
                     <thead>
                       <tr>
-                        <th>#</th>
-                        <th>Client Name</th>
-                        <th>Contact</th>
-                        <th>Visa Service</th>
-                        <th>Status</th>
-                        <th class="text-center">Actions</th>
+                        <th style="text-align: left;">#</th>
+                        <th style="text-align: left;">Client Name</th>
+                        <th style="text-align: left;">Contact</th>
+                        <th style="text-align: left;">Visa Service</th>
+                        <th style="text-align: left;">Status</th>
+                        <th style="text-align: center;">Actions</th> <!-- Centering the Actions column -->
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>1</td>
-                        <td>
-                          <div class="row">
-                            <div class="col-auto">
-                              <img src="../assets/images/user/avatar-1.jpg" alt="user-image" class="wid-40 rounded-circle" />
-                            </div>
-                            <div class="col">
-                              <h6 class="mb-0">Faith Chris Henry</h6>
-                              <p class="text-muted f-12 mb-0">faith@gmail.com</p>
-                            </div>
-                          </div>
-                        </td>
-                        <td>+1 (247) 849-6968</td>
-                        <td>EB1</td>
-                        <td><span class="badge bg-light-success rounded-pill f-12">Completed</span> </td>
-                        <td class="text-center">
-                          <ul class="list-inline me-auto mb-0">
-                            <li class="list-inline-item align-bottom" data-bs-toggle="tooltip" title="View">
-                              <a href="#" class="avtar avtar-xs btn-link-secondary btn-pc-default" data-bs-toggle="modal" data-bs-target="#customer-modal">
-                                <i class="ti ti-eye f-18"></i>
-                              </a>
-                            </li>
-                            <li class="list-inline-item align-bottom" data-bs-toggle="modal" title="Review">
-                              <a href="#" onclick="scheduleGoogleMeet(this.dataset.email, this.dataset.formName, this.dataset.formLink)" class="avtar avtar-xs btn-link-success btn-pc-default" data-email="faith@gmail.com" data-form-name="VISA Form" data-form-link="https://form-url">
-                                <i class="ti ti-calendar f-18" style></i>
-                              </a>
-                            </li>
-                            <li class="list-inline-item align-bottom" data-bs-toggle="modal" title="Nudge">
-                              <a href="#" onclick="nudgeClient(this.dataset.email)" class="avtar avtar-xs btn-link-success btn-pc-default" data-email="faith@gmail.com">
-                                <i class="ti ti-clock f-18" style="color: red;"></i>
-                              </a>
-                            </li>
-                          </ul>
-                        </td>
-                      </tr>
+                      <!-- Clients will be dynamically populated here -->
                     </tbody>
                   </table>
-                </div>
+                </div>                
               </div>
             </div>
           </div>
@@ -87,6 +53,8 @@
         <!-- [ Main Content ] end -->
       </div>
     </div>
+
+    <!-- Client Details Modal -->
     <div class="modal fade" id="customer-modal" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
@@ -169,71 +137,187 @@
         </div>
       </div>
     </div>
-    @@include('../layouts/footer-block.html') @@include('../layouts/footer-js.html')
+
+    @@include('../layouts/footer-block.html') 
+    @@include('../layouts/footer-js.html')
+
+    <!-- [Page Specific JS] start -->
     <script src="../assets/js/plugins/simple-datatables.js"></script>
     <script>
+      // Setup the DataTable
       const dataTable = new simpleDatatables.DataTable('#pc-dt-simple', {
         sortable: false,
         perPage: 5
       });
-      function scheduleGoogleMeet(clientEmail, formName, formLink) {
-        const payload = new FormData();
-        payload.append('client_email', clientEmail);
-        payload.append('form_name', formName);
-        payload.append('form_link', formLink);
-      
-        fetch('http://127.0.0.1:5000/generate_meet', {
-          method: 'POST',
-          body: payload,
-        })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
+
+      // Fetch and display clients
+      document.addEventListener('DOMContentLoaded', function () {
+        fetchClients();
+
+        function fetchClients() {
+          const accessToken = localStorage.getItem('accessToken');
+          if (!accessToken) {
+            alert('Please log in to view clients.');
+            window.location.href = '../login.html';
+            return;
+          }
+
+          fetch('http://127.0.0.1:5000/list_clients', {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${accessToken}`,
+            },
           })
-          .then((data) => {
-            if (data.status === 'success') {
-              alert('Google Meet link generated successfully!');
-              window.open(data.link, '_blank'); // Opens the generated meeting link
-            } else {
-              alert('Failed to generate the link. Please try again.');
-            }
+          .then(response => response.json())
+          .then(clients => {
+            populateClientsTable(clients);
           })
-          .catch((error) => {
-            console.error('Error:', error);
-            alert('An error occurred while generating the link. Please check the console for details.');
+          .catch(error => {
+            console.error('Error fetching clients:', error);
+            alert('Failed to fetch clients.');
           });
-      }
-      
-      function nudgeClient(email) {
-        const payload = new FormData();
-        payload.append('email', email);
-      
-        fetch('http://127.0.0.1:5000/nudge_client', {
-          method: 'POST',
-          body: payload,
-        })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-          })
-          .then((data) => {
-            if (data.status === 'success') {
-              alert('Nudge mail has been sent successfully!');
-            } else {
-              alert('Failed to send the nudge mail. Please try again.');
-            }
-          })
-          .catch((error) => {
-            console.error('Error:', error);
-            alert('An error occurred while sending the nudge mail. Please check the console for details.');
+        }
+
+        function populateClientsTable(clients) {
+          const tbody = document.querySelector('#pc-dt-simple tbody');
+          tbody.innerHTML = '';  // Clear table
+
+          clients.forEach((client, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${index + 1}</td>
+              <td>
+                <div class="row">
+                  <div class="col-auto">
+                    <img src="../assets/images/user/avatar-${(index % 9) + 1}.jpg" alt="user-image" class="wid-40 rounded-circle" />
+                  </div>
+                  <div class="col">
+                    <h6 class="mb-0">${client.first_name}  ${client.middle_name} ${client.last_name}</h6>
+                    <p class="text-muted f-12 mb-0">${client.email_address}</p>
+                  </div>
+                </div>
+              </td>
+              <td>${client.phone_number}</td>
+              <td>${client.visa_services}</td>
+              <td>${getStatusBadge(client.status)}</td>
+              <td class="text-center">
+                <ul class="list-inline me-auto mb-0">
+                  <li class="list-inline-item" title="View">
+                    <a href="#" class="btn-link-secondary" onclick="viewClientDetails('${client._id}')">
+                      <i class="ti ti-eye f-18"></i>
+                    </a>
+                  </li>
+                  <li class="list-inline-item" title="Nudge">
+                    <a href="#" onclick="nudgeClient('${client.email_address}')" class="btn-link-success">
+                      <i class="ti ti-clock f-18" style="color: red;"></i>
+                    </a>
+                  </li>
+                  <li class="list-inline-item" title="Delete">
+                    <a href="#" onclick="deleteClient('${client._id}')" class="btn-link-danger">
+                      <i class="ti ti-trash f-18"></i>
+                    </a>
+                  </li>
+                </ul>
+              </td>
+            `;
+            tbody.appendChild(row);
           });
-      }
-      
-    </script>
+        }
+
+        function getStatusBadge(status) {
+          switch (status) {
+            case 'Not Started': return '<span class="badge bg-light-danger rounded-pill f-12">Not Started</span>';
+            case 'In Progress': return '<span class="badge bg-light-primary rounded-pill f-12">In Progress</span>';
+            case 'Completed': return '<span class="badge bg-light-success rounded-pill f-12">Completed</span>';
+            default: return '<span class="badge bg-light-secondary rounded-pill f-12">Unknown</span>';
+          }
+        }
+
+        // Function to view client details
+            window.viewClientDetails = function(clientId) {
+              const accessToken = localStorage.getItem('accessToken');
+              fetch(`http://127.0.0.1:5000/client_details/${clientId}`, {
+                  method: 'GET',
+                  headers: {
+                      'Authorization': `Bearer ${accessToken}`,
+                  },
+              })
+              .then(response => response.json())
+              .then(client => {
+                  populateClientModal(client);
+              })
+              .catch(error => {
+                  console.error('Error fetching client details:', error);
+                  alert('Failed to fetch client details.');
+              });
+          }
+
+          function populateClientModal(client) {
+            document.getElementById('client-name').textContent = `${client.first_name} ${client.middle_name} ${client.last_name}`;
+            document.getElementById('modal-client-name').textContent = `${client.first_name} ${client.middle_name} ${client.last_name}`;
+            document.getElementById('client-status').textContent = client.application_status;
+            document.getElementById('client-email').textContent = client.email_address;
+            document.getElementById('client-phone').textContent = client.phone_number;
+            document.getElementById('client-visa-service').textContent = client.visa_services;
+            document.getElementById('client-gender').textContent = client.client_gender;
+            document.getElementById('client-dob').textContent = client.date_of_birth;
+
+            const modal = new bootstrap.Modal(document.getElementById('customer-modal'));
+            modal.show();
+          }
+
+          window.deleteClient = function(clientId) {
+              if (!confirm('Are you sure you want to delete this client?')) return;
+
+              const accessToken = localStorage.getItem('accessToken');
+              fetch(`http://127.0.0.1:5000/delete_client/${clientId}`, {
+                  method: 'DELETE',
+                  headers: {
+                      'Authorization': `Bearer ${accessToken}`,
+                  },
+              })
+              .then(response => response.json())
+              .then(data => {
+                  if (data.msg === 'Client deleted successfully') {
+                      alert('Client deleted');
+                      fetchClients(); // Refresh the table
+                  } else {
+                      alert('Failed to delete client.');
+                  }
+              })
+              .catch(error => {
+                  console.error('Error deleting client:', error);
+                  alert('Failed to delete client.');
+              });
+          }
+
+          window.nudgeClient = function(email) {
+              const accessToken = localStorage.getItem('accessToken');
+              fetch('http://127.0.0.1:5000/send_nudge', {
+                  method: 'POST',
+                  headers: {
+                      'Authorization': `Bearer ${accessToken}`,
+                      'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({ email_address: email }),
+              })
+              .then(response => response.json())
+              .then(data => {
+                  if (data.msg === 'Nudge sent successfully') {
+                      alert('Nudge email sent!');
+                  } else {
+                      alert('Failed to send nudge.');
+                  }
+              })
+              .catch(error => {
+                  console.error('Error nudging client:', error);
+                  alert('Failed to send nudge.');
+              });
+          }
+      });
+  </script>
+    <!-- [Page Specific JS] end -->
+    
     @@include('../layouts/customizer.html')
   </body>
   <!-- [Body] end -->
