@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+ <!-- [Head] start -->
+ <head>
+   <meta charset="utf-8">
+   @@include('../layouts/head-page-meta.html', {'title': 'Login'})
+   @@include('../layouts/head-css.html')
+   <style>
+     .password-toggle {
+       cursor: pointer;
+     }
+   </style>
+ </head>
+ <!-- [Head] end -->
+ <!-- [Body] Start -->
+ <body @@bodySetup>
+   @@include('../layouts/loader.html')
+   <div class="auth-main">
+     <div class="auth-wrapper v1">
+       <div class="auth-form">
+         <div class="card my-5">
+           <div class="card-body">
+             <div class="text-center mb-5">
+               <a href="#"><img src="../assets/images/widget/logo-dark.svg" alt="img" /></a>
+             </div>
+            
+             <div class="d-flex justify-content-between align-items-center mb-4">
+               <h4 class="f-w-500 mb-0">Client Login</h4>
+               <h6 class="f-w-400 mb-0 text-secondary">
+               </h6>
+             </div>
+
+             <div class="mb-3">
+               <label for="emailInput" class="form-label">Email Address</label>
+               <input type="email" class="form-control" id="emailInput" placeholder="Enter your email" />
+             </div>
+
+             <!-- Authentication Code Field with Toggle Eye Icon -->
+             <div class="mb-3 position-relative">
+               <label for="passwordInput" class="form-label">Authentication Code</label>
+               <div class="input-group">
+                 <input type="password" class="form-control" id="passwordInput" placeholder="Enter your authentication code" />
+                 <span class="input-group-text password-toggle" onclick="togglePassword()">
+                   <i id="togglePasswordIcon" class="bi bi-eye-slash"></i>
+                 </span>
+               </div>
+             </div>
+
+             <div class="d-grid mt-4">
+               <button type="button" class="btn btn-primary" id="login-button" style="width: 100%; height: 44px;">Login</button>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+   <!-- [ Main Content ] end -->
+   @@include('../layouts/footer-js.html') @@include('../layouts/customizer.html')
+
+   <script>
+    // Function to get URL parameters
+    function getUrlParams() {
+      const params = {};
+      const searchParams = new URLSearchParams(window.location.search);
+      for (const [key, value] of searchParams) {
+        params[key] = value;
+      }
+      return params;
+    }
+
+    // Function to pre-fill form from URL parameters
+    function prefillForm() {
+      const params = getUrlParams();
+      if (params.status_code) {
+        const passwordInput = document.getElementById('passwordInput');
+        passwordInput.value = params.status_code;
+      }
+    }
+
+    // Call prefill on page load
+    document.addEventListener('DOMContentLoaded', prefillForm);
+
+    function togglePassword() {
+      const passwordInput = document.getElementById('passwordInput');
+      const toggleIcon = document.getElementById('togglePasswordIcon');
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.classList.replace('bi-eye-slash', 'bi-eye');
+      } else {
+        passwordInput.type = 'password';
+        toggleIcon.classList.replace('bi-eye', 'bi-eye-slash');
+      }
+    }
+  
+    document.getElementById('login-button').addEventListener('click', async function() {
+      const email = document.getElementById('emailInput').value;
+      const statusCode = document.getElementById('passwordInput').value;
+  
+      // Validate input fields
+      if (!email || !statusCode) {
+        alert('Please fill in both email and authentication code.');
+        return;
+      }
+  
+      // Define the backend endpoint URL for client sign-in
+      const endpoint = 'http://127.0.0.1:5000/client_sign_in';
+  
+      // Prepare the data to be sent in the request
+      const requestData = {
+        email_address: email,
+        status_code: statusCode,
+      };
+  
+      try {
+        // Make the POST request to the backend
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestData),
+        });
+  
+        if (response.ok) {
+          const responseData = await response.json();
+  
+          // Save both the token and client data in localStorage
+          localStorage.setItem('accessToken', responseData.access_token);
+          localStorage.setItem('clientData', JSON.stringify(responseData.client));
+  
+          // Handle successful sign-in
+          console.log('Sign-in successful:', responseData);
+  
+          // Updated redirect path to match your file structure
+          window.location.href = '/dashboard/client_index.html';  // Changed to match your file structure
+        } else {
+          // Handle sign-in failure
+          const errorData = await response.json();
+          console.error('Sign-in failed:', errorData);
+          alert('Sign-in failed. ' + (errorData.msg || 'Invalid email or authentication code.'));
+        }
+      } catch (error) {
+        console.error('Error occurred:', error);
+        alert('An error occurred while signing in. Please try again later.');
+      }
+    });
+  </script>
+  
+   <!-- Include Bootstrap Icons (if not already included) -->
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css" rel="stylesheet">
+ </body>
+ <!-- [Body] end -->
+</html>

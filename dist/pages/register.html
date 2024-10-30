@@ -273,7 +273,7 @@
               <div class="carousel-inner">
                 <div class="carousel-item active">
                   <img src="../assets/images/user/avatar-1.jpg" alt="user-image" class="user-avtar wid-50 rounded-circle mb-3" />
-                  <h5 class="text-white mb-0">Terranouva Migrations</h5>
+                  <h5 class="text-white mb-0">EB1/EB2 Consultant</h5>
                   <div class="star f-20 my-4">
                     <i class="fas fa-star text-warning"></i>
                     <i class="fas fa-star text-warning"></i>
@@ -282,14 +282,12 @@
                     <i class="fas fa-star-half-alt text-warning"></i>
                   </div>
                   <p class="text-white"
-                    >Very good customer service!👌 I liked the design and there was nothing wrong, but found out after testing that it did
-                    not quite match the functionality and overall design that I needed for my type of software. I therefore contacted
-                    customer service and it was no problem even though the deadline for refund had actually expired.😍</p
+                    >All I had to do was upload my docs, and Migraide’s AI did the rest. The process took minutes—so efficient!😍</p
                   >
                 </div>
                 <div class="carousel-item">
                   <img src="../assets/images/user/avatar-2.jpg" alt="user-image" class="user-avtar wid-50 rounded-circle mb-3" />
-                  <h5 class="text-white mb-0">RouteFinders Consulting</h5>
+                  <h5 class="text-white mb-0">General US Visa Applicant</h5>
                   <div class="star f-20 my-4">
                     <i class="fas fa-star text-warning"></i>
                     <i class="fas fa-star text-warning"></i>
@@ -298,14 +296,12 @@
                     <i class="fas fa-star-half-alt text-warning"></i>
                   </div>
                   <p class="text-white"
-                    >Very good customer service!👌 I liked the design and there was nothing wrong, but found out after testing that it did
-                    not quite match the functionality and overall design that I needed for my type of software. I therefore contacted
-                    customer service and it was no problem even though the deadline for refund had actually expired.😍</p
+                    >The AI agent has transformed our workflow. Forms are done in minutes, no guidance needed. It’s a real time-saver!</p
                   >
                 </div>
                 <div class="carousel-item">
                   <img src="../assets/images/user/avatar-3.jpg" alt="user-image" class="user-avtar wid-50 rounded-circle mb-3" />
-                  <h5 class="text-white mb-0">Terranouva Migrations</h5>
+                  <h5 class="text-white mb-0">EB1/EB2 Consultant</h5>
                   <div class="star f-20 my-4">
                     <i class="fas fa-star text-warning"></i>
                     <i class="fas fa-star text-warning"></i>
@@ -314,14 +310,12 @@
                     <i class="fas fa-star-half-alt text-warning"></i>
                   </div>
                   <p class="text-white"
-                    >Very good customer service!👌 I liked the design and there was nothing wrong, but found out after testing that it did
-                    not quite match the functionality and overall design that I needed for my type of software. I therefore contacted
-                    customer service and it was no problem even though the deadline for refund had actually expired.😍</p
+                    >Migraide’s privacy consciousness is outstanding, and the AI handles complex forms with precision. We endorse!</p
                   >
                 </div>
                 <div class="carousel-item">
                   <img src="../assets/images/user/avatar-4.jpg" alt="user-image" class="user-avtar wid-50 rounded-circle mb-3" />
-                  <h5 class="text-white mb-0">Terranouva Migrations</h5>
+                  <h5 class="text-white mb-0">EB1 Consultant</h5>
                   <div class="star f-20 my-4">
                     <i class="fas fa-star text-warning"></i>
                     <i class="fas fa-star text-warning"></i>
@@ -330,14 +324,12 @@
                     <i class="fas fa-star-half-alt text-warning"></i>
                   </div>
                   <p class="text-white"
-                    >Very good customer service!👌 I liked the design and there was nothing wrong, but found out after testing that it did
-                    not quite match the functionality and overall design that I needed for my type of software. I therefore contacted
-                    customer service and it was no problem even though the deadline for refund had actually expired.😍</p
+                    >Migraide’s privacy policy is fantastic. Knowing client data is secure while the AI fills forms perfectly is a huge plus.👌</p
                   >
                 </div>
                 <div class="carousel-item">
                   <img src="../assets/images/user/avatar-5.jpg" alt="user-image" class="user-avtar wid-50 rounded-circle mb-3" />
-                  <h5 class="text-white mb-0">Terranouva Migrations</h5>
+                  <h5 class="text-white mb-0">General US Visa Applicant</h5>
                   <div class="star f-20 my-4">
                     <i class="fas fa-star text-warning"></i>
                     <i class="fas fa-star text-warning"></i>
@@ -346,9 +338,7 @@
                     <i class="fas fa-star-half-alt text-warning"></i>
                   </div>
                   <p class="text-white"
-                    >Very good customer service!👌 I liked the design and there was nothing wrong, but found out after testing that it did
-                    not quite match the functionality and overall design that I needed for my type of software. I therefore contacted
-                    customer service and it was no problem even though the deadline for refund had actually expired.😍</p
+                    >The AI form filler made everything easy. In a few clicks, my entire form was done, no extra instructions needed!</p
                   >
                 </div>
               </div>
@@ -452,7 +442,13 @@
             Swal.fire({
               icon: 'success',
               title: 'Account Created',
-              text: result.msg
+              text: result.msg,
+              showConfirmButton: true
+            }).then((result) => {
+              if (result.isConfirmed) {
+                // Redirect to login page after user clicks OK
+                window.location.href = '/pages/login.html';
+              }
             });
           } else {
             Swal.fire({

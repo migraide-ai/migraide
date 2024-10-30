@@ -202,10 +202,9 @@
   </head>
   <!-- [Head] end -->
   <!-- [Body] Start -->
-
   <body @@bodySetup>
     @@include('../layouts/layout-vertical-client.html')
-
+  
     <!-- [ Main Content ] start -->
     <div class="pc-container">
       <div class="pc-content">
@@ -218,14 +217,14 @@
           </div>
           <span class="progress-percentage" id="progress-percentage">75%</span>
         </div>
-
+  
         <div class="processing-section">
           <div class="card-header" style="padding-bottom: 10px; border-bottom: 1px solid #E0E0E0; width: 100%;">
             <h5 style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; color: #333; padding-right: 30px;">
               Your forms are being filled out. Do not close or refresh this page.
             </h5>
           </div>
-
+  
           <div class="processing-bar">
             <span id="processing-text">Processing all documents</span>
             <div class="processing-progress">
@@ -233,82 +232,52 @@
             </div>
             <span id="processing-percentage" style="margin-left: 380px; position:fixed; font-size: 10px;"></span>
           </div>
-
+  
           <!-- Skeleton loader for the form previews -->
           <div id="form-previews" class="form-previews">
-            <div class="form-preview skeleton">
-              <div class="skeleton-header"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-footer"></div>
-              <div class="skeleton-body"></div>
-            </div>
-            <div class="form-preview skeleton">
-              <div class="skeleton-header"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-footer"></div>
-              <div class="skeleton-body"></div>
-            </div>
-            <div class="form-preview skeleton">
-              <div class="skeleton-header"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-footer"></div>
-              <div class="skeleton-body"></div>
-            </div>
-            <div class="form-preview skeleton">
-              <div class="skeleton-header"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-footer"></div>
-              <div class="skeleton-body"></div>
-            </div>
-            <div class="form-preview skeleton">
-              <div class="skeleton-header"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-footer"></div>
-              <div class="skeleton-body"></div>
-            </div>
-            <div class="form-preview skeleton">
-              <div class="skeleton-header"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-body"></div>
-              <div class="skeleton-footer"></div>
-              <div class="skeleton-body"></div>
-            </div>
+            <!-- Skeleton loaders will be generated dynamically -->
           </div>
+          
           <a href="/forms/success.html">
-          <button id="btn-continue" class="btn-continue" style="width: 287px; height: 44px; background-color: #7b7b7b00; color: #7b7b7b00;" onclick="continueToNextStep()" disabled>Continue</button></a>
+            <button id="btn-continue" class="btn-continue" style="width: 287px; height: 44px; background-color: #7b7b7b00; color: #7b7b7b00;" disabled>
+              Continue
+            </button>
+          </a>
         </div>
       </div>
     </div>
-  <script>
+  
+    <!-- Loading overlay template -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+      <div class="loading-content">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p style="margin-top: 10px;">Loading your form...</p>
+      </div>
+    </div>
+  
+    <script>
+      // Generate skeleton loaders
+      function generateSkeletons() {
+        const formPreviews = document.getElementById('form-previews');
+        for (let i = 0; i < 6; i++) {
+          const skeleton = document.createElement('div');
+          skeleton.classList.add('form-preview', 'skeleton');
+          skeleton.innerHTML = `
+            <div class="skeleton-header"></div>
+            <div class="skeleton-body"></div>
+            <div class="skeleton-body"></div>
+            <div class="skeleton-body"></div>
+            <div class="skeleton-body"></div>
+            <div class="skeleton-body"></div>
+            <div class="skeleton-body"></div>
+            <div class="skeleton-footer"></div>
+            <div class="skeleton-body"></div>
+          `;
+          formPreviews.appendChild(skeleton);
+        }
+      }
+  
+      // Processing steps
       const progressSteps = [
         'Processing all documents',
         'Extracting data from documents',
@@ -318,182 +287,161 @@
         'Cross-checking all data',
         'Form filling completed - click to review'
       ];
-
+  
       let progress = 0;
       let currentStep = 0;
       const progressBarFill = document.getElementById('processing-fill');
       const progressPercentage = document.getElementById('progress-percentage');
       const processingText = document.getElementById('processing-text');
       const formPreviews = document.getElementById('form-previews');
-      async function fillI140Form() {
-        try {
-          // Get user email from localStorage or another source
-          const userEmail = localStorage.getItem('userEmail'); // Adjust based on how you store the email
-          
-          const response = await fetch('http://127.0.0.1:5000/fill_i140_pdf', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              email: userEmail
-            })
-          });
-      
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Failed to fill I-140 form');
-          }
-      
-          const data = await response.json();
-          console.log('Form filled successfully:', data);
-          return true;
-        } catch (error) {
-          console.error('Error filling I-140 form:', error);
-          alert('Error filling form: ' + error.message);
-          return false;
-        }
-      }
-
-  async function updateProcessingProgress() {
-        if (progress < 100) {
-          progress += 16.67;
-          currentStep += 1;
-          progressBarFill.style.width = progress + '%';
-          progressPercentage.innerText = Math.floor(progress) + '%';
-          processingText.innerText = progressSteps[currentStep];
-
-          const randomTime = Math.random() * (2000 - 1000) + 1000;
-          setTimeout(updateProcessingProgress, randomTime);
-          
-        } else {
-          const success = await fillI140Form();
+async function fillI140Form() {
+  try {
+    const clientData = JSON.parse(localStorage.getItem('clientData'));
+    const accessToken = localStorage.getItem('accessToken');
     
-    if (success) {
-          // When progress reaches 100%, replace skeletons with clickable thumbnails
-          replaceSkeletonWithThumbnails();
-          const headerText = document.querySelector('.card-header h5');
-          headerText.innerText = "Your forms are now ready! Click on them to review.";
-          headerText.style.color = '#4285F4';
+    if (!clientData || !clientData.email_address || !accessToken) {
+      throw new Error('Please log in again to continue');
+    }
 
-          const continueButton = document.getElementById('btn-continue');
-          continueButton.disabled = false;
-          continueButton.style.backgroundColor = '#4285F4'; 
-          continueButton.style.color = '#fff';
-        }
-        else {
-          const headerText = document.querySelector('.card-header h5');
-          headerText.innerText = "There was an error processing your forms. Please try again.";
-          headerText.style.color = '#dc3545';
-        }
-      }
-      }
+    const response = await fetch('http://127.0.0.1:5000/fill_i140_pdf', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`
+      },
+      body: JSON.stringify({
+        email: clientData.email_address
+      })
+    });
 
-      function replaceSkeletonWithThumbnails() {
-        // Clear the skeleton loader
-        formPreviews.innerHTML = '';
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to fill I-140 form');
+    }
 
-        // Generate 6 clickable thumbnails
-//         for (let i = 1; i <= 6; i++) {
-//           const thumbnail = document.createElement('a');
-//           thumbnail.href = '#'; // Set appropriate link if needed
-//           thumbnail.classList.add('file-card');
-//           thumbnail.innerHTML = `
-//             <img src="/assets/images/widget/form_i140.png" alt="Document Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
-//           `;
-//           formPreviews.appendChild(thumbnail);
-//         }
-
-//         const formPreviews = document.getElementById('formPreviews'); // Make sure formPreviews is defined
-
-// // Path to the single PDF fil
-for (let i = 1; i <= 6; i++) {
-  const thumbnail = document.createElement('a');
-  thumbnail.href = '/assets/images/widget/i140.pdf'; // Set the href to the PDF file path
-  thumbnail.classList.add('file-card');
-  thumbnail.download = `Document-${i}.pdf`; // Set the download attribute with a filename
-  thumbnail.innerHTML = `
-    <img src="/assets/images/widget/form_i140.png" alt="Document Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
-  `;
-  formPreviews.appendChild(thumbnail);
+    const data = await response.json();
+    localStorage.setItem('filledFormUrl', data.form_url);
+    console.log('Form filled successfully:', data);
+    return true;
+  } catch (error) {
+    console.error('Error filling I-140 form:', error);
+    alert('Error filling form: ' + error.message);
+    return false;
+  }
 }
 
-      }
+// Progress update function
+async function updateProcessingProgress() {
+  if (progress < 100) {
+    progress += 16.67;
+    currentStep += 1;
+    progressBarFill.style.width = progress + '%';
+    progressPercentage.innerText = Math.floor(progress) + '%';
+    processingText.innerText = progressSteps[currentStep];
 
-      setTimeout(updateProcessingProgress, 5000);
+    const randomTime = Math.random() * (2000 - 1000) + 1000;
+    setTimeout(updateProcessingProgress, randomTime);
+  } else {
+    const success = await fillI140Form();
+    
+    if (success) {
+      replaceSkeletonWithThumbnails();
+      const headerText = document.querySelector('.card-header h5');
+      headerText.innerText = "Your forms are now ready! Click on them to view.";
+      headerText.style.color = '#4285F4';
 
-      // function continueToNextStep() {
-      //   alert('Proceeding to the next step...');
-      // }
-      function goToNextPage() {
-        document.getElementById('additional-information-section').style.display = 'none';
-        document.getElementById('visa-checklist-section').style.display = 'block';
-        document.getElementById('progress-bar').style.width = '100%';
-        document.getElementById('progress-percentage').innerText = '100%';
-      }
+      const continueButton = document.getElementById('btn-continue');
+      continueButton.disabled = false;
+      continueButton.style.backgroundColor = '#4285F4';
+      continueButton.style.color = '#fff';
+    } else {
+      const headerText = document.querySelector('.card-header h5');
+      headerText.innerText = "There was an error processing your forms. Please try again.";
+      headerText.style.color = '#dc3545';
+    }
+  }
+}
 
-      function goToPreviousPage() {
-        document.getElementById('visa-checklist-section').style.display = 'none';
-        document.getElementById('additional-information-section').style.display = 'block';
-        document.getElementById('progress-bar').style.width = '50%';
-        document.getElementById('progress-percentage').innerText = '50%';
-      }
+// Function to show loading overlay
+function showLoadingOverlay() {
+  const overlay = document.getElementById('loading-overlay');
+  overlay.style.display = 'flex';
+}
 
-  // URL of the PDF file (You can change this to a file upload or another source)
-  const pdfUrl = 'dist/assets/i140.pdf'; // Replace with your PDF file path
+function hideLoadingOverlay() {
+  const overlay = document.getElementById('loading-overlay');
+  overlay.style.display = 'none';
+}
 
-  // Function to generate PDF thumbnail
-  function generatePdfThumbnail(pdfUrl, pageNumber, thumbnailElement) {
-    // Load the PDF using pdf.js
-    pdfjsLib.getDocument(pdfUrl).promise.then((pdf) => {
-      // Get the desired page
-      pdf.getPage(pageNumber).then((page) => {
-        const scale = 0.5; // Thumbnail scale factor
-        const viewport = page.getViewport({ scale });
+// Function to open filled form with loading state
+function openFilledForm(url) {
+  showLoadingOverlay();
+  window.open(url, '_blank');
+  setTimeout(hideLoadingOverlay, 2000);
+}
 
-        // Create a canvas element to render the thumbnail
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-
-        // Render the page into the canvas
-        const renderContext = {
-          canvasContext: context,
-          viewport: viewport,
-        };
-        page.render(renderContext).promise.then(() => {
-          // Convert canvas to a data URL and replace the thumbnail image
-          const thumbnailUrl = canvas.toDataURL();
-          thumbnailElement.querySelector('img').src = thumbnailUrl; // Replace the image with the thumbnail
-        });
-      });
-    });
+// Replace skeletons with form thumbnails
+function replaceSkeletonWithThumbnails() {
+  formPreviews.innerHTML = '';
+  
+  const filledFormUrl = localStorage.getItem('filledFormUrl');
+  if (!filledFormUrl) {
+    console.error('No filled form URL found');
+    return;
   }
 
-  // Select the container where thumbnails will be added
-  formPreviews = document.querySelector('.form-previews');
+  const formTypes = [
+    { name: 'I-140', image: '/assets/images/widget/form_i140.png' },
+    { name: 'I-907', image: '/assets/images/widget/form_i907.png' },
+    { name: 'G-1145', image: '/assets/images/widget/form_g1145.png' },
+    { name: 'G-1450', image: '/assets/images/widget/form_g1450.png' }
+  ];
 
-  // Generate 6 thumbnails
-  for (let i = 1; i <= 6; i++) {
-    const thumbnail = document.createElement('a');
-    thumbnail.href = '#'; // Set appropriate link if needed
+  formTypes.forEach(form => {
+    const thumbnail = document.createElement('div');
     thumbnail.classList.add('file-card');
     thumbnail.innerHTML = `
-      <img src="/assets/images/widget/form_i140.png" alt="Document Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
+      <img src="${form.image}" alt="${form.name}" style="width: 100%; height: 100%; object-fit: cover;">
     `;
+
+    thumbnail.addEventListener('click', () => {
+      openFilledForm(filledFormUrl);
+    });
+
     formPreviews.appendChild(thumbnail);
+  });
+}
 
-    // Generate and replace the placeholder with PDF thumbnail (first page in this example)
-    generatePdfThumbnail(pdfUrl, 1, thumbnail); // You can modify the page number here if needed
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+  // Check authentication
+  const clientData = JSON.parse(localStorage.getItem('clientData'));
+  const accessToken = localStorage.getItem('accessToken');
+  
+  if (!clientData || !clientData.email_address || !accessToken) {
+    alert('Please log in to access your forms');
+    window.location.href = '../login.html';
+    return;
   }
-    </script>
-    <!-- [Page Specific JS] end -->
-    @@include('../layouts/customizer.html')  
-    @@include('../layouts/footer-block.html')
-    @@include('../layouts/footer-js.html')
 
-    
-  </body>
-  <!-- [Body] end -->
+  // Update header with client name if available
+  if (clientData.first_name) {
+    const headerText = document.querySelector('.card-header h3');
+    if (headerText) {
+      headerText.innerText = `Welcome, ${clientData.first_name}`;
+    }
+  }
+
+  // Generate initial skeletons
+  generateSkeletons();
+
+  // Start processing
+  setTimeout(updateProcessingProgress, 5000);
+});
+</script>
+
+@@include('../layouts/customizer.html')  
+@@include('../layouts/footer-block.html')
+@@include('../layouts/footer-js.html')
+</body>
 </html>
