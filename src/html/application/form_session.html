@@ -341,15 +341,15 @@
                      email: clientData.email_address
                  })
              });
-      
+             console.log (response);
              if (!response.ok) {
                  const errorData = await response.json();
                  throw new Error(errorData.error || 'Failed to fill I-140 form');
              }
       
              const data = await response.json();
-             localStorage.setItem('filledFormUrl', data.form_url);
-             console.log('Form filled successfully, URL:', data.form_url);
+             localStorage.setItem('filledFormUrl', data.pdf_url);
+             console.log('Form filled successfully, URL:', data.pdf_url);
              return true;
          } catch (error) {
              console.error('Error filling I-140 form:', error);
@@ -375,7 +375,7 @@
              if (success) {
                  replaceSkeletonWithThumbnails();
                  const headerText = document.querySelector('.card-header h5');
-                 headerText.innerText = "Your forms are now ready! Click on them to view.";
+                 headerText.innerText = "Your forms are now ready! Click on them to download. Ensure you download all the forms before moving forward!!!";
                  headerText.style.color = '#4285F4';
       
                  const continueButton = document.getElementById('btn-continue');
