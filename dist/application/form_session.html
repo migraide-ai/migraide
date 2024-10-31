@@ -145,13 +145,40 @@
       }
 
       .file-card {
+        position: relative;
         width: 160px;
         height: 200px;
         overflow: hidden;
         background-color: #ffffff;
         border-radius: 5px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25); /* Add shadow */
-      }
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+        transition: transform 0.2s ease-in-out;
+    }
+    
+    .file-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+    
+    .loading-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    
+    .loading-content {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+    }
 
       /* PDF Viewer Styling */
       #pdfViewer {
@@ -1600,182 +1627,207 @@
     <script>
       // Generate skeleton loaders
       function generateSkeletons() {
-        const formPreviews = document.getElementById('form-previews');
-        for (let i = 0; i < 6; i++) {
-          const skeleton = document.createElement('div');
-          skeleton.classList.add('form-preview', 'skeleton');
-          skeleton.innerHTML = `
-            <div class="skeleton-header"></div>
-            <div class="skeleton-body"></div>
-            <div class="skeleton-body"></div>
-            <div class="skeleton-body"></div>
-            <div class="skeleton-body"></div>
-            <div class="skeleton-body"></div>
-            <div class="skeleton-body"></div>
-            <div class="skeleton-footer"></div>
-            <div class="skeleton-body"></div>
-          `;
-          formPreviews.appendChild(skeleton);
-        }
+         const formPreviews = document.getElementById('form-previews');
+         for (let i = 0; i < 6; i++) {
+             const skeleton = document.createElement('div');
+             skeleton.classList.add('form-preview', 'skeleton');
+             skeleton.innerHTML = `
+                 <div class="skeleton-header"></div>
+                 <div class="skeleton-body"></div>
+                 <div class="skeleton-body"></div>
+                 <div class="skeleton-body"></div>
+                 <div class="skeleton-body"></div>
+                 <div class="skeleton-body"></div>
+                 <div class="skeleton-body"></div>
+                 <div class="skeleton-footer"></div>
+                 <div class="skeleton-body"></div>
+             `;
+             formPreviews.appendChild(skeleton);
+         }
       }
-  
+      
       // Processing steps
       const progressSteps = [
-        'Processing all documents',
-        'Extracting data from documents',
-        'Cleaning up data collected',
-        'Destroying and deleting document copies',
-        'Matching all form fields with data',
-        'Cross-checking all data',
-        'Form filling completed - click to review'
+         'Processing all documents',
+         'Extracting data from documents',
+         'Cleaning up data collected',
+         'Destroying and deleting document copies',
+         'Matching all form fields with data',
+         'Cross-checking all data',
+         'Form filling completed - click to review'
       ];
-  
+      
       let progress = 0;
       let currentStep = 0;
       const progressBarFill = document.getElementById('processing-fill');
       const progressPercentage = document.getElementById('progress-percentage');
       const processingText = document.getElementById('processing-text');
       const formPreviews = document.getElementById('form-previews');
-async function fillI140Form() {
-  try {
-    const clientData = JSON.parse(localStorage.getItem('clientData'));
-    const accessToken = localStorage.getItem('accessToken');
-    
-    if (!clientData || !clientData.email_address || !accessToken) {
-      throw new Error('Please log in again to continue');
-    }
-
-    const response = await fetch('http://127.0.0.1:5000/fill_i140_pdf', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`
-      },
-      body: JSON.stringify({
-        email: clientData.email_address
-      })
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to fill I-140 form');
-    }
-
-    const data = await response.json();
-    localStorage.setItem('filledFormUrl', data.form_url);
-    console.log('Form filled successfully:', data);
-    return true;
-  } catch (error) {
-    console.error('Error filling I-140 form:', error);
-    alert('Error filling form: ' + error.message);
-    return false;
-  }
-}
-
-// Progress update function
-async function updateProcessingProgress() {
-  if (progress < 100) {
-    progress += 16.67;
-    currentStep += 1;
-    progressBarFill.style.width = progress + '%';
-    progressPercentage.innerText = Math.floor(progress) + '%';
-    processingText.innerText = progressSteps[currentStep];
-
-    const randomTime = Math.random() * (2000 - 1000) + 1000;
-    setTimeout(updateProcessingProgress, randomTime);
-  } else {
-    const success = await fillI140Form();
-    
-    if (success) {
-      replaceSkeletonWithThumbnails();
-      const headerText = document.querySelector('.card-header h5');
-      headerText.innerText = "Your forms are now ready! Click on them to view.";
-      headerText.style.color = '#4285F4';
-
-      const continueButton = document.getElementById('btn-continue');
-      continueButton.disabled = false;
-      continueButton.style.backgroundColor = '#4285F4';
-      continueButton.style.color = '#fff';
-    } else {
-      const headerText = document.querySelector('.card-header h5');
-      headerText.innerText = "There was an error processing your forms. Please try again.";
-      headerText.style.color = '#dc3545';
-    }
-  }
-}
-
-// Function to show loading overlay
-function showLoadingOverlay() {
-  const overlay = document.getElementById('loading-overlay');
-  overlay.style.display = 'flex';
-}
-
-function hideLoadingOverlay() {
-  const overlay = document.getElementById('loading-overlay');
-  overlay.style.display = 'none';
-}
-
-// Function to open filled form with loading state
-function openFilledForm(url) {
-  showLoadingOverlay();
-  window.open(url, '_blank');
-  setTimeout(hideLoadingOverlay, 2000);
-}
-
-// Replace skeletons with form thumbnails
-function replaceSkeletonWithThumbnails() {
-  formPreviews.innerHTML = '';
-  
-  const filledFormUrl = localStorage.getItem('filledFormUrl');
-  if (!filledFormUrl) {
-    console.error('No filled form URL found');
-    return;
-  }
-
-  const formTypes = [
-    { name: 'I-140', image: '/assets/images/widget/form_i140.png' },
-    { name: 'I-907', image: '/assets/images/widget/form_i907.png' },
-    { name: 'I-1145', image: '/assets/images/widget/form_i140.png' },
-    { name: 'I-1450-715', image: '/assets/images/widget/form_i140.png' },
-    { name: 'I-1450-300', image: '/assets/images/widget/form_i140.png' },
-    { name: 'I-1450-2805', image: '/assets/images/widget/form_i140.png' }
-  ];
-
-  formTypes.forEach(form => {
-    const thumbnail = document.createElement('div');
-    thumbnail.classList.add('file-card');
-    thumbnail.innerHTML = `
-   <img src="${form.image}" alt="${form.name}" style="width: 100%; height: 100%; object-fit: cover;">
-    `;
-
-    thumbnail.addEventListener('click', () => {
-      openFilledForm(filledFormUrl);
-    });
-
-    formPreviews.appendChild(thumbnail);
-  });
-}
-
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', function() {
-  // Check authentication
-  const clientData = JSON.parse(localStorage.getItem('clientData'));
-  const accessToken = localStorage.getItem('accessToken');
-  
-  if (!clientData || !clientData.email_address || !accessToken) {
-    alert('Please log in to access your forms');
-    window.location.href = '../login.html';
-    return;
-  }
-
-
-  // Generate initial skeletons
-  generateSkeletons();
-
-  // Start processing
-  setTimeout(updateProcessingProgress, 5000);
-});
-</script>
+      
+      async function fillI140Form() {
+         try {
+             const clientData = JSON.parse(localStorage.getItem('clientData'));
+             const accessToken = localStorage.getItem('accessToken');
+             
+             if (!clientData || !clientData.email_address || !accessToken) {
+                 throw new Error('Please log in again to continue');
+             }
+      
+             const response = await fetch('http://127.0.0.1:5000/fill_i140_pdf', {
+                 method: 'POST',
+                 headers: {
+                     'Content-Type': 'application/json',
+                     'Authorization': `Bearer ${accessToken}`
+                 },
+                 body: JSON.stringify({
+                     email: clientData.email_address
+                 })
+             });
+      
+             if (!response.ok) {
+                 const errorData = await response.json();
+                 throw new Error(errorData.error || 'Failed to fill I-140 form');
+             }
+      
+             const data = await response.json();
+             localStorage.setItem('filledFormUrl', data.form_url);
+             console.log('Form filled successfully, URL:', data.form_url);
+             return true;
+         } catch (error) {
+             console.error('Error filling I-140 form:', error);
+             alert('Error filling form: ' + error.message);
+             return false;
+         }
+      }
+      
+      // Progress update function
+      async function updateProcessingProgress() {
+         if (progress < 100) {
+             progress += 16.67;
+             currentStep += 1;
+             progressBarFill.style.width = progress + '%';
+             progressPercentage.innerText = Math.floor(progress) + '%';
+             processingText.innerText = progressSteps[currentStep];
+      
+             const randomTime = Math.random() * (2000 - 1000) + 1000;
+             setTimeout(updateProcessingProgress, randomTime);
+         } else {
+             const success = await fillI140Form();
+             
+             if (success) {
+                 replaceSkeletonWithThumbnails();
+                 const headerText = document.querySelector('.card-header h5');
+                 headerText.innerText = "Your forms are now ready! Click on them to view.";
+                 headerText.style.color = '#4285F4';
+      
+                 const continueButton = document.getElementById('btn-continue');
+                 continueButton.disabled = false;
+                 continueButton.style.backgroundColor = '#4285F4';
+                 continueButton.style.color = '#fff';
+             } else {
+                 const headerText = document.querySelector('.card-header h5');
+                 headerText.innerText = "There was an error processing your forms. Please try again.";
+                 headerText.style.color = '#dc3545';
+             }
+         }
+      }
+      
+      // Loading overlay functions
+      function showLoadingOverlay() {
+         const overlay = document.getElementById('loading-overlay');
+         const loadingText = overlay.querySelector('p');
+         loadingText.textContent = 'Opening your filled form...';
+         overlay.style.display = 'flex';
+      }
+      
+      function hideLoadingOverlay() {
+         const overlay = document.getElementById('loading-overlay');
+         overlay.style.display = 'none';
+      }
+      
+      // View filled form function
+      function viewFilledForm(url) {
+         const filledFormUrl = localStorage.getItem('filledFormUrl');
+         if (!filledFormUrl) {
+             alert('Form URL not found. Please try regenerating the form.');
+             return;
+         }
+         window.open(filledFormUrl, '_blank');
+      }
+      
+      // Replace skeletons with thumbnails
+      function replaceSkeletonWithThumbnails() {
+         formPreviews.innerHTML = '';
+         
+         const filledFormUrl = localStorage.getItem('filledFormUrl');
+         if (!filledFormUrl) {
+             console.error('No filled form URL found');
+             return;
+         }
+      
+         const formTypes = [
+             { name: 'I-140', image: '/assets/images/widget/form_i140.png' },
+             { name: 'I-907', image: '/assets/images/widget/form_i907.png' },
+             { name: 'I-1145', image: '/assets/images/widget/form_g1145.png' },
+             { name: 'I-1450-715', image: '/assets/images/widget/form_g1450_715.png' },
+             { name: 'I-1450-300', image: '/assets/images/widget/form_g1450_300.png' },
+             { name: 'I-1450-2805', image: '/assets/images/widget/form_g1450_2805.png' }
+         ];
+      
+         formTypes.forEach(form => {
+             const thumbnail = document.createElement('div');
+             thumbnail.classList.add('file-card');
+             thumbnail.style.cursor = 'pointer';
+             
+             thumbnail.innerHTML = `
+                 <div style="position: relative; width: 100%; height: 100%;">
+                     <img src="${form.image}" alt="${form.name}" style="width: 100%; height: 100%; object-fit: cover;">
+                     <div style="position: absolute; bottom: 0; left: 0; right: 0; 
+                                 background: rgba(0,0,0,0.7); color: white; 
+                                 padding: 5px; text-align: center;">
+                         ${form.name}
+                     </div>
+                     <div style="position: absolute; top: 10px; right: 10px; 
+                                 background: rgba(66, 133, 244, 0.9); padding: 8px; 
+                                 border-radius: 50%; cursor: pointer;">
+                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" 
+                              stroke="white" stroke-width="2" stroke-linecap="round" 
+                              stroke-linejoin="round">
+                             <path d="M12 5v14m-7-7l7 7 7-7"/>
+                         </svg>
+                     </div>
+                 </div>
+             `;
+      
+             thumbnail.addEventListener('click', () => {
+                 showLoadingOverlay();
+                 viewFilledForm(filledFormUrl);
+                 setTimeout(hideLoadingOverlay, 2000);
+             });
+      
+             formPreviews.appendChild(thumbnail);
+         });
+      }
+      
+      // Initialize on page load
+      document.addEventListener('DOMContentLoaded', function() {
+         // Check authentication
+         const clientData = JSON.parse(localStorage.getItem('clientData'));
+         const accessToken = localStorage.getItem('accessToken');
+         
+         if (!clientData || !clientData.email_address || !accessToken) {
+             alert('Please log in to access your forms');
+             window.location.href = '../login.html';
+             return;
+         }
+      
+         // Generate initial skeletons
+         generateSkeletons();
+      
+         // Start processing
+         setTimeout(updateProcessingProgress, 5000);
+      });
+      </script>
 
 <!-- <div class="pct-c-btn">
   <a href="#" data-bs-toggle="offcanvas" data-bs-target="#offcanvas_pc_layout">
