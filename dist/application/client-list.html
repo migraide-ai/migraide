@@ -1821,51 +1821,88 @@ window.openScheduleModal = function(email, name) {
     currentClientEmail = email;
     currentClientName = name;
 }
+window.scheduleGoogleMeet = function(clientEmail, clientName) {
+  // Get the logged in user's data directly
+  const businessEmail = JSON.parse(localStorage.getItem('businessData')).email_address;
+  
+  // Set meeting time for tomorrow at 2 PM UTC
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setUTCHours(14, 0, 0, 0);
+  
+  // Set meeting end time (1 hour later)
+  const endTime = new Date(tomorrow);
+  endTime.setHours(tomorrow.getHours() + 1);
 
-window.scheduleGoogleMeet = async function(clientEmail, clientName) {
-  try {
-      const businessData = JSON.parse(localStorage.getItem('businessData'));
-      if (!businessData || !businessData.email) {
-          throw new Error('User email not found');
+  // Format dates for Google Calendar URL
+  const startDate = tomorrow.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  const endDate = endTime.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+
+  // Create Google Calendar URL with meeting details
+  const url = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+      "&text=" + encodeURIComponent(`Visa Forms Review - ${clientName}`) +
+      "&details=" + encodeURIComponent("Review session for your completed visa forms.") +
+      "&add=" + encodeURIComponent(`${businessEmail},${clientEmail}`) +
+      "&location=" + encodeURIComponent("https://meet.google.com/") +
+      "&dates=" + startDate + "/" + endDate;
+
+  window.open(url, '_blank');
+}
+
+window.nudgeClient = function(email) {
+  const accessToken = localStorage.getItem('accessToken');
+  fetch('http://127.0.0.1:5000/send_nudge', {
+      method: 'POST',
+      headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email_address: email }),
+  })
+  .then(response => response.json())
+  .then(data => {
+      if (data.msg === 'Nudge sent successfully') {
+          alert('Nudge email sent!');
+      } else {
+          alert('Failed to send nudge.');
       }
+  })
+  .catch(error => {
+      console.error('Error nudging client:', error);
+      alert('Failed to send nudge.');
+  });
+}
 
-      const userEmail = businessData.email;
-
-      // Set meeting time for tomorrow at 2 PM UTC
-      const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      tomorrow.setUTCHours(14, 0, 0, 0);
-      
-      // Set meeting end time (1 hour later)
-      const endTime = new Date(tomorrow);
-      endTime.setHours(tomorrow.getHours() + 1);
-
-      // Format dates for Google Calendar URL
-      const startDate = tomorrow.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
-      const endDate = endTime.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
-
-      // Create Google Calendar URL with meeting details
-      const url = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
-          "&text=" + encodeURIComponent(`Visa Forms Review - ${clientName}`) +
-          "&details=" + encodeURIComponent("Review session for your completed visa forms.") +
-          "&add=" + encodeURIComponent(`${userEmail},${clientEmail}`) +
-          "&location=" + encodeURIComponent("https://meet.google.com/") +
-          "&dates=" + startDate + "/" + endDate;
-
-      window.open(url, '_blank');
-  } catch (error) {
-      console.error('Error scheduling meeting:', error);
-      alert('Failed to schedule meeting. Please make sure you are logged in.');
-  }
-};
-
-// Also update the openScheduleModal function
-window.openScheduleModal = function(email, name) {
-  currentClientEmail = email;
-  currentClientName = name;
-  // Add this console.log to verify the values are being set
-  console.log('Schedule modal opened for:', name, email);
-};
+// Separate function for status update
+function updateClientStatus(email) {
+  const token = localStorage.getItem('token');
+  
+  fetch('http://127.0.0.1:5000/update_status_by_email', {
+      method: 'PUT',
+      headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+          email_address: email,
+          application_status: 'In Progress'
+      }),
+  })
+  .then(response => response.json())
+  .then(data => {
+      console.log('Status update response:', data);  // Debug log
+      if (data.msg === 'Application status updated successfully') {
+          alert('Status updated successfully!');
+          fetchClients(); // Refresh the client list
+      } else {
+          alert('Status update failed: ' + data.msg);
+      }
+  })
+  .catch(error => {
+      console.error('Status update error:', error);
+      alert('Failed to update status. Please try again.');
+  });
+}
 
 window.viewClientDetails = function(clientId) {
     const accessToken = localStorage.getItem('accessToken');
@@ -1938,51 +1975,7 @@ window.deleteClient = function(clientId) {
     });
 };
 
-window.nudgeClient = async function(email) {
-    const accessToken = localStorage.getItem('accessToken');
-    try {
-        // Send nudge
-        const nudgeResponse = await fetch('http://127.0.0.1:5000/send_nudge', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${accessToken}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email_address: email,
-            form_url: "https://forms.com/test" }),
-        });
 
-        const nudgeData = await nudgeResponse.json();
-        
-        if (nudgeData.msg === 'Nudge sent successfully') {
-            // Update the client's status after successful nudge
-            const updateResponse = await fetch('http://127.0.0.1:5000/update_status_by_email', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email_address: email,
-                    status: 'In Progress'
-                }),
-            });
-            const updateData = await updateResponse.json();
-
-            if (updateData.msg === 'Application status updated successfully') {
-                alert('Nudge sent and status updated successfully!');
-                fetchClients(); // Refresh the client list
-            } else {
-                alert(updateData.msg || 'Status update failed');
-            }
-        } else {
-            alert(nudgeData.msg || 'Failed to send nudge');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('Failed to process request. Please try again.');
-    }
-};
 </script>
 
 <!-- [Page Specific JS] end -->

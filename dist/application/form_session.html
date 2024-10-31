@@ -1735,15 +1735,17 @@ function replaceSkeletonWithThumbnails() {
   const formTypes = [
     { name: 'I-140', image: '/assets/images/widget/form_i140.png' },
     { name: 'I-907', image: '/assets/images/widget/form_i907.png' },
-    { name: 'G-1145', image: '/assets/images/widget/form_g1145.png' },
-    { name: 'G-1450', image: '/assets/images/widget/form_g1450.png' }
+    { name: 'I-1145', image: '/assets/images/widget/form_i140.png' },
+    { name: 'I-1450-715', image: '/assets/images/widget/form_i140.png' },
+    { name: 'I-1450-300', image: '/assets/images/widget/form_i140.png' },
+    { name: 'I-1450-2805', image: '/assets/images/widget/form_i140.png' }
   ];
 
   formTypes.forEach(form => {
     const thumbnail = document.createElement('div');
     thumbnail.classList.add('file-card');
     thumbnail.innerHTML = `
-      <img src="${form.image}" alt="${form.name}" style="width: 100%; height: 100%; object-fit: cover;">
+   <img src="${form.image}" alt="${form.name}" style="width: 100%; height: 100%; object-fit: cover;">
     `;
 
     thumbnail.addEventListener('click', () => {
@@ -1766,13 +1768,6 @@ document.addEventListener('DOMContentLoaded', function() {
     return;
   }
 
-  // Update header with client name if available
-  if (clientData.first_name) {
-    const headerText = document.querySelector('.card-header h3');
-    if (headerText) {
-      headerText.innerText = `Welcome, ${clientData.first_name}`;
-    }
-  }
 
   // Generate initial skeletons
   generateSkeletons();

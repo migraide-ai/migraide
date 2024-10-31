@@ -115,7 +115,14 @@
   
           // Save the token in localStorage (or sessionStorage)
           localStorage.setItem('accessToken', responseData.access_token);
-  
+   // Store business data including email
+   const businessData = {
+    email_address: email,  // Store the email used for login
+    // Add any other business data from responseData if available
+    ...responseData.business_data // If your backend sends additional business data
+};
+localStorage.setItem('businessData', JSON.stringify(businessData));
+
           // Handle successful sign-in here
           console.log('Sign-in successful:', responseData);
           alert('Sign-in successful');

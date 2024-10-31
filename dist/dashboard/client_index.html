@@ -1364,9 +1364,10 @@
       <div class="col-12 file-manger-wrapper">
         <!-- Hi Faith Text Group -->
         <a class="h5 text-hover-primary d-block" data-bs-toggle="collapse" href="#collapseFilefilter" role="button" aria-expanded="false">
-          <div style="font-size: 35px; font-family: 'Inter', sans-serif; margin-bottom: 30px;">
-          Hi I'm Lincoln &#x1F44B;&#x1F3FE;
+          <div id="greeting-header" style="font-size: 35px; font-family: 'Inter', sans-serif; margin-bottom: 30px;">
+            Hi &#x1F44B;&#x1F3FE;
           </div>
+          
         </a>
     
         <!-- Our AI Agent Text Group -->
@@ -2736,6 +2737,21 @@
      </div> -->
 
     <!-- [Page Specific JS] start -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+      const clientData = localStorage.getItem('clientData');
+      if (clientData) {
+        const parsedClientData = JSON.parse(clientData);
+        const greetingHeader = document.getElementById('greeting-header');
+        if (greetingHeader && parsedClientData.first_name) {
+          greetingHeader.innerText = `Hi, ${parsedClientData.first_name} 👋🏾`;
+        }
+      } else {
+        // Redirect to login page if user is not authenticated
+        window.location.href = '/login.html';
+      }
+    });
+  </script>
     <script src="../assets/js/plugins/apexcharts.min.js"></script>
     <script src="../assets/js/pages/dashboard-default.js"></script>
     <!-- [Page Specific JS] end -->

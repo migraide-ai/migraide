@@ -1854,7 +1854,7 @@
            <div class="col-md-6">
              <div class="mb-3">
                <label class="form-label" for="part1-7">Do you have a U.S. Social Security Number?</label>
-               <select class="form-control" id="part1-7" name="part1-7" required onchange="toggleInputField('part1-7', 'ssn')">
+               <select class="form-control" id="part1-7" name="part1-7" required onchange="toggleInputField('part1-7', 'part1_ssn_number_9')">
                  <option value="" disabled selected>Select</option>
                  <option value="yes">Yes (Provide SSN)</option>
                  <option value="no">No</option>
@@ -1866,7 +1866,7 @@
            <div class="col-md-6">
              <div class="mb-3">
                <label class="form-label" for="part1-8">Do you have a USCIS Online Account Number?</label>
-               <select class="form-control" id="part1-8" name="part1-8" required onchange="toggleInputField('part1-8', 'uscis-account')">
+               <select class="form-control" id="part1-8" name="part1-8" required onchange="toggleInputField('part1-8', 'part1_uscis_number_12')">
                  <option value="" disabled selected>Select</option>
                  <option value="yes">Yes (Provide account number)</option>
                  <option value="no">No</option>
@@ -1881,7 +1881,7 @@
            <div class="col-md-6">
              <div class="mb-3">
                <label class="form-label" for="part2-2a">Is this petition an amendment of a previously filed petition?</label>
-               <select class="form-control" id="part2-2a" name="part2-2a" onchange="toggleInputField('part2-2a', 'petition-receipt')">
+               <select class="form-control" id="part2-2a" name="part2-2a" onchange="toggleInputField('part2-2a', 'part2_previous_application_number_13')">
                  <option value="" disabled selected>Select</option>
                  <option value="yes">Yes (Provide previous petition receipt number)</option>
                  <option value="no">No</option>
@@ -1893,7 +1893,7 @@
            <div class="col-md-6">
              <div class="mb-3">
                <label class="form-label" for="part3-8">What is the Alien Registration Number of the petitioner?</label>
-               <select class="form-control" id="part3-8" name="part3-8" onchange="toggleInputField('part3-8', 'anumber')">
+               <select class="form-control" id="part3-8" name="part3-8" onchange="toggleInputField('part3-8', 'part3_other_info_alien_9')">
                  <option value="" disabled selected>Select</option>
                  <option value="provide_anumber">Provide A-Number</option>
                  <option value="no_anumber">N/A</option>
@@ -2257,7 +2257,7 @@ async function submitUserData() {
     // Get values from all required fields
     const email = document.getElementById('user-email')?.value || localStorage.getItem('userEmail');
     const applyingFrom = document.getElementById('part5-1b-apply-from')?.value;
-    
+
     // Get SSN information
     const hasSSN = document.getElementById('part1-7')?.value;
     const ssnNumber = hasSSN === 'yes' ? 
@@ -2321,10 +2321,10 @@ async function submitUserData() {
 
     const data = await response.json();
     console.log('User data submitted successfully:', data);
-    
+
     // After successful submission, redirect to the form filler page
     window.location.href = "/application/form_session.html";
-    
+
     return data;
 
   } catch (error) {
@@ -2333,6 +2333,7 @@ async function submitUserData() {
     return false;
   }
 }
+
 
 // Add this new function to handle address data extraction
 // Address proof upload handler
@@ -2477,7 +2478,17 @@ function uploadFile(fileType) {
     }
   }
 }
-
+function toggleInputField(selectId, inputType) {
+  const selectElement = document.getElementById(selectId);
+  const containerId = `${selectId}-container`;
+  const container = document.getElementById(containerId);
+  if (selectElement.value === 'yes' || selectElement.value === 'provide_anumber') {
+    const inputField = `<input type="text" class="form-control" placeholder="Enter ${inputType.replace('-', ' ')}" />`;
+    container.innerHTML = inputField;
+  } else {
+    container.innerHTML = '';
+  }
+}
 // Form validation and page navigation functions
 function goToNextPage() {
   const passportFile = document.getElementById('passport-upload')?.files[0];
