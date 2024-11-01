@@ -42,6 +42,52 @@
      .password-toggle {
        cursor: pointer;
      }
+
+     /* Custom Alert Styling */
+     .alert-message {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      background-color: #28a745;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 25px;
+      display: none;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .alert-message .icon {
+      width: 24px;
+      height: 24px;
+      background-color: white;
+      color: #28a745;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .check-icon {
+      width: 24px;
+      height: 24px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .check-icon::before {
+      content: '\2713';
+      color: #28a745;
+      font-size: 18px;
+      font-weight: bold;
+    }
    </style>
  </head>
  <!-- [Head] end -->
@@ -386,78 +432,99 @@
 
 
    <script>
-    function togglePassword() {
-      const passwordInput = document.getElementById('passwordInput');
-      const toggleIcon = document.getElementById('togglePasswordIcon');
-      if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        toggleIcon.classList.replace('bi-eye-slash', 'bi-eye');
-      } else {
-        passwordInput.type = 'password';
-        toggleIcon.classList.replace('bi-eye', 'bi-eye-slash');
-      }
-    }
-  
-    document.getElementById('login-button').addEventListener('click', async function() {
-      const email = document.getElementById('emailInput').value;
-      const password = document.getElementById('passwordInput').value;
-  
-      // Validate input fields
-      if (!email || !password) {
-        alert('Please fill in both email and password.');
-        return;
-      }
-  
-      // Define the backend endpoint URL
-      const endpoint = 'http://127.0.0.1:5000/sign_in'; // Ensure this matches your backend endpoint
-  
-      // Prepare the data to be sent in the request
-      const requestData = {
-        email_address: email,
-        password: password,
-      };
-  
-      try {
-        // Make the POST request to the backend
-        const response = await fetch(endpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(requestData),
-        });
-  
-        if (response.ok) {
-          const responseData = await response.json();
-  
-          // Save the token in localStorage (or sessionStorage)
-          localStorage.setItem('accessToken', responseData.access_token);
-   // Store business data including email
-   const businessData = {
-    email_address: email,  // Store the email used for login
-    // Add any other business data from responseData if available
-    ...responseData.business_data // If your backend sends additional business data
-};
-localStorage.setItem('businessData', JSON.stringify(businessData));
-
-          // Handle successful sign-in here
-          console.log('Sign-in successful:', responseData);
-          alert('Sign-in successful');
-  
-          // Redirect to a different page, for example
-          window.location.href = '../dashboard/index.html';
-        } else {
-          // Handle sign-in failure
-          const errorData = await response.json();
-          console.error('Sign-in failed:', errorData);
-          alert('Sign-in failed. ' + (errorData.message || 'Please check your credentials.'));
+    function showAlert(message, isSuccess, callback = null) {
+        let alertMessage = document.querySelector('.alert-message');
+        if (!alertMessage) {
+            alertMessage = document.createElement('div');
+            alertMessage.className = 'alert-message';
+            document.body.appendChild(alertMessage);
         }
-      } catch (error) {
-        console.error('Error occurred:', error);
-        alert('An error occurred while signing in. Please try again later.');
-      }
+        
+        alertMessage.innerHTML = `<span class="check-icon"></span> ${message}`;
+        alertMessage.style.backgroundColor = isSuccess ? '#28a745' : '#dc3545';
+        alertMessage.style.display = 'flex';
+
+        setTimeout(function () {
+            alertMessage.style.display = 'none';
+            if (callback) callback();
+        }, 2000);
+    }
+
+    document.getElementById('login-button').addEventListener('click', async function() {
+        const email = document.getElementById('emailInput').value;
+        const password = document.getElementById('passwordInput').value;
+
+        if (!email || !password) {
+            showAlert('Please fill in both email and password.', false);
+            return;
+        }
+
+        try {
+            const response = await fetch('http://127.0.0.1:5000/sign_in', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email_address: email,
+                    password: password,
+                }),
+            });
+
+            const responseData = await response.json();
+            console.log('Full response data:', responseData); // Debug log
+
+            if (response.ok) {
+                // Save the token
+                localStorage.setItem('accessToken', responseData.access_token);
+
+                // Debug: Log what we received
+                console.log('Response data structure:', {
+                    hasUser: !!responseData.user,
+                    hasBusinessData: !!responseData.business_data,
+                    full: responseData
+                });
+
+                // Construct user data object
+                const userData = {
+                    email_address: email
+                };
+
+                // Check each possible location for the first name
+                if (responseData.business_data && responseData.business_data.first_name) {
+                    userData.first_name = responseData.business_data.first_name;
+                } else if (responseData.user && responseData.user.first_name) {
+                    userData.first_name = responseData.user.first_name;
+                } else if (responseData.first_name) {
+                    userData.first_name = responseData.first_name;
+                }
+
+                // Include all additional data
+                if (responseData.business_data) {
+                    Object.assign(userData, responseData.business_data);
+                }
+                if (responseData.user) {
+                    Object.assign(userData, responseData.user);
+                }
+
+                console.log('Final userData to be stored:', userData); // Debug log
+
+                // Store the data
+                localStorage.setItem('businessData', JSON.stringify(userData));
+                localStorage.setItem('clientData', JSON.stringify(userData));
+
+                showAlert('Sign-in successful', true, function() {
+                    window.location.href = '../dashboard/index.html';
+                });
+            } else {
+                showAlert(responseData.message || 'Invalid credentials. Please try again.', false);
+            }
+        } catch (error) {
+            console.error('Error during login:', error);
+            showAlert('An error occurred while signing in. Please try again later.', false);
+        }
     });
-  </script>
+</script>
   
    <!-- Include Bootstrap Icons (if not already included) -->
    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css" rel="stylesheet">

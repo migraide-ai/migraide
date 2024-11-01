@@ -24,8 +24,8 @@
         <!-- Hi Faith Text Group -->
        
 <a class="h5 text-hover-primary d-block" data-bs-toggle="collapse" href="#collapseFilefilter" role="button" aria-expanded="false">
-  <div id="greeting" style="font-size: 35px; font-family: 'Inter', sans-serif; margin-bottom: 30px;">
-    Hi <span id="firstNamePlaceholder">I'm Lincoln</span> &#x1F44B;&#x1F3FE; <!-- Default "there" will be replaced dynamically -->
+  <div id="greeting-header" style="font-size: 35px; font-family: 'Inter', sans-serif; margin-bottom: 30px;">
+    Hi &#x1F44B;&#x1F3FE;
   </div>
 </a>
 
@@ -1158,44 +1158,55 @@
     <script src="../assets/js/pages/dashboard-default.js"></script>
    
     <script>
-      // Function to fetch user data and update the greeting
-      async function fetchUserData() {
-        try {
-          const response = await fetch("/dashboard", {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json"
-            }
+      document.addEventListener('DOMContentLoaded', function () {
+          console.log('Starting dashboard initialization');
+          
+          // Check what data we have in localStorage
+          const businessData = localStorage.getItem('businessData');
+          const clientData = localStorage.getItem('clientData');
+          
+          console.log('Found in localStorage:', {
+              hasBusinessData: !!businessData,
+              hasClientData: !!clientData,
+              businessData: businessData ? JSON.parse(businessData) : null,
+              clientData: clientData ? JSON.parse(clientData) : null
           });
-    
-          // Check if the response is okay
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-    
-          // Parse the JSON data from the response
-          const data = await response.json();
-    
-          // Check if the status is success
-          if (data.status === "success") {
-            // Update the greeting with the first name
-            document.getElementById("greeting").innerHTML = `Hi ${data.first_name} &#x1F44B;&#x1F3FE;`;
+  
+          const userData = businessData || clientData;
+  
+          if (userData) {
+              try {
+                  const parsedUserData = JSON.parse(userData);
+                  console.log('Parsed user data:', parsedUserData);
+                  
+                  const greetingHeader = document.getElementById('greeting-header');
+                  
+                  if (greetingHeader) {
+                      if (parsedUserData.first_name) {
+                          console.log('Setting greeting with name:', parsedUserData.first_name);
+                          greetingHeader.innerText = `Hi, ${parsedUserData.first_name} 👋🏾`;
+                      } else {
+                          // If no first name, check what data we do have
+                          console.log('No first_name found. Available fields:', Object.keys(parsedUserData));
+                          greetingHeader.innerText = `Hi 👋🏾`;
+                          
+                          // Try to get the name from other possible fields
+                          if (parsedUserData.name) {
+                              greetingHeader.innerText = `Hi, ${parsedUserData.name} 👋🏾`;
+                          }
+                      }
+                  } else {
+                      console.log('Greeting header element not found');
+                  }
+              } catch (error) {
+                  console.error('Error parsing user data:', error);
+              }
           } else {
-            // Handle the case where there's an error
-            console.error("Error fetching user data:", data.message);
+              console.log('No user data found, redirecting to login');
+              window.location.href = '/login.html';
           }
-    
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-        }
-      }
-    
-      // Call the function to fetch user data when the page loads
-      window.onload = fetchUserData;
-    </script>
-    
-    
-    
+      });
+  </script>
     
     
     

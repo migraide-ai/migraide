@@ -1729,9 +1729,15 @@
                  headerText.innerText = "There was an error processing your forms. Please try again.";
                  headerText.style.color = '#dc3545';
              }
+             history.pushState(null, null, location.href);
+             window.onpopstate = function(event) {
+               history.pushState(null, null, location.href);
+               alert("Please download your forms before proceeding. Use the Continue button to move forward.");
+             };
          }
       }
-      
+    
+
       // Loading overlay functions
       function showLoadingOverlay() {
          const overlay = document.getElementById('loading-overlay');
@@ -1826,6 +1832,34 @@
       
          // Start processing
          setTimeout(updateProcessingProgress, 5000);
+      });
+      history.pushState(null, null, location.href);
+      window.onpopstate = function(event) {
+        history.pushState(null, null, location.href);
+        
+        // Show warning message to user
+        const userConfirmed = confirm(
+          "Warning: Going back may disrupt the form filling process. " +
+          "Are you sure you want to leave this page? Your progress will be lost."
+        );
+        
+        if (!userConfirmed) {
+          return;
+        }
+        
+        // If user really wants to leave, clear form data and redirect to login
+        localStorage.removeItem('filledFormUrl');
+        window.location.href = '/login.html';
+      };
+    
+      // Also handle beforeunload event
+      window.addEventListener('beforeunload', function(e) {
+        // Only show warning if forms are still processing
+        if (progress < 100) {
+          e.preventDefault();
+          e.returnValue = '';
+          return '';
+        }
       });
       </script>
 

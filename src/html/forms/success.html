@@ -127,14 +127,14 @@
         <div class="processing-section">
           <div class="card-header">
             <h5 style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #333; padding-right: 30px;">
-              Visa Form Completed Successfully</h5>            
+              Visa Forms Completed Successfully</h5>            
             <p style="font-size: 14px; color: #666; margin-top: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-              A copy of the form(s) have been sent to your registered email.
+              <!-- A copy of the form(s) have been sent to your registered email. -->
             </p>
             <div class="success-container" style="margin-top: -50px;">
               <i class="fas fa-check-circle" style="font-size: 80px; color:#39b54a;"></i>
                <div class="success-message">
-                 <p style="font-size: 14px;">All documents now destroyed and deleted from our database.</p>
+                 <p style="font-size: 14px;">All documents now destroyed and deleted from our database. </p>
                </div>
                <a href="/index.html">
                <button class="new-application-btn" style="width:287px; height:44px;">Finish</button></a>
@@ -152,7 +152,45 @@
         window.location.href = 'index.html'; // Redirect to the appropriate page
       }
     </script> -->
-    
+    <script>
+      // Prevent navigation back
+      window.addEventListener('load', function() {
+          // Clear browser history to prevent going back
+          window.history.pushState(null, null, window.location.href);
+      
+          // Handle back button press
+          window.onpopstate = function() {
+              window.history.pushState(null, null, window.location.href);
+              
+              // Show warning message
+              alert("Cannot go back - your forms have been processed and documents destroyed. Please use the Finish button to return to the dashboard.");
+          };
+      });
+      
+      // Also prevent using backspace to navigate back
+      document.addEventListener('keydown', function(e) {
+          if (e.key === 'Backspace' && e.target === document.body) {
+              e.preventDefault();
+          }
+      });
+      
+      // Prevent page refresh
+      window.addEventListener('beforeunload', function(e) {
+          // Cancel the event
+          e.preventDefault();
+          // Chrome requires returnValue to be set
+          e.returnValue = '';
+      });
+      
+      // Clear any sensitive data from localStorage when finishing
+      document.querySelector('.new-application-btn').addEventListener('click', function() {
+          // Clear any sensitive form data before redirecting
+          localStorage.removeItem('filledFormUrl');
+          localStorage.removeItem('formData');
+          // Keep authentication data if needed
+          window.location.href = '/index.html';
+      });
+      </script>
     @@include('../layouts/footer-block.html') 
     @@include('../layouts/footer-js.html')
 

@@ -4,6 +4,49 @@
   <head>
     <link rel="stylesheet" href="../assets/css/plugins/style.css" />
     @@include('../layouts/head-page-meta.html', {'title': 'Customer List'}) @@include('../layouts/head-css.html')
+    <style>
+      .alert-message {
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        background-color: #28a745;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 25px;
+        display: none;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .alert-message .icon {
+        width: 24px;
+        height: 24px;
+        background-color: white;
+        color: #28a745;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+      }
+      .check-icon {
+        width: 24px;
+        height: 24px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .check-icon::before {
+        content: '\2713';
+        color: #28a745;
+        font-size: 18px;
+        font-weight: bold;
+      }
+    </style>
   </head>
   <!-- [Head] end -->
   
@@ -139,7 +182,7 @@
   </div>
 </div>
 
-<!-- Schedule Review Modal -->
+<!-- Review Modal Structure -->
 <div class="modal fade" id="review-modal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" style="width: 350px;">
     <div class="modal-content">
@@ -156,6 +199,22 @@
   </div>
 </div>
 
+<!-- Nudge Modal Structure -->
+<div class="modal fade" id="nudge-modal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" style="width: 350px;">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <h5 class="modal-title">Send Reminder to Client</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-footer border-0">
+        <button type="button" class="btn btn-primary" style="width:100%; height: 44px;" id="send-nudge-btn">
+          Send Reminder Email
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 @@include('../layouts/footer-block.html') 
 @@include('../layouts/footer-js.html')
 
@@ -165,71 +224,103 @@
   // Global variables for scheduling
   let currentClientEmail = '';
   let currentClientName = '';
-  
+  let currentNudgeEmail = '';
+let currentNudgeName = '';
   // Setup the DataTable
   const dataTable = new simpleDatatables.DataTable('#pc-dt-simple', {
       sortable: false,
       perPage: 5
   });
-  
-  document.addEventListener('DOMContentLoaded', function () {
-      // Add table styles
-      const tableStyle = document.createElement('style');
-      tableStyle.textContent = `
-          .table th {
-              text-align: left !important;
-              padding-left: 1rem !important;
-          }
-          .table td {
-              text-align: left !important;
-              padding-left: 1rem !important;
-              vertical-align: middle;
-          }
-          /* Keep Actions column centered */
-          .table th:last-child,
-          .table td:last-child {
-              text-align: center !important;
-              padding-left: 0 !important;
-          }
-          /* Column widths */
-          .table td:first-child {
-              width: 5%;
-          }
-          .table td:nth-child(2) {
-              width: 30%;
-          }
-          .table td:nth-child(3) {
-              width: 20%;
-          }
-          .table td:nth-child(4) {
-              width: 20%;
-          }
-          .table td:nth-child(5) {
-              width: 15%;
-          }
-          .table td:last-child {
-              width: 10%;
-          }
-          /* Fix for user avatar and name alignment */
-          .table .row {
-              margin-left: 0;
-              margin-right: 0;
-          }
-          .table .col-auto {
-              padding-left: 0;
-          }
-      `;
-      document.head.appendChild(tableStyle);
-  
-      // Initialize search functionality
-      const searchInput = document.querySelector('[type="search"]');
-      if (searchInput) {
-          searchInput.addEventListener('keyup', function(e) {
-              if (dataTable) {
-                  dataTable.search(e.target.value);
-              }
-          });
+    // Centralized alert function
+    function showAlert(message, isSuccess, callback = null) {
+      let alertMessage = document.querySelector('.alert-message');
+      if (!alertMessage) {
+          alertMessage = document.createElement('div');
+          alertMessage.className = 'alert-message';
+          document.body.appendChild(alertMessage);
       }
+      
+      alertMessage.innerHTML = `<span class="check-icon"></span> ${message}`;
+      alertMessage.style.backgroundColor = isSuccess ? '#28a745' : '#dc3545';
+      alertMessage.style.display = 'flex';
+
+      setTimeout(function () {
+          alertMessage.style.display = 'none';
+          if (callback) callback();
+      }, 2000);
+  }
+    // Custom confirm dialog
+    function showConfirm(message, onConfirm) {
+      let confirmMessage = document.querySelector('.alert-message');
+      if (!confirmMessage) {
+          confirmMessage = document.createElement('div');
+          confirmMessage.className = 'alert-message';
+          document.body.appendChild(confirmMessage);
+      }
+
+      confirmMessage.innerHTML = `
+          <span class="check-icon"></span>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+              <div>${message}</div>
+              <div style="display: flex; gap: 10px;">
+                  <button class="btn btn-sm btn-light" onclick="handleConfirmResponse(false)">Cancel</button>
+                  <button class="btn btn-sm btn-primary" onclick="handleConfirmResponse(true)">OK</button>
+              </div>
+          </div>`;
+      confirmMessage.style.backgroundColor = '#2196F3';
+      confirmMessage.style.display = 'flex';
+      
+      window.handleConfirmResponse = function(response) {
+          confirmMessage.style.display = 'none';
+          if (response) {
+              onConfirm();
+          }
+      };
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    // Add table styles
+    const tableStyle = document.createElement('style');
+    tableStyle.textContent = `
+        .table th {
+            text-align: left !important;
+            padding-left: 1rem !important;
+        }
+        .table td {
+            text-align: left !important;
+            padding-left: 1rem !important;
+            vertical-align: middle;
+        }
+        .table th:last-child,
+        .table td:last-child {
+            text-align: center !important;
+            padding-left: 0 !important;
+        }
+        .table td:first-child { width: 5%; }
+        .table td:nth-child(2) { width: 30%; }
+        .table td:nth-child(3) { width: 20%; }
+        .table td:nth-child(4) { width: 20%; }
+        .table td:nth-child(5) { width: 15%; }
+        .table td:last-child { width: 10%; }
+        .table .row {
+            margin-left: 0;
+            margin-right: 0;
+        }
+        .table .col-auto {
+            padding-left: 0;
+        }
+    `;
+    document.head.appendChild(tableStyle);
+
+    // Initialize search functionality
+    const searchInput = document.querySelector('[type="search"]');
+    if (searchInput) {
+        searchInput.addEventListener('keyup', function(e) {
+            if (dataTable) {
+                dataTable.search(e.target.value);
+            }
+        });
+    }
+
    // Add schedule button event listener
    const scheduleMeetBtn = document.getElementById('schedule-meet-btn');
    if (scheduleMeetBtn) {
@@ -243,33 +334,45 @@
        });
    }
   
-      // Fetch initial data
-      fetchClients();
-  });
-  
-  function fetchClients() {
-      const accessToken = localStorage.getItem('accessToken');
-      if (!accessToken) {
-          alert('Please log in to view clients.');
-          window.location.href = '../login.html';
-          return;
+      // Add nudge button event listener
+      const sendNudgeBtn = document.getElementById('send-nudge-btn');
+      if (sendNudgeBtn) {
+          sendNudgeBtn.addEventListener('click', function() {
+              console.log('Sending nudge to:', currentNudgeName, currentNudgeEmail);
+              nudgeClient(currentNudgeEmail);
+              const modal = bootstrap.Modal.getInstance(document.getElementById('nudge-modal'));
+              if (modal) {
+                  modal.hide();
+              }
+          });
       }
-  
-      fetch('http://127.0.0.1:5000/list_clients', {
-          method: 'GET',
-          headers: {
-              'Authorization': `Bearer ${accessToken}`,
-          },
-      })
-      .then(response => response.json())
-      .then(clients => {
-          populateClientsTable(clients);
-      })
-      .catch(error => {
-          console.error('Error fetching clients:', error);
-          alert('Failed to fetch clients.');
+       // Fetch initial data
+       fetchClients();
       });
-  }
+      function fetchClients() {
+        const accessToken = localStorage.getItem('accessToken');
+        if (!accessToken) {
+            showAlert('Please log in to view clients.', false, function() {
+                window.location.href = '../login.html';
+            });
+            return;
+        }
+    
+        fetch('http://127.0.0.1:5000/list_clients', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+            },
+        })
+        .then(response => response.json())
+        .then(clients => {
+            populateClientsTable(clients);
+        })
+        .catch(error => {
+            console.error('Error fetching clients:', error);
+            showAlert('Failed to fetch clients.', false);
+        });
+    }
   
   function populateClientsTable(clients) {
       const tbody = document.querySelector('#pc-dt-simple tbody');
@@ -294,26 +397,26 @@
               <td class="text-left">${client.visa_services || 'N/A'}</td>
               <td class="text-left">${getStatusBadge(client.status)}</td>
               <td class="text-center">
-                  <ul class="list-inline me-auto mb-0">
-                      <li class="list-inline-item" title="View">
-                          <a href="#" class="btn-link-secondary" onclick="viewClientDetails('${client._id}')">
-                              <i class="ti ti-eye f-18"></i>
-                          </a>
-                      </li>
-                      <li class="list-inline-item" title="Schedule Review">
-                          <a href="#" class="btn-link-primary" onclick="openScheduleModal('${client.email_address}', '${client.first_name} ${client.last_name}')" data-bs-toggle="modal" data-bs-target="#review-modal">
-                              <i class="ti ti-calendar f-18"></i>
-                          </a>
-                      </li>
-                      <li class="list-inline-item" title="Nudge">
-                          <a href="#" onclick="nudgeClient('${client.email_address}')" class="btn-link-success">
-                              <i class="ti ti-clock f-18" style="color: red;"></i>
-                          </a>
-                      </li>
-                      <li class="list-inline-item" title="Delete">
-                          <a href="#" onclick="deleteClient('${client._id}')" class="btn-link-danger">
-                              <i class="ti ti-trash f-18"></i>
-                          </a>
+                 <ul class="list-inline me-auto mb-0">
+                    <li class="list-inline-item" title="View">
+                        <a href="#" class="btn-link-secondary" onclick="viewClientDetails('${client._id}')">
+                            <i class="ti ti-eye f-18"></i>
+                        </a>
+                    </li>
+                    <li class="list-inline-item" title="Schedule Review">
+                        <a href="#" class="btn-link-primary" onclick="openScheduleModal('${client.email_address}', '${client.first_name} ${client.last_name}')" data-bs-toggle="modal" data-bs-target="#review-modal">
+                            <i class="ti ti-calendar f-18"></i>
+                        </a>
+                    </li>
+                    <li class="list-inline-item" title="Send Reminder">
+                        <a href="#" class="btn-link-success" onclick="openNudgeModal('${client.email_address}', '${client.first_name} ${client.last_name}')" data-bs-toggle="modal" data-bs-target="#nudge-modal">
+                            <i class="ti ti-clock f-18" style="color: red;"></i>
+                        </a>
+                    </li>
+                    <li class="list-inline-item" title="Delete">
+                        <a href="#" onclick="deleteClient('${client._id}')" class="btn-link-danger">
+                            <i class="ti ti-trash f-18"></i>
+                        </a>
                       </li>
                   </ul>
               </td>
@@ -371,6 +474,11 @@ window.scheduleGoogleMeet = function(clientEmail, clientName) {
 
   window.open(url, '_blank');
 }
+// Update the openNudgeModal function
+window.openNudgeModal = function(email, name) {
+  currentNudgeEmail = email;
+  currentNudgeName = name;
+}
 
 window.nudgeClient = function(email) {
   const accessToken = localStorage.getItem('accessToken');
@@ -385,45 +493,14 @@ window.nudgeClient = function(email) {
   .then(response => response.json())
   .then(data => {
       if (data.msg === 'Nudge sent successfully') {
-          alert('Nudge email sent!');
+          showAlert('Reminder sent successfully!', true);
       } else {
-          alert('Failed to send nudge.');
+          showAlert('Failed to send reminder.', false);
       }
   })
   .catch(error => {
-      console.error('Error nudging client:', error);
-      alert('Failed to send nudge.');
-  });
-}
-
-// Separate function for status update
-function updateClientStatus(email) {
-  const token = localStorage.getItem('token');
-  
-  fetch('http://127.0.0.1:5000/update_status_by_email', {
-      method: 'PUT',
-      headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-          email_address: email,
-          application_status: 'In Progress'
-      }),
-  })
-  .then(response => response.json())
-  .then(data => {
-      console.log('Status update response:', data);  // Debug log
-      if (data.msg === 'Application status updated successfully') {
-          alert('Status updated successfully!');
-          fetchClients(); // Refresh the client list
-      } else {
-          alert('Status update failed: ' + data.msg);
-      }
-  })
-  .catch(error => {
-      console.error('Status update error:', error);
-      alert('Failed to update status. Please try again.');
+      console.error('Error sending reminder:', error);
+      showAlert('Failed to send reminder. Please try again.', false);
   });
 }
 
@@ -474,28 +551,55 @@ window.viewClientDetails = function(clientId) {
 };
 
 window.deleteClient = function(clientId) {
-    if (!confirm('Are you sure you want to delete this client?')) return;
-
-    const accessToken = localStorage.getItem('accessToken');
-    fetch(`http://127.0.0.1:5000/delete_client/${clientId}`, {
-        method: 'DELETE',
-        headers: {
-            'Authorization': `Bearer ${accessToken}`,
-        },
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.msg === 'Client deleted successfully') {
-            alert('Client deleted');
-            fetchClients(); // Refresh the table
-        } else {
-            alert('Failed to delete client.');
-        }
-    })
-    .catch(error => {
-        console.error('Error deleting client:', error);
-        alert('Failed to delete client.');
-    });
+  showConfirm('Are you sure you want to delete this client?', function() {
+      const accessToken = localStorage.getItem('accessToken');
+      fetch(`http://127.0.0.1:5000/delete_client/${clientId}`, {
+          method: 'DELETE',
+          headers: {
+              'Authorization': `Bearer ${accessToken}`,
+          },
+      })
+      .then(response => response.json())
+      .then(data => {
+          if (data.msg === 'Client deleted successfully') {
+              showAlert('Client deleted successfully', true);
+              fetchClients();
+          } else {
+              showAlert('Failed to delete client.', false);
+          }
+      })
+      .catch(error => {
+          console.error('Error deleting client:', error);
+          showAlert('Failed to delete client.', false);
+      });
+  });
+};
+window.updateClientStatus = function(email) {
+  const token = localStorage.getItem('token');
+  fetch('http://127.0.0.1:5000/update_status_by_email', {
+      method: 'PUT',
+      headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+          email_address: email,
+          application_status: 'In Progress'
+      }),
+  })
+  .then(response => response.json())
+  .then(data => {
+      if (data.msg === 'Application status updated successfully') {
+          showAlert('Status updated successfully!', true);
+          fetchClients();
+      } else {
+          showAlert(`Status update failed: ${data.msg}`, false);
+      }
+  })
+  .catch(error => {
+      console.error('Status update error:', error);
+      showAlert('Failed to update status. Please try again.', false);
+  });
 };
 
 

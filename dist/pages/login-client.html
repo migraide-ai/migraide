@@ -42,6 +42,50 @@
      .password-toggle {
        cursor: pointer;
      }
+     .alert-message {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      background-color: #28a745;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 25px;
+      display: none;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .alert-message .icon {
+      width: 24px;
+      height: 24px;
+      background-color: white;
+      color: #28a745;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .check-icon {
+      width: 24px;
+      height: 24px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .check-icon::before {
+      content: '\2713';
+      color: #28a745;
+      font-size: 18px;
+      font-weight: bold;
+    }
    </style>
  </head>
  <!-- [Head] end -->
@@ -375,93 +419,111 @@
 
 
    <script>
+    // Function to show custom alerts
+    function showAlert(message, isSuccess, callback = null) {
+        let alertMessage = document.querySelector('.alert-message');
+        if (!alertMessage) {
+            alertMessage = document.createElement('div');
+            alertMessage.className = 'alert-message';
+            document.body.appendChild(alertMessage);
+        }
+        
+        alertMessage.innerHTML = `<span class="check-icon"></span> ${message}`;
+        alertMessage.style.backgroundColor = isSuccess ? '#28a745' : '#dc3545'; // Green for success, red for error
+        alertMessage.style.display = 'flex';
+
+        setTimeout(function () {
+            alertMessage.style.display = 'none';
+            if (callback) callback();
+        }, 2000);
+    }
+
     // Function to get URL parameters
     function getUrlParams() {
-      const params = {};
-      const searchParams = new URLSearchParams(window.location.search);
-      for (const [key, value] of searchParams) {
-        params[key] = value;
-      }
-      return params;
+        const params = {};
+        const searchParams = new URLSearchParams(window.location.search);
+        for (const [key, value] of searchParams) {
+            params[key] = value;
+        }
+        return params;
     }
 
     // Function to pre-fill form from URL parameters
     function prefillForm() {
-      const params = getUrlParams();
-      if (params.status_code) {
-        const passwordInput = document.getElementById('passwordInput');
-        passwordInput.value = params.status_code;
-      }
+        const params = getUrlParams();
+        if (params.status_code) {
+            const passwordInput = document.getElementById('passwordInput');
+            passwordInput.value = params.status_code;
+        }
     }
 
     // Call prefill on page load
     document.addEventListener('DOMContentLoaded', prefillForm);
 
     function togglePassword() {
-      const passwordInput = document.getElementById('passwordInput');
-      const toggleIcon = document.getElementById('togglePasswordIcon');
-      if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        toggleIcon.classList.replace('bi-eye-slash', 'bi-eye');
-      } else {
-        passwordInput.type = 'password';
-        toggleIcon.classList.replace('bi-eye', 'bi-eye-slash');
-      }
-    }
-  
-    document.getElementById('login-button').addEventListener('click', async function() {
-      const email = document.getElementById('emailInput').value;
-      const statusCode = document.getElementById('passwordInput').value;
-  
-      // Validate input fields
-      if (!email || !statusCode) {
-        alert('Please fill in both email and authentication code.');
-        return;
-      }
-  
-      // Define the backend endpoint URL for client sign-in
-      const endpoint = 'http://127.0.0.1:5000/client_sign_in';
-  
-      // Prepare the data to be sent in the request
-      const requestData = {
-        email_address: email,
-        status_code: statusCode,
-      };
-  
-      try {
-        // Make the POST request to the backend
-        const response = await fetch(endpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(requestData),
-        });
-  
-        if (response.ok) {
-          const responseData = await response.json();
-  
-          // Save both the token and client data in localStorage
-          localStorage.setItem('accessToken', responseData.access_token);
-          localStorage.setItem('clientData', JSON.stringify(responseData.client));
-  
-          // Handle successful sign-in
-          console.log('Sign-in successful:', responseData);
-  
-          // Updated redirect path to match your file structure
-          window.location.href = '/dashboard/client_index.html';  // Changed to match your file structure
+        const passwordInput = document.getElementById('passwordInput');
+        const toggleIcon = document.getElementById('togglePasswordIcon');
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleIcon.classList.replace('bi-eye-slash', 'bi-eye');
         } else {
-          // Handle sign-in failure
-          const errorData = await response.json();
-          console.error('Sign-in failed:', errorData);
-          alert('Sign-in failed. ' + (errorData.msg || 'Invalid email or authentication code.'));
+            passwordInput.type = 'password';
+            toggleIcon.classList.replace('bi-eye', 'bi-eye-slash');
         }
-      } catch (error) {
-        console.error('Error occurred:', error);
-        alert('An error occurred while signing in. Please try again later.');
-      }
+    }
+
+    document.getElementById('login-button').addEventListener('click', async function() {
+        const email = document.getElementById('emailInput').value;
+        const statusCode = document.getElementById('passwordInput').value;
+
+        // Validate input fields
+        if (!email || !statusCode) {
+            showAlert('Please fill in both email and authentication code.', false);
+            return;
+        }
+
+        // Define the backend endpoint URL for client sign-in
+        const endpoint = 'http://127.0.0.1:5000/client_sign_in';
+
+        // Prepare the data to be sent in the request
+        const requestData = {
+            email_address: email,
+            status_code: statusCode,
+        };
+
+        try {
+            // Make the POST request to the backend
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData),
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+
+                // Save both the token and client data in localStorage
+                localStorage.setItem('accessToken', responseData.access_token);
+                localStorage.setItem('clientData', JSON.stringify(responseData.client));
+
+                // Show success message and redirect
+                showAlert('Sign-in successful!', true, function() {
+                    window.location.href = '/dashboard/client_index.html';
+                });
+            } else {
+                // Handle sign-in failure
+                const errorData = await response.json();
+                console.error('Sign-in failed:', errorData);
+                showAlert(errorData.msg || 'Invalid email or authentication code.', false);
+            }
+        } catch (error) {
+            console.error('Error occurred:', error);
+            showAlert('An error occurred while signing in. Please try again later.', false);
+        }
     });
-  </script>
+</script>
   
    <!-- Include Bootstrap Icons (if not already included) -->
    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css" rel="stylesheet">
