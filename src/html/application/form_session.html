@@ -444,6 +444,41 @@ async function fillG1450Forms() {
   }
 }
 
+// Add I-907 form filling function
+async function fillI907Form() {
+  try {
+      const clientData = JSON.parse(localStorage.getItem('clientData'));
+      const accessToken = localStorage.getItem('accessToken');
+      
+      if (!clientData || !clientData.email_address || !accessToken) {
+          throw new Error('Please log in again to continue');
+      }
+
+      const response = await fetch('http://127.0.0.1:5000/fill_i907_pdf', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${accessToken}`
+          },
+          body: JSON.stringify({
+              email: clientData.email_address
+          })
+      });
+
+      if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to fill I-907 form');
+      }
+
+      const data = await response.json();
+      localStorage.setItem('i907FormUrl', data.pdf_url);
+      return true;
+  } catch (error) {
+      console.error('Error filling I-907 form:', error);
+      return false;
+  }
+}
+
 
 // Function to fill all forms
 async function fillAllForms() {
@@ -451,7 +486,8 @@ async function fillAllForms() {
       const results = await Promise.all([
           fillI140Form(),
           fillG1145Form(),
-          fillG1450Forms()
+          fillG1450Forms(),
+          fillI907Form()
       ]);
 
       return results.every(result => result === true);
@@ -495,6 +531,9 @@ function viewFilledForm(formType) {
       case 'I-1450-2805':
           formUrl = localStorage.getItem('g1450_2805FormUrl');
           break;
+          case 'I-907':  // Add this case
+          formUrl = localStorage.getItem('i907FormUrl');
+          break;
       default:
           console.error('Unknown form type:', formType);
           return;
@@ -518,8 +557,9 @@ function replaceSkeletonWithThumbnails() {
       { name: 'I-1145', image: '/assets/images/widget/form_g1145.png' },
       { name: 'I-1450-715', image: '/assets/images/widget/form_g1450_715.png' },
       { name: 'I-1450-300', image: '/assets/images/widget/form_g1450_300.png' },
-      { name: 'I-1450-2805', image: '/assets/images/widget/form_g1450_2805.png' }
-  ];
+      { name: 'I-1450-2805', image: '/assets/images/widget/form_g1450_2805.png' },
+      { name: 'I-907', image: '/assets/images/widget/form_i907.png' }
+      ];
 
   formTypes.forEach(form => {
       const thumbnail = document.createElement('div');
