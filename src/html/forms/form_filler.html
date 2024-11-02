@@ -878,79 +878,6 @@ async function handleI94Upload(file) {
   }
 }
 
-async function submitUserData() {
-  try {
-    // Get values from all required fields
-    const email = document.getElementById('user-email')?.value || localStorage.getItem('userEmail');
-    const applyingFrom = document.getElementById('part5-1b-apply-from')?.value;
-
-    // Get SSN information
-    const hasSSN = document.getElementById('part1-7')?.value;
-    const ssnNumber = hasSSN === 'yes' ? 
-      document.getElementById('part1-7-container')?.querySelector('input')?.value : null;
-
-    // Get USCIS Account information
-    const hasUSCISAccount = document.getElementById('part1-8')?.value;
-    const uscisAccountNumber = hasUSCISAccount === 'yes' ? 
-      document.getElementById('part1-8-container')?.querySelector('input')?.value : null;
-
-    // Get Previous Petition information
-    const hasPreviousPetition = document.getElementById('part2-2a')?.value;
-    const petitionReceiptNumber = hasPreviousPetition === 'yes' ? 
-      document.getElementById('part2-2a-container')?.querySelector('input')?.value : null;
-
-    // Get Alien Registration information
-    const hasAlienRegistration = document.getElementById('part3-8')?.value;
-    const alienRegistrationNumber = hasAlienRegistration === 'provide_anumber' ? 
-      document.getElementById('part3-8-container')?.querySelector('input')?.value : null;
-
-    // Validate required fields
-    if (!email || !applyingFrom) {
-      throw new Error('Missing required fields');
-    }
-
-    // Prepare data for submission
-    const userData = {
-      email_address: email,
-      applying_from: applyingFrom,
-      has_ssn: hasSSN,
-      ssn_number: ssnNumber || "",  // Providing a default empty string if ssnNumber is not defined
-      has_uscis_account: hasUSCISAccount,
-      uscis_account_number: uscisAccountNumber || "",
-      is_amendment: hasPreviousPetition,
-      previous_receipt_number: petitionReceiptNumber || "",
-      has_alien_number: hasAlienRegistration ,
-      alien_number: alienRegistrationNumber || ""
-    };
-
-    // Make API call
-    const response = await fetch('http://127.0.0.1:5000/submit-user-data', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userData)
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to submit user data');
-    }
-
-    const data = await response.json();
-    console.log('User data submitted successfully:', data);
-
-    // After successful submission, redirect to the form filler page
-    window.location.href = "/application/form_session.html";
-
-    return data;
-
-  } catch (error) {
-    console.error('Error submitting user data:', error);
-    alert(error.message || 'Failed to submit user data. Please try again.');
-    return false;
-  }
-}
 
 
 // Add this new function to handle address data extraction
@@ -1096,6 +1023,7 @@ function uploadFile(fileType) {
     }
   }
 }
+// Form Field Handlers
 function toggleInputField(selectId, inputType) {
   const selectElement = document.getElementById(selectId);
   const containerId = `${selectId}-container`;
@@ -1152,8 +1080,161 @@ function goToNextPage() {
   }
   return false;
 }
+function validateAdditionalInfo() {
+  const requiredFields = [
+    { id: 'part1-7', name: 'SSN Information' },
+    { id: 'part1-8', name: 'USCIS Account Information' },
+    { id: 'part2-2a', name: 'Previous Petition Information' },
+    { id: 'part3-8', name: 'Alien Registration Information' }
+  ];
+
+  const missingFields = [];
+
+  requiredFields.forEach(field => {
+    const select = document.getElementById(field.id);
+    if (!select || select.value === "") {
+      missingFields.push(field.name);
+    } else if (select.value === "yes" || select.value === "provide_anumber") {
+      // Check if the corresponding input field has a value
+      const container = document.getElementById(`${field.id}-container`);
+      const input = container.querySelector('input');
+      if (!input || !input.value.trim()) {
+        missingFields.push(`${field.name} details`);
+      }
+    }
+  });
+
+  if (missingFields.length > 0) {
+    const alertMessage = document.getElementById('alert-message');
+    if (alertMessage) {
+      const messageSpan = alertMessage.querySelector('span:last-child');
+      if (messageSpan) {
+        messageSpan.textContent = `Please provide: ${missingFields.join(', ')}`;
+      }
+      alertMessage.style.display = 'flex';
+      setTimeout(() => {
+        alertMessage.style.display = 'none';
+      }, 3000);
+    }
+    return false;
+  }
+  return true;
+}
+// Data Submission
+async function submitUserData() {
+  try {
+    // Get values from all required fields
+    const email = document.getElementById('user-email')?.value || localStorage.getItem('userEmail');
+    const applyingFrom = document.getElementById('part5-1b-apply-from')?.value;
+
+    // Get SSN information
+    const hasSSN = document.getElementById('part1-7')?.value;
+    const ssnNumber = hasSSN === 'yes' ? 
+      document.getElementById('part1-7-container')?.querySelector('input')?.value : null;
+
+    // Get USCIS Account information
+    const hasUSCISAccount = document.getElementById('part1-8')?.value;
+    const uscisAccountNumber = hasUSCISAccount === 'yes' ? 
+      document.getElementById('part1-8-container')?.querySelector('input')?.value : null;
+
+    // Get Previous Petition information
+    const hasPreviousPetition = document.getElementById('part2-2a')?.value;
+    const petitionReceiptNumber = hasPreviousPetition === 'yes' ? 
+      document.getElementById('part2-2a-container')?.querySelector('input')?.value : null;
+
+    // Get Alien Registration information
+    const hasAlienRegistration = document.getElementById('part3-8')?.value;
+    const alienRegistrationNumber = hasAlienRegistration === 'provide_anumber' ? 
+      document.getElementById('part3-8-container')?.querySelector('input')?.value : null;
+
+    // Validate required fields
+    if (!email || !applyingFrom) {
+      throw new Error('Missing required fields');
+    }
+
+    // Prepare data for submission
+    const userData = {
+      email_address: email,
+      applying_from: applyingFrom,
+      has_ssn: hasSSN,
+      ssn_number: ssnNumber || "",
+      has_uscis_account: hasUSCISAccount,
+      uscis_account_number: uscisAccountNumber || "",
+      is_amendment: hasPreviousPetition,
+      previous_receipt_number: petitionReceiptNumber || "",
+      has_alien_number: hasAlienRegistration,
+      alien_number: alienRegistrationNumber || ""
+    };
+
+    console.log('Submitting user data:', userData); // Debug log
+
+    const response = await fetch('http://127.0.0.1:5000/submit-user-data', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData)
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to submit user data');
+    }
+
+    const data = await response.json();
+    console.log('User data submitted successfully:', data);
+    return true;
+
+  } catch (error) {
+    console.error('Error submitting user data:', error);
+    const alertMessage = document.getElementById('alert-message');
+    if (alertMessage) {
+      const messageSpan = alertMessage.querySelector('span:last-child');
+      if (messageSpan) {
+        messageSpan.textContent = error.message || 'Failed to submit user data';
+      }
+      alertMessage.style.display = 'flex';
+      setTimeout(() => {
+        alertMessage.style.display = 'none';
+      }, 3000);
+    }
+    return false;
+  }
+}
+// Navigation to Form Filler
+async function goToFillerPage() {
+  if (!validateAdditionalInfo()) {
+    return false;
+  }
+
+  try {
+    const continueButton = document.getElementById('continueButton');
+    if (continueButton) {
+      continueButton.disabled = true;
+      continueButton.textContent = 'Processing...';
+    }
+
+    const success = await submitUserData();
+    
+    if (success) {
+      window.location.href = "/application/form_session.html";
+    } else {
+      if (continueButton) {
+        continueButton.disabled = false;
+        continueButton.textContent = 'Continue';
+      }
+    }
+  } catch (error) {
+    console.error('Error in form submission:', error);
+    if (continueButton) {
+      continueButton.disabled = false;
+      continueButton.textContent = 'Continue';
+    }
+  }
+}
 
 // Initialize everything when the page loads
+// Page Initialization
 document.addEventListener('DOMContentLoaded', function() {
   // Hide alert message initially
   const alertMessage = document.getElementById('alert-message');
@@ -1162,7 +1243,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // Initialize all file upload handlers
-  const fileTypes = ['passport', 'spouse-passport', 'children-passport','i94', 'cv-resume', 'address-proof'];
+  const fileTypes = ['passport', 'spouse-passport', 'children-passport', 'i94', 'cv-resume', 'address-proof'];
   fileTypes.forEach(type => {
     const fileInput = document.getElementById(`${type}-upload`);
     if (fileInput) {
@@ -1170,7 +1251,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Initialize any checkboxes
+  // Initialize checkboxes
   const checkboxes = document.querySelectorAll('.form-check-input');
   checkboxes.forEach((checkbox) => {
     if (checkbox.checked) {
@@ -1179,7 +1260,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Check authentication status
+  // Check authentication
   try {
     getAuthenticatedClientData();
   } catch (error) {
