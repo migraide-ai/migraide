@@ -369,15 +369,14 @@
 
 
 
-<!-- Children's Passport Upload Section -->
-<div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background-color: #F8F8F8; border: 1px solid #E0E0E0; border-radius: 8px; margin-bottom: 15px;">
-  <span id="children-passport-file-label" style="font-size: 16px; font-weight: 500; color: #333;">Passport data page of children (if any)</span>
-  <input type="file" id="children-passport-upload" multiple accept="image/jpeg,image/png,image/jpg,image/jfif" style="display: none;">
-  <button id="children-passport-upload-btn" style="background-color: #4285F4; color: #fff; border: none; padding: 10px 40px; border-radius: 25px; cursor: pointer; transition: background-color 0.3s ease; font-size: 16px;"
-    onclick="document.getElementById('children-passport-upload').click()">
-    Upload files
-  </button>
-</div>
+
+  <!-- Passport data page of children (if any) -->
+  <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background-color: #F8F8F8; border: 1px solid #E0E0E0; border-radius: 8px; margin-bottom: 15px;">
+    <span id="children-passport-file-label" style="font-size: 16px; font-weight: 500; color: #333;">Passport data page of children (if any)</span>
+    <input type="file" id="children-passport-upload" multiple accept="image/jpeg,image/png" style="display: none;">
+    <button id="children-passport-upload-btn" style="background-color: #4285F4; color: #fff; border: none; padding: 10px 40px; border-radius: 25px; cursor: pointer; transition: background-color 0.3s ease; font-size: 16px;"
+      onclick="document.getElementById('children-passport-upload').click()">Upload file</button>
+  </div>
 
 
 
@@ -727,102 +726,30 @@ async function handleResumeUpload(file) {
   }
 }
 // Passport upload handler
-async function handlePassportUpload(file, applicantType) {
+async function handlePassportUpload(files, applicantType) {
   try {
     const { clientData, accessToken } = getAuthenticatedClientData();
     const elementPrefix = applicantType === 'main' ? 'passport' : 
-    applicantType === 'spouse' ? 'spouse-passport' : 
-    'children-passport';
+                         applicantType === 'spouse' ? 'spouse-passport' : 
+                         'children-passport';
+
     const progressBar = document.getElementById(`${elementPrefix}-progress-bar`);
     const progressFill = document.getElementById(`${elementPrefix}-progress-fill`);
     const uploadButton = document.getElementById(`${elementPrefix}-upload-btn`);
     const fileLabel = document.getElementById(`${elementPrefix}-file-label`);
-    if (!file) throw new Error('No file selected');
 
-    const maxSize = 2 * 1024 * 1024;
-    if (file.size > maxSize) {
-      throw new Error('File size exceeds 2MB limit');
-    }
-
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/jfif'];
-    if (!allowedTypes.includes(file.type)) {
-      throw new Error('Invalid file type. Only PNG, JPG, JPEG, and JFIF files are allowed.');
-    }
-
-    progressBar.style.display = 'block';
-    progressFill.style.width = '0%';
-    uploadButton.textContent = 'Uploading...';
-    uploadButton.disabled = true;
-
-    const formData = new FormData();
-    formData.append('image', file);
-    formData.append('email', clientData.email_address);
-    formData.append('is_primary_applicant', applicantType === 'main');
-
-    let progress = 0;
-    const progressInterval = setInterval(() => {
-      if (progress < 90) {
-        progress += 10;
-        progressFill.style.width = `${progress}%`;
-      }
-    }, 200);
-
-    const response = await fetch('http://127.0.0.1:5000/extract-passport-data', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`
-      },
-      body: formData
-    });
-
-    clearInterval(progressInterval);
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to process passport');
-    }
-
-    const data = await response.json();
-    progressFill.style.width = '100%';
-
-    uploadButton.textContent = 'Change file';
-    uploadButton.style.backgroundColor = '#4CAF50';
-    uploadButton.disabled = false;
-    fileLabel.textContent = file.name;
-
-    setTimeout(() => {
-      progressBar.style.display = 'none';
-    }, 1000);
-
-    return data;
-
-  } catch (error) {
-    handleUploadError(error, applicantType === 'main' ? 'passport' : 
-                            applicantType === 'spouse' ? 'spouse-passport' : 
-                            'children-passport');
-    throw error;
-  }
-}
-
-// Add this new function to handle multiple children passports
-async function handleChildrenPassportUpload(files) {
-  try {
-    const { clientData, accessToken } = getAuthenticatedClientData();
-
-    const progressBar = document.getElementById('children-passport-progress-bar');
-    const progressFill = document.getElementById('children-passport-progress-fill');
-    const uploadButton = document.getElementById('children-passport-upload-btn');
-    const fileLabel = document.getElementById('children-passport-file-label');
-
-    if (!files || files.length === 0) {
+    // Handle both single and multiple files
+    const fileArray = Array.isArray(files) ? files : [files];
+    
+    if (fileArray.length === 0) {
       throw new Error('No files selected');
     }
 
     // Validate all files
-    const maxSize = 2 * 1024 * 1024; // 2MB
+    const maxSize = 2 * 1024 * 1024;
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/jfif'];
     
-    for (let file of files) {
+    for (let file of fileArray) {
       if (file.size > maxSize) {
         throw new Error(`File ${file.name} exceeds 2MB limit`);
       }
@@ -834,63 +761,69 @@ async function handleChildrenPassportUpload(files) {
     // Show upload starting
     progressBar.style.display = 'block';
     progressFill.style.width = '0%';
-    uploadButton.textContent = `Uploading ${files.length} files...`;
+    uploadButton.textContent = fileArray.length > 1 ? 
+      `Uploading ${fileArray.length} files...` : 'Uploading...';
     uploadButton.disabled = true;
 
-    // Process each file
+    // Process all files
     const results = [];
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
+    for (let i = 0; i < fileArray.length; i++) {
+      const file = fileArray[i];
       const formData = new FormData();
       formData.append('image', file);
       formData.append('email', clientData.email_address);
-      formData.append('child_index', i); // Add index to identify different children
+      formData.append('is_primary_applicant', applicantType === 'main');
+      if (applicantType === 'children') {
+        formData.append('child_index', i);
+      }
 
-      // Update progress for each file
-      const progress = (i / files.length) * 90;
+      // Update progress
+      const progress = ((i + 1) / fileArray.length) * 90;
       progressFill.style.width = `${progress}%`;
 
-      try {
-        const response = await fetch('http://127.0.0.1:5000/extract-passport-data', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${accessToken}`
-          },
-          body: formData
-        });
+      const response = await fetch('http://127.0.0.1:5000/extract-passport-data', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        },
+        body: formData
+      });
 
-        if (!response.ok) {
-          throw new Error(`Failed to process ${file.name}`);
-        }
-
-        const data = await response.json();
-        results.push(data);
-      } catch (error) {
-        console.error(`Error processing ${file.name}:`, error);
-        throw new Error(`Failed to process ${file.name}: ${error.message}`);
+      if (!response.ok) {
+        throw new Error(`Failed to process ${file.name}`);
       }
+
+      const data = await response.json();
+      results.push(data);
     }
 
     // Update UI to show completion
     progressFill.style.width = '100%';
-    uploadButton.textContent = 'Change files';
+    uploadButton.textContent = fileArray.length > 1 ? 'Change files' : 'Change file';
     uploadButton.style.backgroundColor = '#4CAF50';
     uploadButton.disabled = false;
-    fileLabel.textContent = `${files.length} children's passports uploaded`;
+    
+    if (applicantType === 'children' && fileArray.length > 1) {
+      fileLabel.textContent = `${fileArray.length} children's passports uploaded`;
+      localStorage.setItem('childrenPassportData', JSON.stringify(results));
+    } else {
+      fileLabel.textContent = fileArray[0].name;
+    }
 
     setTimeout(() => {
       progressBar.style.display = 'none';
     }, 1000);
 
-    // Store the results
-    localStorage.setItem('childrenPassportData', JSON.stringify(results));
     return results;
 
   } catch (error) {
-    handleUploadError(error, 'children-passport');
+    handleUploadError(error, elementPrefix);
     throw error;
   }
 }
+
+
+
 // I-94 upload handler
 async function handleI94Upload(file) {
   try {
@@ -1059,7 +992,7 @@ function uploadFile(fileType) {
       fileInfoLabel = document.getElementById('spouse-passport-file-label');
       uploadButton = document.getElementById('spouse-passport-upload-btn');
       break;
-      case 'children-passport':
+    case 'children-passport':
       progressBarFill = document.getElementById('children-passport-progress-fill');
       progressBar = document.getElementById('children-passport-progress-bar');
       fileInfoLabel = document.getElementById('children-passport-file-label');
@@ -1086,15 +1019,17 @@ function uploadFile(fileType) {
   }
 
   const fileInput = document.getElementById(`${fileType}-upload`);
-    
+  const file = fileInput.files[0];
+
+
   if (fileType === 'children-passport') {
     // Handle multiple files for children's passports
-    const files = fileInput.files;
+    const files = Array.from(fileInput.files);
     if (files.length > 0) {
-      return handleChildrenPassportUpload(files);
+      return handlePassportUpload(files, 'children');
     }
   } else {
-    // Handle single file uploads for other types
+    // Handle single file uploads
     const file = fileInput.files[0];
     if (file) {
       switch(fileType) {
@@ -1108,10 +1043,10 @@ function uploadFile(fileType) {
           return handleResumeUpload(file);
         case 'address-proof':
           return handleAddressUpload(file);
-        }
       }
     }
   }
+}
 // Form Field Handlers
 function toggleInputField(selectId, inputType) {
   const selectElement = document.getElementById(selectId);
@@ -1122,6 +1057,19 @@ function toggleInputField(selectId, inputType) {
     container.innerHTML = inputField;
   } else {
     container.innerHTML = '';
+  }
+}
+function goToPreviousPage() {
+  const visaChecklistSection = document.getElementById('visa-checklist-section');
+  const additionalInfoSection = document.getElementById('additional-information-section');
+  const progressBar = document.getElementById('progress-bar');
+  const progressPercentage = document.getElementById('progress-percentage');
+
+  if (visaChecklistSection && additionalInfoSection && progressBar && progressPercentage) {
+    visaChecklistSection.style.display = 'block';
+    additionalInfoSection.style.display = 'none';
+    progressBar.style.width = '25%';
+    progressPercentage.innerText = '25%';
   }
 }
 // Form validation and page navigation functions
@@ -1235,9 +1183,7 @@ async function submitUserData() {
     const hasAlienRegistration = document.getElementById('part3-8')?.value;
     const alienRegistrationNumber = hasAlienRegistration === 'provide_anumber' ? 
       document.getElementById('part3-8-container')?.querySelector('input')?.value : null;
- // Get children's passport data if it exists
- const childrenPassportData = localStorage.getItem('childrenPassportData');
- const childrenData = childrenPassportData ? JSON.parse(childrenPassportData) : [];
+
     // Validate required fields
     if (!email || !applyingFrom) {
       throw new Error('Missing required fields');
@@ -1254,8 +1200,7 @@ async function submitUserData() {
       is_amendment: hasPreviousPetition,
       previous_receipt_number: petitionReceiptNumber || "",
       has_alien_number: hasAlienRegistration,
-      alien_number: alienRegistrationNumber || "",
-      children_data: childrenData // Add children's passport data to submission
+      alien_number: alienRegistrationNumber || ""
     };
 
     console.log('Submitting user data:', userData); // Debug log
@@ -1339,24 +1284,13 @@ document.addEventListener('DOMContentLoaded', function() {
   fileTypes.forEach(type => {
     const fileInput = document.getElementById(`${type}-upload`);
     if (fileInput) {
+      // Set multiple attribute for children's passport
+      if (type === 'children-passport') {
+        fileInput.setAttribute('multiple', 'multiple');
+      }
       fileInput.addEventListener('change', () => uploadFile(type));
     }
   });
-  // Set up multiple file upload for children's passports
-  const childrenPassportInput = document.getElementById('children-passport-upload');
-  if (childrenPassportInput) {
-    childrenPassportInput.setAttribute('multiple', 'multiple');
-    
-    // Add change event listener to show selected file count
-    childrenPassportInput.addEventListener('change', (event) => {
-      const fileCount = event.target.files.length;
-      const fileLabel = document.getElementById('children-passport-file-label');
-      if (fileLabel) {
-        fileLabel.textContent = fileCount > 0 
-          ? `${fileCount} children's passport${fileCount > 1 ? 's' : ''} selected` 
-          : 'Passport data page of children (if any)';
-      }
-    });
 
   // Initialize checkboxes
   const checkboxes = document.querySelectorAll('.form-check-input');
