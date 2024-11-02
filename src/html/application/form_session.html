@@ -358,7 +358,6 @@ async function fillI140Form() {
   }
 }
 
-// Function to fill G-1145 form
 async function fillG1145Form() {
   try {
       const clientData = JSON.parse(localStorage.getItem('clientData'));
@@ -385,7 +384,9 @@ async function fillG1145Form() {
       }
 
       const data = await response.json();
+      // Store the URL with the correct key for G-1145
       localStorage.setItem('g1145FormUrl', data.pdf_url);
+      console.log('G-1145 form URL stored:', data.pdf_url); // Debug log
       return true;
   } catch (error) {
       console.error('Error filling G-1145 form:', error);
@@ -420,12 +421,21 @@ async function fillG1450Forms() {
       }
 
       const data = await response.json();
-      const pdfLinks = data.pdf_links;
-      
+      console.log('G-1450 response:', data); // Debug log
+
+      if (!data.pdf_links) {
+          throw new Error('No PDF links received for G-1450 forms');
+      }
+
       // Store URLs for different payment amounts
-      localStorage.setItem('g1450_300FormUrl', pdfLinks.payment_300);
-      localStorage.setItem('g1450_715FormUrl', pdfLinks.payment_715);
-      localStorage.setItem('g1450_2805FormUrl', pdfLinks.payment_2805);
+      localStorage.setItem('g1450_300FormUrl', data.pdf_links.payment_300);
+      localStorage.setItem('g1450_715FormUrl', data.pdf_links.payment_715);
+      localStorage.setItem('g1450_2805FormUrl', data.pdf_links.payment_2805);
+
+      // Debug logs
+      console.log('G-1450 300 URL:', data.pdf_links.payment_300);
+      console.log('G-1450 715 URL:', data.pdf_links.payment_715);
+      console.log('G-1450 2805 URL:', data.pdf_links.payment_2805);
       
       return true;
   } catch (error) {
@@ -433,6 +443,7 @@ async function fillG1450Forms() {
       return false;
   }
 }
+
 
 // Function to fill all forms
 async function fillAllForms() {
@@ -463,15 +474,14 @@ function hideLoadingOverlay() {
   overlay.style.display = 'none';
 }
 
-// View filled form function
+// Modified viewFilledForm function with debugging
 function viewFilledForm(formType) {
   let formUrl;
+  console.log('Viewing form type:', formType); // Debug log
+  
   switch(formType) {
       case 'I-140':
           formUrl = localStorage.getItem('i140FormUrl');
-          break;
-      case 'I-907':
-          formUrl = localStorage.getItem('i907FormUrl');
           break;
       case 'I-1145':
           formUrl = localStorage.getItem('g1145FormUrl');
@@ -490,6 +500,8 @@ function viewFilledForm(formType) {
           return;
   }
 
+  console.log('Form URL:', formUrl); // Debug log
+
   if (!formUrl) {
       alert('Form URL not found. Please try regenerating the form.');
       return;
@@ -497,13 +509,12 @@ function viewFilledForm(formType) {
   window.open(formUrl, '_blank');
 }
 
-// Replace skeletons with thumbnails
+// Modified thumbnail creation with corrected form names
 function replaceSkeletonWithThumbnails() {
   formPreviews.innerHTML = '';
   
   const formTypes = [
       { name: 'I-140', image: '/assets/images/widget/form_i140.png' },
-      { name: 'I-907', image: '/assets/images/widget/form_i907.png' },
       { name: 'I-1145', image: '/assets/images/widget/form_g1145.png' },
       { name: 'I-1450-715', image: '/assets/images/widget/form_g1450_715.png' },
       { name: 'I-1450-300', image: '/assets/images/widget/form_g1450_300.png' },
@@ -536,6 +547,7 @@ function replaceSkeletonWithThumbnails() {
       `;
 
       thumbnail.addEventListener('click', () => {
+          console.log('Clicking form:', form.name); // Debug log
           showLoadingOverlay();
           viewFilledForm(form.name);
           setTimeout(hideLoadingOverlay, 2000);
@@ -544,7 +556,6 @@ function replaceSkeletonWithThumbnails() {
       formPreviews.appendChild(thumbnail);
   });
 }
-
 // Progress update function
 async function updateProcessingProgress() {
   if (progress < 100) {
