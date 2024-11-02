@@ -2285,24 +2285,16 @@ async function submitUserData() {
 
     // Prepare data for submission
     const userData = {
-      email: email,
+      email_address: email,
       applying_from: applyingFrom,
-      ssn_details: {
-        has_ssn: hasSSN === 'yes',
-        ssn_number: ssnNumber
-      },
-      uscis_details: {
-        has_uscis_account: hasUSCISAccount === 'yes',
-        uscis_account_number: uscisAccountNumber
-      },
-      petition_details: {
-        is_amendment: hasPreviousPetition === 'yes',
-        previous_receipt_number: petitionReceiptNumber
-      },
-      alien_registration: {
-        has_alien_number: hasAlienRegistration === 'provide_anumber',
-        alien_number: alienRegistrationNumber
-      }
+      has_ssn: hasSSN,
+      ssn_number: ssnNumber || "",  // Providing a default empty string if ssnNumber is not defined
+      has_uscis_account: hasUSCISAccount,
+      uscis_account_number: uscisAccountNumber || "",
+      is_amendment: hasPreviousPetition,
+      previous_receipt_number: petitionReceiptNumber || "",
+      has_alien_number: hasAlienRegistration ,
+      alien_number: alienRegistrationNumber || ""
     };
 
     // Make API call
