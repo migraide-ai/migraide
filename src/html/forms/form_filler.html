@@ -986,7 +986,7 @@ function uploadFile(fileType) {
       fileInfoLabel = document.getElementById('passport-file-label');
       uploadButton = document.getElementById('passport-upload-btn');
       break;
-      case 'spouse-passport':
+    case 'spouse-passport':
       progressBarFill = document.getElementById('spouse-passport-progress-fill');
       progressBar = document.getElementById('spouse-passport-progress-bar');
       fileInfoLabel = document.getElementById('spouse-passport-file-label');
@@ -1019,8 +1019,6 @@ function uploadFile(fileType) {
   }
 
   const fileInput = document.getElementById(`${fileType}-upload`);
-  const file = fileInput.files[0];
-
 
   if (fileType === 'children-passport') {
     // Handle multiple files for children's passports
