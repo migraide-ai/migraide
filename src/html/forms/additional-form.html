@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Additional Information</title>
+  @@include('../layouts/head-page-meta.html', {'title': 'Form Sections'}) 
+  @@include('../layouts/head-css.html')
+  <link rel="stylesheet" href="path/to/bootstrap.css" />
+  <style>
+    .card {
+      background-color: #fff;
+      border-radius: 8px;
+    }
+
+    .form-control {
+      background-color: #FFFFFF;
+      border: 1px solid #DDDDDD;
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+
+    .form-control:focus {
+      border-color: #4285F4;
+      box-shadow: none;
+    }
+
+    .form-label {
+      font-weight: 500;
+      color: #333333;
+      margin-bottom: 10px;
+    }
+
+    .btn-primary {
+      background-color: #4285F4;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 50px;
+      width: 287px;
+      height: 44px;
+      color: #fff;
+      font-size: 16px;
+      font-family: 'Inter', sans-serif;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-secondary {
+      background-color: #E0E0E0;
+      color: #333;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 50px;
+      width: 287px;
+      height: 44px;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+
+    .alert-message {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      background-color: #dc3545;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 25px;
+      display: none;
+      z-index: 1000;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .progress-wrapper {
+      position: relative;
+      margin-bottom: 40px;
+    }
+
+    .progress {
+      height: 10px;
+      border: 1px solid #DDDDDD;
+      border-radius: 5px;
+      background-color: #F2F2F2;
+    }
+
+    .progress-bar {
+      background-color: #4285F4;
+      border-radius: 5px;
+      transition: width 0.4s;
+    }
+
+    .progress-percentage {
+      position: absolute;
+      right: 20px;
+      top: -25px;
+      font-size: 14px;
+      color: #000;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body @@bodySetup>
+  @@include('../layouts/layout-vertical.html')
+
+  <div class="pc-container">
+    <div class="pc-content">
+      <div class="card-header" style="padding-bottom: 20px;">
+        <h3>Additional Information</h3>
+      </div>
+
+      <!-- Progress bar -->
+      <div class="progress-wrapper">
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" id="progress-bar" style="width: 50%;"></div>
+        </div>
+        <span class="progress-percentage" id="progress-percentage">50%</span>
+      </div>
+
+      <div class="card">
+        <div class="card-header" style="padding-bottom: 10px; border-bottom: 1px solid #E0E0E0; width: 100%;">
+          <h5 style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; color: #333;">
+            Just a few more details required to fill out all forms. Omitting any detail will result in omission from the filled out forms.
+          </h5>
+        </div>
+
+        <div class="card-body">
+          <!-- Application Location -->
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label" for="part5-1b-apply-from">Where will you be applying from? <span style="color: red;">*</span></label>
+                <select class="form-control" id="part5-1b-apply-from" name="part5-1b-apply-from" required>
+                  <option value="" disabled selected>Select</option>
+                  <option value="within-usa">Within the USA</option>
+                  <option value="outside-usa">Outside the USA</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- SSN Information -->
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label" for="part1-7">Do you have a U.S. Social Security Number?</label>
+                <select class="form-control" id="part1-7" name="part1-7" required 
+                        onchange="toggleInputField('part1-7', 'part1_ssn_number_9')">
+                  <option value="" disabled selected>Select</option>
+                  <option value="yes">Yes (Provide SSN)</option>
+                  <option value="no">No</option>
+                </select>
+                <div id="part1-7-container"></div>
+              </div>
+            </div>
+
+            <!-- USCIS Account -->
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label" for="part1-8">Do you have a USCIS Online Account Number?</label>
+                <select class="form-control" id="part1-8" name="part1-8" required 
+                        onchange="toggleInputField('part1-8', 'part1_uscis_number_12')">
+                  <option value="" disabled selected>Select</option>
+                  <option value="yes">Yes (Provide account number)</option>
+                  <option value="no">No</option>
+                </select>
+                <div id="part1-8-container"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Previous Petition and Alien Registration -->
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label" for="part2-2a">Is this petition an amendment of a previously filed petition?</label>
+                <select class="form-control" id="part2-2a" name="part2-2a" 
+                        onchange="toggleInputField('part2-2a', 'part2_previous_application_number_13')">
+                  <option value="" disabled selected>Select</option>
+                  <option value="yes">Yes (Provide previous petition receipt number)</option>
+                  <option value="no">No</option>
+                </select>
+                <div id="part2-2a-container"></div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label" for="part3-8">What is the Alien Registration Number of the petitioner?</label>
+                <select class="form-control" id="part3-8" name="part3-8" 
+                        onchange="toggleInputField('part3-8', 'part3_other_info_alien_9')">
+                  <option value="" disabled selected>Select</option>
+                  <option value="provide_anumber">Provide A-Number</option>
+                  <option value="no_anumber">N/A</option>
+                </select>
+                <div id="part3-8-container"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Navigation Buttons -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin: 20px 30px; padding-bottom: 30px;">
+            <a href="/forms/form_filler.html">
+              <button type="button" class="btn btn-secondary">Back</button>
+            </a>
+            <button id="continueButton" type="button" class="btn btn-primary" onclick="goToFillerPage()">
+              Continue
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alert Message -->
+  <div class="alert-message" id="alert-message">
+    <span class="icon">!</span>
+    <span>Kindly provide all fields marked as required.</span>
+  </div>
+
+  <!-- Include your JavaScript file -->
+  <script>
+    // Form field toggle handler
+function toggleInputField(selectId, inputType) {
+    const selectElement = document.getElementById(selectId);
+    const containerId = `${selectId}-container`;
+    const container = document.getElementById(containerId);
+    if (selectElement.value === 'yes' || selectElement.value === 'provide_anumber') {
+      const inputField = `<input type="text" class="form-control" placeholder="Enter ${inputType.replace('-', ' ')}" />`;
+      container.innerHTML = inputField;
+    } else {
+      container.innerHTML = '';
+    }
+  }
+  
+  // Form validation
+  function validateAdditionalInfo() {
+    const requiredFields = [
+      { id: 'part5-1b-apply-from', name: 'Application Location' },
+      { id: 'part1-7', name: 'SSN Information' },
+      { id: 'part1-8', name: 'USCIS Account Information' },
+      { id: 'part2-2a', name: 'Previous Petition Information' },
+      { id: 'part3-8', name: 'Alien Registration Information' }
+    ];
+  
+    const missingFields = [];
+  
+    requiredFields.forEach(field => {
+      const select = document.getElementById(field.id);
+      if (!select || select.value === "") {
+        missingFields.push(field.name);
+      } else if (select.value === "yes" || select.value === "provide_anumber") {
+        // Check if the corresponding input field has a value
+        const container = document.getElementById(`${field.id}-container`);
+        const input = container.querySelector('input');
+        if (!input || !input.value.trim()) {
+          missingFields.push(`${field.name} details`);
+        }
+      }
+    });
+  
+    if (missingFields.length > 0) {
+      const alertMessage = document.getElementById('alert-message');
+      if (alertMessage) {
+        const messageSpan = alertMessage.querySelector('span:last-child');
+        if (messageSpan) {
+          messageSpan.textContent = `Please provide: ${missingFields.join(', ')}`;
+        }
+        alertMessage.style.display = 'flex';
+        setTimeout(() => {
+          alertMessage.style.display = 'none';
+        }, 3000);
+      }
+      return false;
+    }
+    return true;
+  }
+  
+  // Submit user data
+  async function submitUserData() {
+    try {
+      // Get values from all required fields
+      const email = localStorage.getItem('userEmail');
+      const applyingFrom = document.getElementById('part5-1b-apply-from')?.value;
+  
+      // Get SSN information
+      const hasSSN = document.getElementById('part1-7')?.value;
+      const ssnNumber = hasSSN === 'yes' ? 
+        document.getElementById('part1-7-container')?.querySelector('input')?.value : null;
+  
+      // Get USCIS Account information
+      const hasUSCISAccount = document.getElementById('part1-8')?.value;
+      const uscisAccountNumber = hasUSCISAccount === 'yes' ? 
+        document.getElementById('part1-8-container')?.querySelector('input')?.value : null;
+  
+      // Get Previous Petition information
+      const hasPreviousPetition = document.getElementById('part2-2a')?.value;
+      const petitionReceiptNumber = hasPreviousPetition === 'yes' ? 
+        document.getElementById('part2-2a-container')?.querySelector('input')?.value : null;
+  
+      // Get Alien Registration information
+      const hasAlienRegistration = document.getElementById('part3-8')?.value;
+      const alienRegistrationNumber = hasAlienRegistration === 'provide_anumber' ? 
+        document.getElementById('part3-8-container')?.querySelector('input')?.value : null;
+  
+      // Validate required fields
+      if (!email || !applyingFrom) {
+        throw new Error('Missing required fields');
+      }
+  
+      // Prepare data for submission
+      const userData = {
+        email_address: email,
+        applying_from: applyingFrom,
+        has_ssn: hasSSN,
+        ssn_number: ssnNumber || "",
+        has_uscis_account: hasUSCISAccount,
+        uscis_account_number: uscisAccountNumber || "",
+        is_amendment: hasPreviousPetition,
+        previous_receipt_number: petitionReceiptNumber || "",
+        has_alien_number: hasAlienRegistration,
+        alien_number: alienRegistrationNumber || ""
+      };
+  
+      console.log('Submitting user data:', userData); // Debug log
+  
+      const response = await fetch('http://127.0.0.1:5000/submit-user-data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData)
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to submit user data');
+      }
+  
+      const data = await response.json();
+      console.log('User data submitted successfully:', data);
+      return true;
+  
+    } catch (error) {
+      console.error('Error submitting user data:', error);
+      const alertMessage = document.getElementById('alert-message');
+      if (alertMessage) {
+        const messageSpan = alertMessage.querySelector('span:last-child');
+        if (messageSpan) {
+          messageSpan.textContent = error.message || 'Failed to submit user data';
+        }
+        alertMessage.style.display = 'flex';
+        setTimeout(() => {
+          alertMessage.style.display = 'none';
+        }, 3000);
+      }
+      return false;
+    }
+  }
+  
+  // Handle form submission and navigation
+  async function goToFillerPage() {
+    if (!validateAdditionalInfo()) {
+      return false;
+    }
+  
+    try {
+      const continueButton = document.getElementById('continueButton');
+      if (continueButton) {
+        continueButton.disabled = true;
+        continueButton.textContent = 'Processing...';
+      }
+  
+      const success = await submitUserData();
+      
+      if (success) {
+        window.location.href = "/application/form_session.html";
+      } else {
+        if (continueButton) {
+          continueButton.disabled = false;
+          continueButton.textContent = 'Continue';
+        }
+      }
+    } catch (error) {
+      console.error('Error in form submission:', error);
+      if (continueButton) {
+        continueButton.disabled = false;
+        continueButton.textContent = 'Continue';
+      }
+    }
+  }
+  
+  // Initialize page
+  document.addEventListener('DOMContentLoaded', function() {
+    // Check authentication
+    const clientData = JSON.parse(localStorage.getItem('clientData'));
+    const accessToken = localStorage.getItem('accessToken');
+    
+    if (!clientData || !clientData.email_address || !accessToken) {
+      window.location.href = '/pages/login-client.html';
+      return;
+    }
+  
+    // Initialize alert message
+    const alertMessage = document.getElementById('alert-message');
+    if (alertMessage) {
+      alertMessage.style.display = 'none';
+    }
+  });
+  </script>
+
+  @@include('../layouts/footer-block.html')
+  @@include('../layouts/footer-js.html')
+</body>
+</html>

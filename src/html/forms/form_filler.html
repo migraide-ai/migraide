@@ -1,612 +1,327 @@
 <!doctype html>
 <html lang="en">
-<!-- [Head] start -->
 <head>
- <title>Multi-step Form</title>
- @@include('../layouts/head-page-meta.html', {'title': 'Form Sections'}) @@include('../layouts/head-css.html')
- <link rel="stylesheet" href="path/to/bootstrap.css" />
- <style>
-   /* Card and Form Styles */
-   .card {
-     background-color: #fff;
-     border-radius: 8px;
-   }
-
-
-
-
-
-
-
-
-   /* Progress bar */
-   .progress-wrapper {
-     position: relative;
-     margin-bottom: 40px;
-   }
-
-
-
-
-
-
-
-
-   .progress {
-     height: 10px;
-     border: 1px solid #DDDDDD;
-     border-radius: 5px;
-     background-color: #F2F2F2;
-   }
-
-
-
-
-
-
-
-
-   .progress-bar {
-     background-color: #4285F4;
-     border-radius: 5px;
-     transition: width 0.4s;
-   }
-
-
-
-
-
-
-
-
-   .progress-percentage {
-     position: absolute;
-     right: 20px;
-     top: -25px;
-     font-size: 14px;
-     color: #000;
-     font-weight: 500;
-   }
-
-
-
-
-
-
-
-
-   /* Styling for form input fields */
-   .form-control {
-     background-color: #FFFFFF;
-     border: 1px solid #DDDDDD;
-     border-radius: 5px;
-     padding: 10px;
-     margin-bottom: 20px;
-   }
-
-
-
-
-
-
-
-
-   .form-control:focus {
-     border-color: #4285F4;
-     box-shadow: none;
-   }
-
-
-
-
-
-
-
-
-   .form-label {
-     font-weight: 500;
-     color: #333333;
-     margin-bottom: 10px;
-   }
-
-
-
-
-
-
-
-
-   /* Styling the submit button */
-   .btn-primary {
-     background-color: #4285F4;
-     border: none;
-     padding: 10px 20px;
-     border-radius: 5px;
-     display: inline-flex;
-     align-items: center;
-     justify-content: center;
-     width: 287px;
-     height: 44px;
-   }
-
-
-
-
-
-
-
-
-   .btn-primary:focus {
-     box-shadow: none;
-   }
-
-
-
-
-
-
-
-
-   .btn-secondary {
-     background-color: #C7C7C7;
-     border: none;
-     padding: 10px 20px;
-     border-radius: 5px;
-     width: 287px;
-     height: 44px;
-   }
-
-
-
-
-
-
-
-
-   .btn-secondary:focus {
-     box-shadow: none;
-   }
-
-
-
-
-
-
-
-
-   /* Heading */
-   h5, h3 {
-     font-family: 'Inter', sans-serif;
-     font-size: 28px;
-     font-weight: 600;
-   }
-
-
-
-
-
-
-
-
-   .description-text {
-     margin-top: 30px; /* Adds 30px space between heading and description */
-     color: #666666;
-     font-size: 16px;
-   }
-
-
-
-
-
-
-
-
-   /* Alert message styling */
-   .alert-message {
-     position: fixed;
-     top: 80px;
-     right: 20px;
-     background-color: #dc3545;
-     color: white;
-     padding: 10px 20px;
-     border-radius: 25px;
-     display: none;
-     z-index: 1000;
-     display: flex;
-     align-items: center;
-     gap: 10px;
-     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-   }
-   .alert-message .icon {
-     width: 24px;
-     height: 24px;
-     background-color: white;
-     color: #dc3545;
-     border-radius: 50%;
-     display: flex;
-     align-items: center;
-     justify-content: center;
-     font-weight: bold;
-   }
- </style>
-</head>
-<!-- [Head] end -->
-<!-- [Body] Start -->
-<body @@bodySetup>
- @@include('../layouts/layout-vertical.html')
-
-
-
-
-
-
-
-
- <!-- [ Main Content ] start -->
- <div class="pc-container">
-   <div class="pc-content">
-     <div class="card-header" style="padding-bottom: 20px;">
-       <h3>Getting Started</h3>
-     </div>
-     <!-- Progress bar placed at the top of both pages -->
-     <div class="progress-wrapper">
-       <div class="progress">
-         <div class="progress-bar" role="progressbar" id="progress-bar" style="width: 25%;"></div>
-       </div>
-       <span class="progress-percentage" id="progress-percentage">25%</span>
-     </div>
-  
-     <!-- Second Page: Visa Document Checklist (Initially hidden) -->
-   <div style="padding-bottom:30px;">
-     <div class="card" id="visa-checklist-section" >
-       <div class="card-header" style="padding-bottom: 10px; border-bottom: 1px solid #E0E0E0; width: 100%;">
-         <h5 style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; color: #333;  padding-right: 30px;">
-          For your application, these are the anticipated forms you need. Kindly upload the requested files below.      </h5>
-       </div>
-       <div style="margin-left: 20px; margin-top: 20px;">
-       <div class="form-check-group" style="font-family: 'Inter', sans-serif; font-size: 14px; color: #333;">
-         <div class="form-check" style="margin-bottom: 10px; display: flex; align-items: center;">
-           <input class="form-check-input" type="checkbox" id="formI140" value="I-140" checked disabled style="width: 20px; height: 20px; border-radius: 5px; border: 1px solid #DDDDDD; background-color: #FFFFFF; cursor: pointer; appearance: none; display: inline-block; position: relative; vertical-align: middle; margin-right: 10px;" onclick="this.style.backgroundColor=this.checked ? '#4285F4' : '#FFFFFF'; this.style.borderColor=this.checked ? '#4285F4' : '#DDDDDD';">
-           <label class="form-check-label" for="formI140">
-             <a style="text-decoration: none; color: #4285F4;">Form I-140</a>
-           </label>
-         </div>
-       <div>
-        <div class="form-check-group" style="font-family: 'Inter', sans-serif; font-size: 14px; color: #333;">
-    
-         <div class="form-check" style="margin-bottom: 10px; display: flex; align-items: center;">
-           <input class="form-check-input" type="checkbox" id="formI907" value="I-907" checked disabled style="width: 20px; height: 20px; border-radius: 5px; border: 1px solid #DDDDDD; background-color: #FFFFFF; cursor: pointer; appearance: none; display: inline-block; position: relative; vertical-align: middle; margin-right: 10px;" onclick="this.style.backgroundColor=this.checked ? '#4285F4' : '#FFFFFF'; this.style.borderColor=this.checked ? '#4285F4' : '#DDDDDD';">
-           <label class="form-check-label" for="formI907">
-             <a style="text-decoration: none; color: #4285F4;">Form I-907</a>
-           </label>
-         </div>
-    
-         <div class="form-check" style="margin-bottom: 10px; display: flex; align-items: center;">
-           <input class="form-check-input" type="checkbox" id="formG1145" value="G-1145" checked disabled style="width: 20px; height: 20px; border-radius: 5px; border: 1px solid #DDDDDD; background-color: #FFFFFF; cursor: pointer; appearance: none; display: inline-block; position: relative; vertical-align: middle; margin-right: 10px;" onclick="this.style.backgroundColor=this.checked ? '#4285F4' : '#FFFFFF'; this.style.borderColor=this.checked ? '#4285F4' : '#DDDDDD';">
-           <label class="form-check-label" for="formG1145">
-             <a style="text-decoration: none; color: #4285F4;">Form G-1145</a>
-           </label>
-         </div>
-    
-         <div class="form-check" style="margin-bottom: 10px; display: flex; align-items: center;">
-           <input class="form-check-input" type="checkbox" id="formG1450" value="G-1450" checked disabled style="width: 20px; height: 20px; border-radius: 5px; border: 1px solid #DDDDDD; background-color: #FFFFFF; cursor: pointer; appearance: none; display: inline-block; position: relative; vertical-align: middle; margin-right: 10px;" onclick="this.style.backgroundColor=this.checked ? '#4285F4' : '#FFFFFF'; this.style.borderColor=this.checked ? '#4285F4' : '#DDDDDD';">
-           <label class="form-check-label" for="formG1450">
-             <a  style="text-decoration: none; color: #4285F4;">Form G-1450</a>
-           </label>
-         </div>
-       </div>
-       </div>
-       </div>
-       <div class="col-md-6" style="padding-top: 20px;">
-        <div class="mb-3">
-          <label class="form-label" for="part5-1b-apply-from">Where will you be applying from? <span style="color: red;">*</span></label>
-           <select class="form-control" id="part5-1b-apply-from" name="part5-1b-apply-from" required>
-            <option value="" disabled selected>Select</option>
-            <option value="within-usa">Within the USA</option>
-            <option value="outside-usa">Outside the USA</option>
-          </select>
-        </div>
-      </div>
-      <div class="col-md-6" style="padding-top: 20px;">
-        <div class="mb-3">
-          <!-- <label class="form-label" for="part5-1b-premium-processing">Are you opting for premium processing?<span style="color: red;">*</span></label>
-         <select class="form-control" id="part5-1b-premium-processing" name="part5-1b-premium-processing" required>
-            <option value="" disabled selected>Select</option>
-
-
-
-
-            <option value="within-usa">Yes</option>
-            <option value="outside-usa">No</option>
-          </select> -->
-        </div>
-      </div>
-<!-- File Uploader Section for Passports -->
-<label class="form-label" for="part5-1b" style="padding-top: 20px;">Kindly upload the following documents to facilitate the automated form filling.</label>
-<div style="font-family: 'Inter', sans-serif; padding: 20px; background-color: #fff; border-radius: 8px; border: 1px dashed #666; margin-bottom: 30px; width: 50%;">
-  <p style="font-size: 14px; color: #666; margin-bottom: 20px;">If you are applying with any dependents, ensure to upload their passports accordingly.</p>
-
-  <!-- Passport data page for main applicant (Required) -->
-  <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background-color: #F8F8F8; border: 1px solid #E0E0E0; border-radius: 8px; margin-bottom: 15px;">
-    <span id="passport-file-label" style="font-size: 16px; font-weight: 500; color: #333;">Passport data page for main applicant <span style="color: red;">*</span></span>
-    <input type="file" id="passport-upload" required accept="image/jpeg,image/png" style="display: none;">
-    <button id="passport-upload-btn" style="background-color: #4285F4; color: #fff; border: none; padding: 10px 40px; border-radius: 25px; cursor: pointer; transition: background-color 0.3s ease; font-size: 16px;"
-      onclick="document.getElementById('passport-upload').click()">Upload file</button>
-  </div>
-
-
-<!-- Progress Bar for Passport Upload -->
-<div id="passport-progress-bar" style="height: 8px; background-color: #E0E0E0; border-radius: 5px; margin-top: 10px; margin-bottom: 10px; overflow: hidden; position: relative; width: 100%; display: none;">
-<div id="passport-progress-fill" style="height: 100%; background-color: #4A90E2; width: 0%; transition: width 2s ease;"></div>
-</div>
-
-
-
-
-
-
-  <!-- Passport data page of spouse (if any) -->
-  <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background-color: #F8F8F8; border: 1px solid #E0E0E0; border-radius: 8px; margin-bottom: 15px;">
-    <span id="spouse-passport-file-label" style="font-size: 16px; font-weight: 500; color: #333;">Passport data page of spouse (if any)</span>
-    <input type="file" id="spouse-passport-upload" accept="image/jpeg,image/png" style="display: none;">
-    <button id="spouse-passport-upload-btn" style="background-color: #4285F4; color: #fff; border: none; padding: 10px 40px; border-radius: 25px; cursor: pointer; transition: background-color 0.3s ease; font-size: 16px;"
-      onclick="document.getElementById('spouse-passport-upload').click()">Upload file</button>
-  </div>
-
-
-
-
-
-
-<!-- Progress Bar for Spouse Passport Upload -->
-<div id="spouse-passport-progress-bar" style="height: 8px; background-color: #E0E0E0; border-radius: 5px; margin-top: 10px; margin-bottom: 10px; overflow: hidden; position: relative; width: 100%; display: none;">
-<div id="spouse-passport-progress-fill" style="height: 100%; background-color: #4A90E2; width: 0%; transition: width 2s ease;"></div>
-</div>
-
-
-
-
-
-
-
-
-  <!-- Passport data page of children (if any) -->
-  <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background-color: #F8F8F8; border: 1px solid #E0E0E0; border-radius: 8px; margin-bottom: 15px;">
-    <span id="children-passport-file-label" style="font-size: 16px; font-weight: 500; color: #333;">Passport data page of children (if any)</span>
-    <input type="file" id="children-passport-upload" multiple accept="image/jpeg,image/png" style="display: none;">
-    <button id="children-passport-upload-btn" style="background-color: #4285F4; color: #fff; border: none; padding: 10px 40px; border-radius: 25px; cursor: pointer; transition: background-color 0.3s ease; font-size: 16px;"
-      onclick="document.getElementById('children-passport-upload').click()">Upload file</button>
-  </div>
-
-
-
-
-<!-- Progress Bar for Children Passport Upload -->
-<div id="children-passport-progress-bar" style="height: 8px; background-color: #E0E0E0; border-radius: 5px; margin-top: 10px; margin-bottom: 10px; overflow: hidden; position: relative; width: 100%; display: none;">
-<div id="children-passport-progress-fill" style="height: 100%; background-color: #4A90E2; width: 0%; transition: width 2s ease;"></div>
-</div>
-
-
-
-
-
-
-
-
-         <!-- I-94 for main applicant -->
-         <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background-color: #F8F8F8; border: 1px solid #E0E0E0; border-radius: 8px; margin-bottom: 15px;">
-          <span id="i94-file-label" style="font-size: 16px; font-weight: 500; color: #333;">Form I-94 for main applicant <span style="color: red;">*</span></span>
-          <input type="file" id="i94-upload"  required  accept=".pdf,image/jpeg,image/jpg,image/png,image/jfif" 
-          style="display: none;" 
-          onchange="uploadFile('i94')">
-          <button id="i94-upload-btn" style="background-color: #4285F4; color: #fff; border: none; padding: 10px 40px; border-radius: 25px; cursor: pointer; transition: background-color 0.3s ease; font-size: 16px;"
-            onclick="document.getElementById('i94-upload').click()">Upload file</button>
-        </div>
-
-
-
-
-
-
-
-
-         <!-- Progress Bar for I-94 Upload -->
-         <div id="i94-progress-bar" style="height: 8px; background-color: #E0E0E0; border-radius: 5px; margin-top: 10px; margin-bottom: 10px; overflow: hidden; position: relative; width: 100%; display: none;">
-           <div id="i94-progress-fill" style="height: 100%; background-color: #4A90E2; width: 0%; transition: width 2s ease;"></div>
-         </div>
- <!-- CV and Resume -->
- <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background-color: #F8F8F8; border: 1px solid #E0E0E0; border-radius: 8px; margin-bottom: 15px;">
-  <span id="cv-resume-file-label" style="font-size: 16px; font-weight: 500; color: #333;">CV/Resume for main applicant <span style="color: red;">*</span></span>
-  <input type="file" id="cv-resume-upload" required accept="application/pdf" style="display: none;" onchange="uploadFile('cv-resume')">
-  <button id="cv-resume-upload-btn" style="background-color: #4285F4; color: #fff; border: none; padding: 10px 40px; border-radius: 25px; cursor: pointer; transition: background-color 0.3s ease; font-size: 16px;"
-    onclick="document.getElementById('cv-resume-upload').click()">Upload file</button>
-</div>
-<!-- Progress Bar for CV and Resume Upload -->
-<div id="cv-resume-progress-bar" style="height: 8px; background-color: #E0E0E0; border-radius: 5px; margin-top: 10px; margin-bottom: 10px; overflow: hidden; position: relative; width: 100%; display: none;">
-<div id="cv-resume-progress-fill" style="height: 100%; background-color: #4A90E2; width: 0%; transition: width 2s ease;"></div>
-</div>
-       <!-- Proof of Address for main applicant (Required) -->
-       <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background-color: #F8F8F8; border: 1px solid #E0E0E0; border-radius: 8px; margin-bottom: 15px;">
-        <span id="address-proof-label" style="font-size: 16px; font-weight: 500; color: #333;">Screenshot of Address for main applicant <span style="color: red;">*</span></span>
-        <input type="file" id="address-proof-upload" required accept="image/jpeg,image/png" style="display: none;" onchange="uploadFile('address-proof')">
-        <button id="address-proof-upload-btn" style="background-color: #4285F4; color: #fff; border: none; padding: 10px 40px; border-radius: 25px; cursor: pointer; transition: background-color 0.3s ease; font-size: 16px;"
-          onclick="document.getElementById('address-proof-upload').click()">Upload file</button>
-         </div>
-         <!-- Progress Bar for Third File -->
-         <div id="address-proof-progress-bar" style="height: 8px; background-color: #E0E0E0; border-radius: 5px; margin-top: 10px; margin-bottom: 10px; overflow: hidden; position: relative; width: 100%; display: none;">
-             <div id="address-proof-progress-fill" style="height: 100%; background-color: #4A90E2; width: 100%; transition: width 5s ease;"></div>
-         </div>
-         <!-- Error Message for Third Upload (Visible only on failure) -->
-         <div id="address-proof-error-message" style="display: none; color: #FF0000; margin-top: 10px;">File incorrect. This is not a valid proof of address. Please upload the correct file.</div>
-       </div>
-       </div>
-       <div class="text-end" style="margin-bottom: 20px; margin-right: 30px; padding-bottom: 30px;">
-  <!-- Remove the <a> tag, keep only the button -->
-    <button type="button" class="btn btn-primary"
-    style="background-color: #4285F4; border: none; padding: 10px 20px; font-size: 16px; font-family: 'Inter', sans-serif;
-    border-radius: 50px; width: 287px; height: 44px; text-align: center; transition: background-color 0.3s ease;"
-    onmouseover="this.style.backgroundColor='#2a6ad7';"
-    onmouseout="this.style.backgroundColor='#4285F4';"
-    onclick="if(goToNextPage()) { /* any additional actions */ }">
-    Continue
-</button>
-
-
-
-
-       </div>
-       </div>
-
-
-
-
-
-
-
-
- <!-- Title Section with Underline for "Form controls" -->
- <div class="card" id="additional-information-section" style="border-radius: 8px; border: 1px solid #DDDDDD; padding-top: 0px; display: none;">
-   <div class="card-header" style="padding-bottom: 10px; border-bottom: 1px solid #E0E0E0; width: 100%;">
-     <h5 style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; color: #333;">
-      Just a few more details required to fill out all forms. Omitting any detail will result in omission from the filled out forms.
-     </h5>
-   </div>     
-   <div class="card-body">
-     <div class="card-body">
-       <!-- Row 2: Part 1, Questions 7-8 -->
-       <div class="card-body">
-         <!-- Row 2: Part 1, Questions 7-8 -->
-         <div class="row">
-           <div class="col-md-6">
-             <div class="mb-3">
-               <label class="form-label" for="part1-7">Do you have a U.S. Social Security Number?</label>
-               <select class="form-control" id="part1-7" name="part1-7" required onchange="toggleInputField('part1-7', 'part1_ssn_number_9')">
-                 <option value="" disabled selected>Select</option>
-                 <option value="yes">Yes (Provide SSN)</option>
-                 <option value="no">No</option>
-               </select>
-               <div id="part1-7-container"></div> <!-- Placeholder for SSN input field -->
-             </div>
-           </div>
-      
-           <div class="col-md-6">
-             <div class="mb-3">
-               <label class="form-label" for="part1-8">Do you have a USCIS Online Account Number?</label>
-               <select class="form-control" id="part1-8" name="part1-8" required onchange="toggleInputField('part1-8', 'part1_uscis_number_12')">
-                 <option value="" disabled selected>Select</option>
-                 <option value="yes">Yes (Provide account number)</option>
-                 <option value="no">No</option>
-               </select>
-               <div id="part1-8-container"></div> <!-- Placeholder for USCIS input field -->
-             </div>
-           </div>
-         </div>
-      
-         <!-- Row 3: Part 2, Questions 1a - 2b -->
-         <div class="row">
-           <div class="col-md-6">
-             <div class="mb-3">
-               <label class="form-label" for="part2-2a">Is this petition an amendment of a previously filed petition?</label>
-               <select class="form-control" id="part2-2a" name="part2-2a" onchange="toggleInputField('part2-2a', 'part2_previous_application_number_13')">
-                 <option value="" disabled selected>Select</option>
-                 <option value="yes">Yes (Provide previous petition receipt number)</option>
-                 <option value="no">No</option>
-               </select>
-               <div id="part2-2a-container"></div> <!-- Placeholder for petition receipt input field -->
-             </div>
-           </div>
-      
-           <div class="col-md-6">
-             <div class="mb-3">
-               <label class="form-label" for="part3-8">What is the Alien Registration Number of the petitioner?</label>
-               <select class="form-control" id="part3-8" name="part3-8" onchange="toggleInputField('part3-8', 'part3_other_info_alien_9')">
-                 <option value="" disabled selected>Select</option>
-                 <option value="provide_anumber">Provide A-Number</option>
-                 <option value="no_anumber">N/A</option>
-               </select>
-               <div id="part3-8-container"></div> <!-- Placeholder for A-Number input field -->
-             </div>
-           </div>
-         </div>
-       </div>     
-    
-   </div>
-  
-    <!-- Continue Button -->
-    <!-- Back Button -->
-<!-- Container for the Buttons -->
-<div style="display: flex; justify-content: space-between; align-items: center; margin: 20px 30px; padding-bottom: 30px;">
-
-
-
-
-
-
-
-
-<!-- Back Button -->
-<button type="button" class="btn btn-primary"
- style="background-color: #E0E0E0; color: #333; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; transition: background-color 0.3s ease; font-size: 16px; width: 287px; height: 44px;"
- onmouseover="this.style.backgroundColor='#c7c7c7';"
- onmouseout="this.style.backgroundColor='#E0E0E0';"
- onclick="goToPreviousPage()">Back</button>
-
-
-
-
-
-
-
-
-<!-- Continue Button -->
-<a href="/application/form_session.html">
-<!-- Continue Button -->
-<button id="continueButton" type="button" class="btn btn-primary"
-  style="background-color: #4285F4; border: none; padding: 10px 20px; font-size: 16px; font-family: 'Inter', sans-serif;
-  border-radius: 50px; width: 287px; height: 44px; text-align: center; transition: background-color 0.3s ease;"
-  onclick="goToFillerPage()">
-  Continue
-</button>
-</a>
-
-
-
-
-</div>
-
-
-
-
-</div>
-</div>
-</div>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
- <!-- Alert Message -->
- <div class="alert-message" id="alert-message">
-  <span class="icon">!</span>
-  <span>Kindly provide all fields marked as required.</span>
-</div>
-<style>
-  .is-invalid {
-    border-color: #dc3545;
-  }
+  <title>Document Upload</title>
+  @@include('../layouts/head-page-meta.html', {'title': 'Form Sections'}) 
+  @@include('../layouts/head-css.html')
+  <link rel="stylesheet" href="path/to/bootstrap.css" />
+  <style>
+    /* Card and General Styles */
+    .card {
+      background-color: #fff;
+      border-radius: 8px;
+    }
+
+    /* Main Progress Bar Styles */
+    .progress-wrapper {
+      position: relative;
+      margin-bottom: 40px;
+    }
+
+    .progress {
+      height: 10px;
+      border: 1px solid #DDDDDD;
+      border-radius: 5px;
+      background-color: #F2F2F2;
+    }
+
+    .progress-bar {
+      background-color: #4285F4;
+      border-radius: 5px;
+      transition: width 0.4s;
+    }
+
+    .progress-percentage {
+      position: absolute;
+      right: 20px;
+      top: -25px;
+      font-size: 14px;
+      color: #000;
+      font-weight: 500;
+    }
+
+    /* Upload Section Styles */
+    .upload-section {
+      font-family: 'Inter', sans-serif;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      border: 1px dashed #666;
+      margin-bottom: 30px;
+      width: 50%;
+    }
+
+    .file-upload-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 15px;
+      background-color: #F8F8F8;
+      border: 1px solid #E0E0E0;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+    /* Upload Button Styles */
+    .upload-button {
+      background-color: #4285F4;
+      color: #fff;
+      border: none;
+      padding: 10px 40px;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      font-size: 16px;
+    }
+
+    .upload-button:hover {
+      background-color: #2a6ad7;
+    }
+
+    /* Progress Wrapper Styles */
+    .upload-progress-wrapper {
+      margin-top: 10px;
+      margin-bottom: 15px;
+      display: none;
+    }
+
+    .upload-progress-status {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 5px;
+    }
+
+    .upload-progress-bar {
+      height: 8px;
+      background-color: #E0E0E0;
+      border-radius: 5px;
+      overflow: hidden;
+      position: relative;
+      width: 100%;
+    }
+
+    .upload-progress-fill {
+      height: 100%;
+      background-color: #4A90E2;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* Alert Message Styles */
+    .alert-message {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      background-color: #dc3545;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 25px;
+      display: none;
+      z-index: 1000;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .alert-message .icon {
+      width: 24px;
+      height: 24px;
+      background-color: white;
+      color: #dc3545;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    /* Continue Button Styles */
+    .btn-primary {
+      background-color: #4285F4;
+      border: none;
+      padding: 10px 40px;
+      font-size: 16px;
+      font-family: 'Inter', sans-serif;
+      border-radius: 50px;
+      width: 287px;
+      height: 44px;
+      color: #fff;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      background-color: #2a6ad7;
+    }
   </style>
-<script>
+</head>
+<body @@bodySetup>
+  @@include('../layouts/layout-vertical.html')
 
-  // Common authentication helper function
-// Common authentication helper function
+  <div class="pc-container">
+    <div class="pc-content">
+      <div class="card-header" style="padding-bottom: 20px;">
+        <h3>Document Upload</h3>
+      </div>
+
+      <!-- Main Progress bar -->
+      <div class="progress-wrapper">
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" id="progress-bar" style="width: 25%;"></div>
+        </div>
+        <span class="progress-percentage" id="progress-percentage">25%</span>
+      </div>
+
+      <div class="card">
+        <div class="card-header" style="padding-bottom: 10px; border-bottom: 1px solid #E0E0E0; width: 100%;">
+          <h5 style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; color: #333;">
+            Please upload the required documents for your application.
+          </h5>
+        </div>
+
+        <div class="card-body">
+          <div class="upload-section">
+            <p style="font-size: 14px; color: #666; margin-bottom: 20px;">
+              If you are applying with any dependents, ensure to upload their passports accordingly.
+            </p>
+
+            <!-- I'll continue with the upload containers in Part 2 -->
+             <!-- Main Applicant Passport -->
+            <div class="file-upload-container">
+              <span id="passport-file-label" style="font-size: 16px; font-weight: 500; color: #333;">
+                Passport data page for main applicant <span style="color: red;">*</span>
+              </span>
+              <input type="file" id="passport-upload" required accept="image/jpeg,image/png" style="display: none;">
+              <button id="passport-upload-btn" class="upload-button" 
+                      onclick="document.getElementById('passport-upload').click()">Upload file</button>
+            </div>
+            <div id="passport-progress-wrapper" class="upload-progress-wrapper">
+              <div class="upload-progress-status">
+                <span id="passport-upload-status">Uploading...</span>
+                <span id="passport-upload-percentage">0%</span>
+              </div>
+              <div class="upload-progress-bar">
+                <div id="passport-progress-fill" class="upload-progress-fill"></div>
+              </div>
+            </div>
+
+            <!-- Spouse Passport -->
+            <div class="file-upload-container">
+              <span id="spouse-passport-file-label" style="font-size: 16px; font-weight: 500; color: #333;">
+                Passport data page of spouse (if any)
+              </span>
+              <input type="file" id="spouse-passport-upload" accept="image/jpeg,image/png" style="display: none;">
+              <button id="spouse-passport-upload-btn" class="upload-button"
+                      onclick="document.getElementById('spouse-passport-upload').click()">Upload file</button>
+            </div>
+            <div id="spouse-passport-progress-wrapper" class="upload-progress-wrapper">
+              <div class="upload-progress-status">
+                <span id="spouse-passport-upload-status">Uploading...</span>
+                <span id="spouse-passport-upload-percentage">0%</span>
+              </div>
+              <div class="upload-progress-bar">
+                <div id="spouse-passport-progress-fill" class="upload-progress-fill"></div>
+              </div>
+            </div>
+
+            <!-- Children Passport -->
+            <div class="file-upload-container">
+              <span id="children-passport-file-label" style="font-size: 16px; font-weight: 500; color: #333;">
+                Passport data page of children (if any)
+              </span>
+              <input type="file" id="children-passport-upload" multiple accept="image/jpeg,image/png,image/jpg,image/jfif" style="display: none;">
+              <button id="children-passport-upload-btn" class="upload-button"
+                      onclick="document.getElementById('children-passport-upload').click()">Upload files</button>
+            </div>
+            <div id="children-passport-progress-wrapper" class="upload-progress-wrapper">
+              <div class="upload-progress-status">
+                <span id="children-passport-upload-status">Uploading...</span>
+                <span id="children-passport-upload-percentage">0%</span>
+              </div>
+              <div class="upload-progress-bar">
+                <div id="children-passport-progress-fill" class="upload-progress-fill"></div>
+              </div>
+            </div>
+
+            <!-- I-94 Upload -->
+            <div class="file-upload-container">
+              <span id="i94-file-label" style="font-size: 16px; font-weight: 500; color: #333;">
+                Form I-94 for main applicant <span style="color: red;">*</span>
+              </span>
+              <input type="file" id="i94-upload" required accept=".pdf,image/jpeg,image/jpg,image/png,image/jfif" style="display: none;">
+              <button id="i94-upload-btn" class="upload-button"
+                      onclick="document.getElementById('i94-upload').click()">Upload file</button>
+            </div>
+            <div id="i94-progress-wrapper" class="upload-progress-wrapper">
+              <div class="upload-progress-status">
+                <span id="i94-upload-status">Uploading...</span>
+                <span id="i94-upload-percentage">0%</span>
+              </div>
+              <div class="upload-progress-bar">
+                <div id="i94-progress-fill" class="upload-progress-fill"></div>
+              </div>
+            </div>
+
+            <!-- CV/Resume -->
+            <div class="file-upload-container">
+              <span id="cv-resume-file-label" style="font-size: 16px; font-weight: 500; color: #333;">
+                CV/Resume for main applicant <span style="color: red;">*</span>
+              </span>
+              <input type="file" id="cv-resume-upload" required accept="application/pdf" style="display: none;">
+              <button id="cv-resume-upload-btn" class="upload-button"
+                      onclick="document.getElementById('cv-resume-upload').click()">Upload file</button>
+            </div>
+            <div id="cv-resume-progress-wrapper" class="upload-progress-wrapper">
+              <div class="upload-progress-status">
+                <span id="cv-resume-upload-status">Uploading...</span>
+                <span id="cv-resume-upload-percentage">0%</span>
+              </div>
+              <div class="upload-progress-bar">
+                <div id="cv-resume-progress-fill" class="upload-progress-fill"></div>
+              </div>
+            </div>
+
+            <!-- Address Proof -->
+            <div class="file-upload-container">
+              <span id="address-proof-label" style="font-size: 16px; font-weight: 500; color: #333;">
+                Screenshot of Address for main applicant <span style="color: red;">*</span>
+              </span>
+              <input type="file" id="address-proof-upload" required accept="image/jpeg,image/png" style="display: none;">
+              <button id="address-proof-upload-btn" class="upload-button"
+                      onclick="document.getElementById('address-proof-upload').click()">Upload file</button>
+            </div>
+            <div id="address-proof-progress-wrapper" class="upload-progress-wrapper">
+              <div class="upload-progress-status">
+                <span id="address-proof-upload-status">Uploading...</span>
+                <span id="address-proof-upload-percentage">0%</span>
+              </div>
+              <div class="upload-progress-bar">
+                <div id="address-proof-progress-fill" class="upload-progress-fill"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Continue Button -->
+          <div class="text-end" style="margin: 20px 30px;">
+            <button type="button" class="btn btn-primary" onclick="if(validateUploads()) window.location.href='/forms/additional-form.html'">
+              Continue
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alert Message -->
+  <div class="alert-message" id="alert-message">
+    <span class="icon">!</span>
+    <span>Please upload all required documents.</span>
+  </div>
+
+  <!-- Include your JavaScript file -->
+  <script>
+    // Common authentication helper function
 function getAuthenticatedClientData() {
   const clientData = JSON.parse(localStorage.getItem('clientData'));
   const accessToken = localStorage.getItem('accessToken');
@@ -618,114 +333,99 @@ function getAuthenticatedClientData() {
   return { clientData, accessToken };
 }
 
-// Common error handler
-function handleUploadError(error, fileType) {
-  console.error(`${fileType} upload error:`, error);
-  
+// Show alert message
+function showAlert(message) {
   const alertMessage = document.getElementById('alert-message');
   if (alertMessage) {
-    alertMessage.textContent = error.message || `Failed to upload ${fileType}`;
+    const messageSpan = alertMessage.querySelector('span:last-child');
+    if (messageSpan) {
+      messageSpan.textContent = message;
+    }
     alertMessage.style.display = 'flex';
-    setTimeout(() => alertMessage.style.display = 'none', 3000);
-  }
-
-  // Reset UI
-  const uploadButton = document.getElementById(`${fileType}-upload-btn`);
-  const progressBar = document.getElementById(`${fileType}-progress-bar`);
-  if (uploadButton) {
-    uploadButton.textContent = 'Upload file';
-    uploadButton.disabled = false;
-  }
-  if (progressBar) {
-    progressBar.style.display = 'none';
-  }
-}
-
-// Resume upload handler
-async function handleResumeUpload(file) {
-  try {
-    const { clientData, accessToken } = getAuthenticatedClientData();
-
-    const progressBar = document.getElementById('cv-resume-progress-bar');
-    const progressFill = document.getElementById('cv-resume-progress-fill');
-    const uploadButton = document.getElementById('cv-resume-upload-btn');
-    const fileLabel = document.getElementById('cv-resume-file-label');
-
-    if (!file) {
-      throw new Error('No file selected');
-    }
-
-    // Validate file size (2MB max)
-    const maxSize = 2 * 1024 * 1024;
-    if (file.size > maxSize) {
-      throw new Error('File size exceeds 2MB limit');
-    }
-
-    // Validate file type
-    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-    if (!allowedTypes.includes(file.type)) {
-      throw new Error('Invalid file type. Only PDF, DOC, and DOCX files are allowed.');
-    }
-
-    // Update UI to show upload is starting
-    progressBar.style.display = 'block';
-    progressFill.style.width = '0%';
-    uploadButton.textContent = 'Uploading...';
-    uploadButton.disabled = true;
-
-    // Create FormData
-    const formData = new FormData();
-    formData.append('resume', file);
-    formData.append('email', clientData.email_address);
-
-    // Simulate upload progress
-    let progress = 0;
-    const progressInterval = setInterval(() => {
-      if (progress < 90) {
-        progress += 10;
-        progressFill.style.width = `${progress}%`;
-      }
-    }, 200);
-
-    // Make API call
-    const response = await fetch('http://127.0.0.1:5000/upload-resume', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`
-      },
-      body: formData
-    });
-
-    clearInterval(progressInterval);
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to process resume');
-    }
-
-    // Handle successful upload
-    const data = await response.json();
-    progressFill.style.width = '100%';
-    
-    // Update UI to show success
-    uploadButton.textContent = 'Change file';
-    uploadButton.style.backgroundColor = '#4CAF50';
-    uploadButton.disabled = false;
-    fileLabel.textContent = file.name;
-
-    // Hide progress bar after a delay
     setTimeout(() => {
-      progressBar.style.display = 'none';
-    }, 1000);
-
-    return data;
-
-  } catch (error) {
-    handleUploadError(error, 'cv-resume');
-    throw error;
+      alertMessage.style.display = 'none';
+    }, 3000);
   }
 }
-// Passport upload handler
+
+// Update progress UI
+function updateProgress(fileType, progress, status = null) {
+  const wrapper = document.getElementById(`${fileType}-progress-wrapper`);
+  const progressFill = document.getElementById(`${fileType}-progress-fill`);
+  const statusElement = document.getElementById(`${fileType}-upload-status`);
+  const percentageElement = document.getElementById(`${fileType}-upload-percentage`);
+
+  if (wrapper) wrapper.style.display = 'block';
+  if (progressFill) progressFill.style.width = `${progress}%`;
+  if (percentageElement) percentageElement.textContent = `${Math.round(progress)}%`;
+  if (statusElement && status) statusElement.textContent = status;
+}
+
+// Reset progress UI
+function resetProgress(fileType) {
+  const wrapper = document.getElementById(`${fileType}-progress-wrapper`);
+  const button = document.getElementById(`${fileType}-upload-btn`);
+  if (wrapper) wrapper.style.display = 'none';
+  if (button) {
+    button.textContent = 'Upload file';
+    button.disabled = false;
+    button.style.backgroundColor = '#4285F4';
+  }
+}
+
+// Handle file upload error
+function handleUploadError(error, fileType) {
+  console.error(`${fileType} upload error:`, error);
+  showAlert(error.message || `Failed to upload ${fileType}`);
+  resetProgress(fileType);
+}
+
+// Handle successful upload
+function handleUploadSuccess(fileType, fileName) {
+  const button = document.getElementById(`${fileType}-upload-btn`);
+  const label = document.getElementById(`${fileType}-file-label`);
+  
+  if (button) {
+    button.textContent = 'Change file';
+    button.style.backgroundColor = '#4CAF50';
+    button.disabled = false;
+  }
+  
+  if (label) {
+    const originalText = label.textContent.split('(')[0].trim();
+    label.innerHTML = `${fileName} <span style="color: #4CAF50;">(✓)</span>`;
+  }
+  
+  setTimeout(() => {
+    resetProgress(fileType);
+  }, 1000);
+}
+
+// Validate file before upload
+function validateFile(file, fileType) {
+  const maxSize = 2 * 1024 * 1024; // 2MB
+  let allowedTypes;
+
+  switch(fileType) {
+    case 'cv-resume':
+      allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+      break;
+    case 'i94':
+      allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png', 'image/jfif'];
+      break;
+    default:
+      allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/jfif'];
+  }
+
+  if (file.size > maxSize) {
+    throw new Error(`File size exceeds 2MB limit`);
+  }
+  if (!allowedTypes.includes(file.type)) {
+    throw new Error(`Invalid file type for ${fileType}`);
+  }
+}
+
+// Handle passport uploads (main, spouse, and children)
 async function handlePassportUpload(files, applicantType) {
   try {
     const { clientData, accessToken } = getAuthenticatedClientData();
@@ -733,12 +433,6 @@ async function handlePassportUpload(files, applicantType) {
                          applicantType === 'spouse' ? 'spouse-passport' : 
                          'children-passport';
 
-    const progressBar = document.getElementById(`${elementPrefix}-progress-bar`);
-    const progressFill = document.getElementById(`${elementPrefix}-progress-fill`);
-    const uploadButton = document.getElementById(`${elementPrefix}-upload-btn`);
-    const fileLabel = document.getElementById(`${elementPrefix}-file-label`);
-
-    // Handle both single and multiple files
     const fileArray = Array.isArray(files) ? files : [files];
     
     if (fileArray.length === 0) {
@@ -746,26 +440,16 @@ async function handlePassportUpload(files, applicantType) {
     }
 
     // Validate all files
-    const maxSize = 2 * 1024 * 1024;
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/jfif'];
-    
-    for (let file of fileArray) {
-      if (file.size > maxSize) {
-        throw new Error(`File ${file.name} exceeds 2MB limit`);
-      }
-      if (!allowedTypes.includes(file.type)) {
-        throw new Error(`File ${file.name} is not in an allowed format. Only PNG, JPG, JPEG, and JFIF files are allowed.`);
-      }
+    fileArray.forEach(file => validateFile(file, elementPrefix));
+
+    updateProgress(elementPrefix, 0, 'Starting upload...');
+    const button = document.getElementById(`${elementPrefix}-upload-btn`);
+    if (button) {
+      button.textContent = fileArray.length > 1 ? `Uploading ${fileArray.length} files...` : 'Uploading...';
+      button.disabled = true;
     }
 
-    // Show upload starting
-    progressBar.style.display = 'block';
-    progressFill.style.width = '0%';
-    uploadButton.textContent = fileArray.length > 1 ? 
-      `Uploading ${fileArray.length} files...` : 'Uploading...';
-    uploadButton.disabled = true;
-
-    // Process all files
+    // Process files
     const results = [];
     for (let i = 0; i < fileArray.length; i++) {
       const file = fileArray[i];
@@ -777,9 +461,8 @@ async function handlePassportUpload(files, applicantType) {
         formData.append('child_index', i);
       }
 
-      // Update progress
       const progress = ((i + 1) / fileArray.length) * 90;
-      progressFill.style.width = `${progress}%`;
+      updateProgress(elementPrefix, progress, `Processing file ${i + 1} of ${fileArray.length}...`);
 
       const response = await fetch('http://127.0.0.1:5000/extract-passport-data', {
         method: 'POST',
@@ -797,22 +480,14 @@ async function handlePassportUpload(files, applicantType) {
       results.push(data);
     }
 
-    // Update UI to show completion
-    progressFill.style.width = '100%';
-    uploadButton.textContent = fileArray.length > 1 ? 'Change files' : 'Change file';
-    uploadButton.style.backgroundColor = '#4CAF50';
-    uploadButton.disabled = false;
+    updateProgress(elementPrefix, 100, 'Complete!');
     
     if (applicantType === 'children' && fileArray.length > 1) {
-      fileLabel.textContent = `${fileArray.length} children's passports uploaded`;
+      handleUploadSuccess(elementPrefix, `${fileArray.length} children's passports`);
       localStorage.setItem('childrenPassportData', JSON.stringify(results));
     } else {
-      fileLabel.textContent = fileArray[0].name;
+      handleUploadSuccess(elementPrefix, fileArray[0].name);
     }
-
-    setTimeout(() => {
-      progressBar.style.display = 'none';
-    }, 1000);
 
     return results;
 
@@ -822,44 +497,29 @@ async function handlePassportUpload(files, applicantType) {
   }
 }
 
-
-
-// I-94 upload handler
+// Handle I94 upload
 async function handleI94Upload(file) {
   try {
     const { clientData, accessToken } = getAuthenticatedClientData();
+    validateFile(file, 'i94');
 
-    const progressBar = document.getElementById('i94-progress-bar');
-    const progressFill = document.getElementById('i94-progress-fill');
-    const uploadButton = document.getElementById('i94-upload-btn');
-    const fileLabel = document.getElementById('i94-file-label');
-
-    if (!file) throw new Error('No file selected');
-
-    const maxSize = 2 * 1024 * 1024;
-    if (file.size > maxSize) {
-      throw new Error('File size exceeds 2MB limit');
+    updateProgress('i94', 0, 'Starting upload...');
+    const button = document.getElementById('i94-upload-btn');
+    if (button) {
+      button.textContent = 'Uploading...';
+      button.disabled = true;
     }
-
-    const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png', 'image/jfif'];
-    if (!allowedTypes.includes(file.type)) {
-      throw new Error('Invalid file type. Only PDF, PNG, JPG, JPEG, and JFIF files are allowed.');
-    }
-
-    progressBar.style.display = 'block';
-    progressFill.style.width = '0%';
-    uploadButton.textContent = 'Uploading...';
-    uploadButton.disabled = true;
 
     const formData = new FormData();
     formData.append('file', file);
     formData.append('email', clientData.email_address);
 
+    // Simulate upload progress
     let progress = 0;
     const progressInterval = setInterval(() => {
       if (progress < 90) {
         progress += 10;
-        progressFill.style.width = `${progress}%`;
+        updateProgress('i94', progress, 'Uploading...');
       }
     }, 200);
 
@@ -874,21 +534,12 @@ async function handleI94Upload(file) {
     clearInterval(progressInterval);
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to process I-94');
+      throw new Error('Failed to process I-94');
     }
 
     const data = await response.json();
-    progressFill.style.width = '100%';
-
-    uploadButton.textContent = 'Change file';
-    uploadButton.style.backgroundColor = '#4CAF50';
-    uploadButton.disabled = false;
-    fileLabel.textContent = file.name;
-
-    setTimeout(() => {
-      progressBar.style.display = 'none';
-    }, 1000);
+    updateProgress('i94', 100, 'Complete!');
+    handleUploadSuccess('i94', file.name);
 
     return data;
 
@@ -898,35 +549,69 @@ async function handleI94Upload(file) {
   }
 }
 
+// Handle Resume upload
+async function handleResumeUpload(file) {
+  try {
+    const { clientData, accessToken } = getAuthenticatedClientData();
+    validateFile(file, 'cv-resume');
 
+    updateProgress('cv-resume', 0, 'Starting upload...');
+    const button = document.getElementById('cv-resume-upload-btn');
+    if (button) {
+      button.textContent = 'Uploading...';
+      button.disabled = true;
+    }
 
-// Add this new function to handle address data extraction
-// Address proof upload handler
+    const formData = new FormData();
+    formData.append('resume', file);
+    formData.append('email', clientData.email_address);
+
+    let progress = 0;
+    const progressInterval = setInterval(() => {
+      if (progress < 90) {
+        progress += 10;
+        updateProgress('cv-resume', progress, 'Uploading...');
+      }
+    }, 200);
+
+    const response = await fetch('http://127.0.0.1:5000/upload-resume', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      },
+      body: formData
+    });
+
+    clearInterval(progressInterval);
+
+    if (!response.ok) {
+      throw new Error('Failed to process resume');
+    }
+
+    const data = await response.json();
+    updateProgress('cv-resume', 100, 'Complete!');
+    handleUploadSuccess('cv-resume', file.name);
+
+    return data;
+
+  } catch (error) {
+    handleUploadError(error, 'cv-resume');
+    throw error;
+  }
+}
+
+// Handle Address upload
 async function handleAddressUpload(file) {
   try {
     const { clientData, accessToken } = getAuthenticatedClientData();
+    validateFile(file, 'address-proof');
 
-    const progressBar = document.getElementById('address-proof-progress-bar');
-    const progressFill = document.getElementById('address-proof-progress-fill');
-    const uploadButton = document.getElementById('address-proof-upload-btn');
-    const fileLabel = document.getElementById('address-proof-label');
-
-    if (!file) throw new Error('No file selected');
-
-    const maxSize = 2 * 1024 * 1024;
-    if (file.size > maxSize) {
-      throw new Error('File size exceeds 2MB limit');
+    updateProgress('address-proof', 0, 'Starting upload...');
+    const button = document.getElementById('address-proof-upload-btn');
+    if (button) {
+      button.textContent = 'Uploading...';
+      button.disabled = true;
     }
-
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/jfif'];
-    if (!allowedTypes.includes(file.type)) {
-      throw new Error('Invalid file type. Only PNG, JPG, JPEG, and JFIF files are allowed.');
-    }
-
-    progressBar.style.display = 'block';
-    progressFill.style.width = '0%';
-    uploadButton.textContent = 'Uploading...';
-    uploadButton.disabled = true;
 
     const formData = new FormData();
     formData.append('image', file);
@@ -936,7 +621,7 @@ async function handleAddressUpload(file) {
     const progressInterval = setInterval(() => {
       if (progress < 90) {
         progress += 10;
-        progressFill.style.width = `${progress}%`;
+        updateProgress('address-proof', progress, 'Uploading...');
       }
     }, 200);
 
@@ -951,21 +636,12 @@ async function handleAddressUpload(file) {
     clearInterval(progressInterval);
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to process address proof');
+      throw new Error('Failed to process address proof');
     }
 
     const data = await response.json();
-    progressFill.style.width = '100%';
-
-    uploadButton.textContent = 'Change file';
-    uploadButton.style.backgroundColor = '#4CAF50';
-    uploadButton.disabled = false;
-    fileLabel.textContent = file.name;
-
-    setTimeout(() => {
-      progressBar.style.display = 'none';
-    }, 1000);
+    updateProgress('address-proof', 100, 'Complete!');
+    handleUploadSuccess('address-proof', file.name);
 
     return data;
 
@@ -977,57 +653,14 @@ async function handleAddressUpload(file) {
 
 // Main file upload handler
 function uploadFile(fileType) {
-  let progressBarFill, progressBar, fileInfoLabel, uploadButton;
-
-  switch(fileType) {
-    case 'passport':
-      progressBarFill = document.getElementById('passport-progress-fill');
-      progressBar = document.getElementById('passport-progress-bar');
-      fileInfoLabel = document.getElementById('passport-file-label');
-      uploadButton = document.getElementById('passport-upload-btn');
-      break;
-    case 'spouse-passport':
-      progressBarFill = document.getElementById('spouse-passport-progress-fill');
-      progressBar = document.getElementById('spouse-passport-progress-bar');
-      fileInfoLabel = document.getElementById('spouse-passport-file-label');
-      uploadButton = document.getElementById('spouse-passport-upload-btn');
-      break;
-    case 'children-passport':
-      progressBarFill = document.getElementById('children-passport-progress-fill');
-      progressBar = document.getElementById('children-passport-progress-bar');
-      fileInfoLabel = document.getElementById('children-passport-file-label');
-      uploadButton = document.getElementById('children-passport-upload-btn');
-      break;
-    case 'i94':
-      progressBarFill = document.getElementById('i94-progress-fill');
-      progressBar = document.getElementById('i94-progress-bar');
-      fileInfoLabel = document.getElementById('i94-file-label');
-      uploadButton = document.getElementById('i94-upload-btn');
-      break;
-    case 'cv-resume':
-      progressBarFill = document.getElementById('cv-resume-progress-fill');
-      progressBar = document.getElementById('cv-resume-progress-bar');
-      fileInfoLabel = document.getElementById('cv-resume-file-label');
-      uploadButton = document.getElementById('cv-resume-upload-btn');
-      break;
-    case 'address-proof':
-      progressBarFill = document.getElementById('address-proof-progress-fill');
-      progressBar = document.getElementById('address-proof-progress-bar');
-      fileInfoLabel = document.getElementById('address-proof-label');
-      uploadButton = document.getElementById('address-proof-upload-btn');
-      break;
-  }
-
   const fileInput = document.getElementById(`${fileType}-upload`);
-
+  
   if (fileType === 'children-passport') {
-    // Handle multiple files for children's passports
     const files = Array.from(fileInput.files);
     if (files.length > 0) {
       return handlePassportUpload(files, 'children');
     }
   } else {
-    // Handle single file uploads
     const file = fileInput.files[0];
     if (file) {
       switch(fileType) {
@@ -1045,244 +678,45 @@ function uploadFile(fileType) {
     }
   }
 }
-// Form Field Handlers
-function toggleInputField(selectId, inputType) {
-  const selectElement = document.getElementById(selectId);
-  const containerId = `${selectId}-container`;
-  const container = document.getElementById(containerId);
-  if (selectElement.value === 'yes' || selectElement.value === 'provide_anumber') {
-    const inputField = `<input type="text" class="form-control" placeholder="Enter ${inputType.replace('-', ' ')}" />`;
-    container.innerHTML = inputField;
-  } else {
-    container.innerHTML = '';
-  }
-}
-function goToPreviousPage() {
-  const visaChecklistSection = document.getElementById('visa-checklist-section');
-  const additionalInfoSection = document.getElementById('additional-information-section');
-  const progressBar = document.getElementById('progress-bar');
-  const progressPercentage = document.getElementById('progress-percentage');
 
-  if (visaChecklistSection && additionalInfoSection && progressBar && progressPercentage) {
-    visaChecklistSection.style.display = 'block';
-    additionalInfoSection.style.display = 'none';
-    progressBar.style.width = '25%';
-    progressPercentage.innerText = '25%';
-  }
-}
-// Form validation and page navigation functions
-function goToNextPage() {
-  const passportFile = document.getElementById('passport-upload')?.files[0];
-  const i94File = document.getElementById('i94-upload')?.files[0];
-  const cvResumeFile = document.getElementById('cv-resume-upload')?.files[0];
-  const addressProofFile = document.getElementById('address-proof-upload')?.files[0];
-  const applyFromSelect = document.getElementById('part5-1b-apply-from')?.value;
-
-  const missingRequirements = [];
-
-  if (!passportFile) missingRequirements.push('Passport');
-  if (!i94File) missingRequirements.push('I-94');
-  if (!cvResumeFile) missingRequirements.push('CV/Resume');
-  if (!addressProofFile) missingRequirements.push('Proof of Address');
-  if (!applyFromSelect || applyFromSelect === "") missingRequirements.push('Application Location');
-
-  if (missingRequirements.length > 0) {
-    const alertMessage = document.getElementById('alert-message');
-    if (alertMessage) {
-      const messageSpan = alertMessage.querySelector('span:last-child');
-      if (messageSpan) {
-        messageSpan.textContent = `Please provide: ${missingRequirements.join(', ')}`;
-      }
-      alertMessage.style.display = 'flex';
-      setTimeout(() => {
-        alertMessage.style.display = 'none';
-      }, 3000);
-    }
-    return false;
-  }
-
-  const visaChecklistSection = document.getElementById('visa-checklist-section');
-  const additionalInfoSection = document.getElementById('additional-information-section');
-  const progressBar = document.getElementById('progress-bar');
-  const progressPercentage = document.getElementById('progress-percentage');
-
-  if (visaChecklistSection && additionalInfoSection && progressBar && progressPercentage) {
-    visaChecklistSection.style.display = 'none';
-    additionalInfoSection.style.display = 'block';
-    progressBar.style.width = '50%';
-    progressPercentage.innerText = '50%';
-    return true;
-  }
-  return false;
-}
-function validateAdditionalInfo() {
-  const requiredFields = [
-    { id: 'part1-7', name: 'SSN Information' },
-    { id: 'part1-8', name: 'USCIS Account Information' },
-    { id: 'part2-2a', name: 'Previous Petition Information' },
-    { id: 'part3-8', name: 'Alien Registration Information' }
+// Validate all required uploads
+function validateUploads() {
+  const requiredUploads = [
+    { id: 'passport-upload', name: 'Passport' },
+    { id: 'i94-upload', name: 'I-94' },
+    { id: 'cv-resume-upload', name: 'CV/Resume' },
+    { id: 'address-proof-upload', name: 'Proof of Address' }
   ];
 
-  const missingFields = [];
-
-  requiredFields.forEach(field => {
-    const select = document.getElementById(field.id);
-    if (!select || select.value === "") {
-      missingFields.push(field.name);
-    } else if (select.value === "yes" || select.value === "provide_anumber") {
-      // Check if the corresponding input field has a value
-      const container = document.getElementById(`${field.id}-container`);
-      const input = container.querySelector('input');
-      if (!input || !input.value.trim()) {
-        missingFields.push(`${field.name} details`);
-      }
-    }
+  const missingUploads = requiredUploads.filter(upload => {
+    const fileInput = document.getElementById(upload.id);
+    return !fileInput || !fileInput.files || fileInput.files.length === 0;
   });
 
-  if (missingFields.length > 0) {
-    const alertMessage = document.getElementById('alert-message');
-    if (alertMessage) {
-      const messageSpan = alertMessage.querySelector('span:last-child');
-      if (messageSpan) {
-        messageSpan.textContent = `Please provide: ${missingFields.join(', ')}`;
-      }
-      alertMessage.style.display = 'flex';
-      setTimeout(() => {
-        alertMessage.style.display = 'none';
-      }, 3000);
-    }
+  if (missingUploads.length > 0) {
+    showAlert(`Please upload: ${missingUploads.map(u => u.name).join(', ')}`);
     return false;
   }
+
   return true;
 }
-// Data Submission
-async function submitUserData() {
-  try {
-    // Get values from all required fields
-    const email = document.getElementById('user-email')?.value || localStorage.getItem('userEmail');
-    const applyingFrom = document.getElementById('part5-1b-apply-from')?.value;
 
-    // Get SSN information
-    const hasSSN = document.getElementById('part1-7')?.value;
-    const ssnNumber = hasSSN === 'yes' ? 
-      document.getElementById('part1-7-container')?.querySelector('input')?.value : null;
-
-    // Get USCIS Account information
-    const hasUSCISAccount = document.getElementById('part1-8')?.value;
-    const uscisAccountNumber = hasUSCISAccount === 'yes' ? 
-      document.getElementById('part1-8-container')?.querySelector('input')?.value : null;
-
-    // Get Previous Petition information
-    const hasPreviousPetition = document.getElementById('part2-2a')?.value;
-    const petitionReceiptNumber = hasPreviousPetition === 'yes' ? 
-      document.getElementById('part2-2a-container')?.querySelector('input')?.value : null;
-
-    // Get Alien Registration information
-    const hasAlienRegistration = document.getElementById('part3-8')?.value;
-    const alienRegistrationNumber = hasAlienRegistration === 'provide_anumber' ? 
-      document.getElementById('part3-8-container')?.querySelector('input')?.value : null;
-
-    // Validate required fields
-    if (!email || !applyingFrom) {
-      throw new Error('Missing required fields');
-    }
-
-    // Prepare data for submission
-    const userData = {
-      email_address: email,
-      applying_from: applyingFrom,
-      has_ssn: hasSSN,
-      ssn_number: ssnNumber || "",
-      has_uscis_account: hasUSCISAccount,
-      uscis_account_number: uscisAccountNumber || "",
-      is_amendment: hasPreviousPetition,
-      previous_receipt_number: petitionReceiptNumber || "",
-      has_alien_number: hasAlienRegistration,
-      alien_number: alienRegistrationNumber || ""
-    };
-
-    console.log('Submitting user data:', userData); // Debug log
-
-    const response = await fetch('http://127.0.0.1:5000/submit-user-data', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userData)
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to submit user data');
-    }
-
-    const data = await response.json();
-    console.log('User data submitted successfully:', data);
-    return true;
-
-  } catch (error) {
-    console.error('Error submitting user data:', error);
-    const alertMessage = document.getElementById('alert-message');
-    if (alertMessage) {
-      const messageSpan = alertMessage.querySelector('span:last-child');
-      if (messageSpan) {
-        messageSpan.textContent = error.message || 'Failed to submit user data';
-      }
-      alertMessage.style.display = 'flex';
-      setTimeout(() => {
-        alertMessage.style.display = 'none';
-      }, 3000);
-    }
-    return false;
-  }
-}
-// Navigation to Form Filler
-async function goToFillerPage() {
-  if (!validateAdditionalInfo()) {
-    return false;
-  }
-
-  try {
-    const continueButton = document.getElementById('continueButton');
-    if (continueButton) {
-      continueButton.disabled = true;
-      continueButton.textContent = 'Processing...';
-    }
-
-    const success = await submitUserData();
-    
-    if (success) {
-      window.location.href = "/application/form_session.html";
-    } else {
-      if (continueButton) {
-        continueButton.disabled = false;
-        continueButton.textContent = 'Continue';
-      }
-    }
-  } catch (error) {
-    console.error('Error in form submission:', error);
-    if (continueButton) {
-      continueButton.disabled = false;
-      continueButton.textContent = 'Continue';
-    }
-  }
-}
-
-// Initialize everything when the page loads
-// Page Initialization
+// Initialize page
 document.addEventListener('DOMContentLoaded', function() {
-  // Hide alert message initially
-  const alertMessage = document.getElementById('alert-message');
-  if (alertMessage) {
-    alertMessage.style.display = 'none';
+  // Check authentication
+  try {
+    getAuthenticatedClientData();
+  } catch (error) {
+    console.error('Authentication check failed:', error);
+    window.location.href = '../login.html';
+    return;
   }
 
-  // Initialize all file upload handlers
+  // Initialize file upload handlers
   const fileTypes = ['passport', 'spouse-passport', 'children-passport', 'i94', 'cv-resume', 'address-proof'];
   fileTypes.forEach(type => {
     const fileInput = document.getElementById(`${type}-upload`);
     if (fileInput) {
-      // Set multiple attribute for children's passport
       if (type === 'children-passport') {
         fileInput.setAttribute('multiple', 'multiple');
       }
@@ -1290,28 +724,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Initialize checkboxes
-  const checkboxes = document.querySelectorAll('.form-check-input');
-  checkboxes.forEach((checkbox) => {
-    if (checkbox.checked) {
-      checkbox.style.backgroundColor = '#4285F4';
-      checkbox.style.borderColor = '#4285F4';
-    }
-  });
-
-  // Check authentication
-  try {
-    getAuthenticatedClientData();
-  } catch (error) {
-    console.error('Authentication check failed:', error);
-    window.location.href = '../login.html';
+  // Initialize alert message
+  const alertMessage = document.getElementById('alert-message');
+  if (alertMessage) {
+    alertMessage.style.display = 'none';
   }
 });
-</script>
+  </script>
 
-<!-- Keep these includes -->
-@@include('../layouts/footer-block.html')
-@@include('../layouts/footer-js.html')
-
+  @@include('../layouts/footer-block.html')
+  @@include('../layouts/footer-js.html')
 </body>
 </html>
