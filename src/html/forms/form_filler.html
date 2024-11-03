@@ -362,16 +362,6 @@ function updateProgress(fileType, progress, status = null) {
 }
 
 // Reset progress UI
-function resetProgress(fileType) {
-  const wrapper = document.getElementById(`${fileType}-progress-wrapper`);
-  const button = document.getElementById(`${fileType}-upload-btn`);
-  if (wrapper) wrapper.style.display = 'none';
-  if (button) {
-    button.textContent = 'Upload file';
-    button.disabled = false;
-    button.style.backgroundColor = '#4285F4';
-  }
-}
 
 // Handle file upload error
 function handleUploadError(error, fileType) {
@@ -381,26 +371,55 @@ function handleUploadError(error, fileType) {
 }
 
 // Handle successful upload
+// Handle successful upload
 function handleUploadSuccess(fileType, fileName) {
   const button = document.getElementById(`${fileType}-upload-btn`);
   const label = document.getElementById(`${fileType}-file-label`);
   
   if (button) {
     button.textContent = 'Change file';
-    button.style.backgroundColor = '#4CAF50';
+    button.style.backgroundColor = '#4CAF50';  // Change to green
     button.disabled = false;
   }
   
   if (label) {
-    const originalText = label.textContent.split('(')[0].trim();
-    label.innerHTML = `${fileName} <span style="color: #4CAF50;">(✓)</span>`;
+    const isRequired = label.innerHTML.includes('*');
+    const baseText = label.textContent.split('*')[0].trim();
+    label.innerHTML = `${fileName} ${isRequired ? '<span style="color: red;">*</span>' : ''}`;
   }
   
   setTimeout(() => {
-    resetProgress(fileType);
+    const progressWrapper = document.getElementById(`${fileType}-progress-wrapper`);
+    if (progressWrapper) {
+      progressWrapper.style.display = 'none';
+    }
   }, 1000);
 }
 
+function resetProgress(fileType) {
+  const wrapper = document.getElementById(`${fileType}-progress-wrapper`);
+  const button = document.getElementById(`${fileType}-upload-btn`);
+  const label = document.getElementById(`${fileType}-file-label`);
+  
+  if (wrapper) {
+    wrapper.style.display = 'none';
+  }
+  
+  if (button) {
+    button.textContent = 'Upload file';
+    button.disabled = false;
+    button.style.backgroundColor = '#4285F4';  // Reset to original blue
+  }
+
+  // Reset the label to original text with red asterisk if required
+  if (label) {
+    const isRequired = label.innerHTML.includes('*');
+    const originalText = label.textContent.split('*')[0].trim();
+    label.innerHTML = isRequired ? 
+      `${originalText} <span style="color: red;">*</span>` : 
+      originalText;
+  }
+}
 // Validate file before upload
 function validateFile(file, fileType) {
   const maxSize = 2 * 1024 * 1024; // 2MB
@@ -672,6 +691,7 @@ function uploadFile(fileType) {
 
 // Validate all required uploads
 function validateUploads() {
+  const continueButton = document.querySelector('.btn-primary');
   const requiredUploads = [
     { id: 'passport-upload', name: 'Passport' },
     { id: 'i94-upload', name: 'I-94' },
@@ -687,6 +707,11 @@ function validateUploads() {
   if (missingUploads.length > 0) {
     showAlert(`Please upload: ${missingUploads.map(u => u.name).join(', ')}`);
     return false;
+  }
+
+  if (continueButton) {
+    continueButton.disabled = true;
+    continueButton.textContent = 'Processing...';
   }
 
   return true;
