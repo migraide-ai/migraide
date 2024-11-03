@@ -617,26 +617,18 @@ async function handleAddressUpload(file) {
     formData.append('image', file);
     formData.append('email', clientData.email_address);
 
-    let progress = 0;
-    const progressInterval = setInterval(() => {
-      if (progress < 90) {
-        progress += 10;
-        updateProgress('address-proof', progress, 'Uploading...');
-      }
-    }, 200);
-
+    // Add access token to headers
     const response = await fetch('http://127.0.0.1:5000/extract_address_data', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${accessToken}`
+        'Authorization': `Bearer ${accessToken}` // Make sure to include the token
       },
       body: formData
     });
 
-    clearInterval(progressInterval);
-
     if (!response.ok) {
-      throw new Error('Failed to process address proof');
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to process address proof');
     }
 
     const data = await response.json();
@@ -644,7 +636,6 @@ async function handleAddressUpload(file) {
     handleUploadSuccess('address-proof', file.name);
 
     return data;
-
   } catch (error) {
     handleUploadError(error, 'address-proof');
     throw error;

@@ -245,12 +245,15 @@ function toggleInputField(selectId, inputType) {
   
     requiredFields.forEach(field => {
       const select = document.getElementById(field.id);
-      if (!select || select.value === "") {
+      if (!select || select.value === "" || select.value === null) {
         missingFields.push(field.name);
-      } else if (select.value === "yes" || select.value === "provide_anumber") {
-        // Check if the corresponding input field has a value
+        return;
+      }
+  
+      // Only check for input field if the selection requires additional info
+      if (select.value === "yes" || select.value === "provide_anumber") {
         const container = document.getElementById(`${field.id}-container`);
-        const input = container.querySelector('input');
+        const input = container?.querySelector('input');
         if (!input || !input.value.trim()) {
           missingFields.push(`${field.name} details`);
         }
@@ -258,17 +261,7 @@ function toggleInputField(selectId, inputType) {
     });
   
     if (missingFields.length > 0) {
-      const alertMessage = document.getElementById('alert-message');
-      if (alertMessage) {
-        const messageSpan = alertMessage.querySelector('span:last-child');
-        if (messageSpan) {
-          messageSpan.textContent = `Please provide: ${missingFields.join(', ')}`;
-        }
-        alertMessage.style.display = 'flex';
-        setTimeout(() => {
-          alertMessage.style.display = 'none';
-        }, 3000);
-      }
+      showAlert(`Please provide: ${missingFields.join(', ')}`);
       return false;
     }
     return true;
@@ -277,8 +270,9 @@ function toggleInputField(selectId, inputType) {
   // Submit user data
   async function submitUserData() {
     try {
+      const { clientData, accessToken } = getAuthenticatedClientData();
+  
       // Get values from all required fields
-      const email = localStorage.getItem('userEmail');
       const applyingFrom = document.getElementById('part5-1b-apply-from')?.value;
   
       // Get SSN information
@@ -302,13 +296,13 @@ function toggleInputField(selectId, inputType) {
         document.getElementById('part3-8-container')?.querySelector('input')?.value : null;
   
       // Validate required fields
-      if (!email || !applyingFrom) {
+      if (!clientData.email_address || !applyingFrom) {
         throw new Error('Missing required fields');
       }
   
       // Prepare data for submission
       const userData = {
-        email_address: email,
+        email_address: clientData.email_address,
         applying_from: applyingFrom,
         has_ssn: hasSSN,
         ssn_number: ssnNumber || "",
@@ -320,12 +314,13 @@ function toggleInputField(selectId, inputType) {
         alien_number: alienRegistrationNumber || ""
       };
   
-      console.log('Submitting user data:', userData); // Debug log
+      console.log('Submitting user data:', userData);
   
       const response = await fetch('http://127.0.0.1:5000/submit-user-data', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`
         },
         body: JSON.stringify(userData)
       });
@@ -341,21 +336,10 @@ function toggleInputField(selectId, inputType) {
   
     } catch (error) {
       console.error('Error submitting user data:', error);
-      const alertMessage = document.getElementById('alert-message');
-      if (alertMessage) {
-        const messageSpan = alertMessage.querySelector('span:last-child');
-        if (messageSpan) {
-          messageSpan.textContent = error.message || 'Failed to submit user data';
-        }
-        alertMessage.style.display = 'flex';
-        setTimeout(() => {
-          alertMessage.style.display = 'none';
-        }, 3000);
-      }
+      showAlert(error.message || 'Failed to submit user data');
       return false;
     }
   }
-  
   // Handle form submission and navigation
   async function goToFillerPage() {
     if (!validateAdditionalInfo()) {
