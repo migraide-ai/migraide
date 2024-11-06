@@ -71,6 +71,7 @@
     "datatables.net-scroller-bs5": "^2.4.0",
     "datatables.net-select-bs5": "^2.0.0",
     "datatables.net-select-dt": "^2.0.0",
+    "dotenv": "^16.4.5",
     "dragula": "^3.7.3",
     "dropzone": "^5.9.3",
     "feather-icons": "^4.29.1",

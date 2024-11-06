@@ -1570,12 +1570,14 @@
             </div>
           </div>
 
-          <!-- Navigation Buttons -->
           <div style="display: flex; justify-content: space-between; align-items: center; margin: 20px 30px; padding-bottom: 30px;">
-            <a href="/forms/form_filler.html">
-              <button type="button" class="btn btn-secondary">Back</button>
-            </a>
-            <button id="continueButton" type="button" class="btn btn-primary" onclick="goToFillerPage()">
+            <button type="button" class="btn btn-secondary" onclick="window.location.href='/forms/form_filler.html'">
+              Back
+            </button>
+            <button id="continueButton" 
+                    type="button" 
+                    class="btn btn-primary" 
+                    style="background-color: #4285F4; border: none; padding: 10px 20px; font-size: 16px; font-family: 'Inter', sans-serif; border-radius: 50px; width: 287px; height: 44px; text-align: center; transition: background-color 0.3s ease;">
               Continue
             </button>
           </div>
@@ -1590,195 +1592,200 @@
     <span>Kindly provide all fields marked as required.</span>
   </div>
 
-  <!-- Include your JavaScript file -->
   <script>
+    // Helper function to show alerts
+    function showAlert(message) {
+      console.log('Alert:', message);
+      const alertMessage = document.getElementById('alert-message');
+      if (alertMessage) {
+        const messageSpan = alertMessage.querySelector('span:last-child');
+        if (messageSpan) {
+          messageSpan.textContent = message;
+        }
+        alertMessage.style.display = 'flex';
+        setTimeout(() => {
+          alertMessage.style.display = 'none';
+        }, 3000);
+      }
+    }
+
     // Form field toggle handler
-function toggleInputField(selectId, inputType) {
-    const selectElement = document.getElementById(selectId);
-    const containerId = `${selectId}-container`;
-    const container = document.getElementById(containerId);
-    if (selectElement.value === 'yes' || selectElement.value === 'provide_anumber') {
-      const inputField = `<input type="text" class="form-control" placeholder="Enter ${inputType.replace('-', ' ')}" />`;
-      container.innerHTML = inputField;
-    } else {
-      container.innerHTML = '';
-    }
-  }
-  
-  // Form validation
-  function validateAdditionalInfo() {
-    const requiredFields = [
-      { id: 'part5-1b-apply-from', name: 'Application Location' },
-      { id: 'part1-7', name: 'SSN Information' },
-      { id: 'part1-8', name: 'USCIS Account Information' },
-      { id: 'part2-2a', name: 'Previous Petition Information' },
-      { id: 'part3-8', name: 'Alien Registration Information' }
-    ];
-  
-    const missingFields = [];
-  
-    requiredFields.forEach(field => {
-      const select = document.getElementById(field.id);
-      if (!select || select.value === "") {
-        missingFields.push(field.name);
-      } else if (select.value === "yes" || select.value === "provide_anumber") {
-        // Check if the corresponding input field has a value
-        const container = document.getElementById(`${field.id}-container`);
-        const input = container.querySelector('input');
-        if (!input || !input.value.trim()) {
-          missingFields.push(`${field.name} details`);
-        }
-      }
-    });
-  
-    if (missingFields.length > 0) {
-      const alertMessage = document.getElementById('alert-message');
-      if (alertMessage) {
-        const messageSpan = alertMessage.querySelector('span:last-child');
-        if (messageSpan) {
-          messageSpan.textContent = `Please provide: ${missingFields.join(', ')}`;
-        }
-        alertMessage.style.display = 'flex';
-        setTimeout(() => {
-          alertMessage.style.display = 'none';
-        }, 3000);
-      }
-      return false;
-    }
-    return true;
-  }
-  
-  // Submit user data
-  async function submitUserData() {
-    try {
-      // Get values from all required fields
-      const email = localStorage.getItem('userEmail');
-      const applyingFrom = document.getElementById('part5-1b-apply-from')?.value;
-  
-      // Get SSN information
-      const hasSSN = document.getElementById('part1-7')?.value;
-      const ssnNumber = hasSSN === 'yes' ? 
-        document.getElementById('part1-7-container')?.querySelector('input')?.value : null;
-  
-      // Get USCIS Account information
-      const hasUSCISAccount = document.getElementById('part1-8')?.value;
-      const uscisAccountNumber = hasUSCISAccount === 'yes' ? 
-        document.getElementById('part1-8-container')?.querySelector('input')?.value : null;
-  
-      // Get Previous Petition information
-      const hasPreviousPetition = document.getElementById('part2-2a')?.value;
-      const petitionReceiptNumber = hasPreviousPetition === 'yes' ? 
-        document.getElementById('part2-2a-container')?.querySelector('input')?.value : null;
-  
-      // Get Alien Registration information
-      const hasAlienRegistration = document.getElementById('part3-8')?.value;
-      const alienRegistrationNumber = hasAlienRegistration === 'provide_anumber' ? 
-        document.getElementById('part3-8-container')?.querySelector('input')?.value : null;
-  
-      // Validate required fields
-      if (!email || !applyingFrom) {
-        throw new Error('Missing required fields');
-      }
-  
-      // Prepare data for submission
-      const userData = {
-        email_address: email,
-        applying_from: applyingFrom,
-        has_ssn: hasSSN,
-        ssn_number: ssnNumber || "",
-        has_uscis_account: hasUSCISAccount,
-        uscis_account_number: uscisAccountNumber || "",
-        is_amendment: hasPreviousPetition,
-        previous_receipt_number: petitionReceiptNumber || "",
-        has_alien_number: hasAlienRegistration,
-        alien_number: alienRegistrationNumber || ""
-      };
-  
-      console.log('Submitting user data:', userData); // Debug log
-  
-      const response = await fetch('http://127.0.0.1:5000/submit-user-data', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData)
-      });
-  
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to submit user data');
-      }
-  
-      const data = await response.json();
-      console.log('User data submitted successfully:', data);
-      return true;
-  
-    } catch (error) {
-      console.error('Error submitting user data:', error);
-      const alertMessage = document.getElementById('alert-message');
-      if (alertMessage) {
-        const messageSpan = alertMessage.querySelector('span:last-child');
-        if (messageSpan) {
-          messageSpan.textContent = error.message || 'Failed to submit user data';
-        }
-        alertMessage.style.display = 'flex';
-        setTimeout(() => {
-          alertMessage.style.display = 'none';
-        }, 3000);
-      }
-      return false;
-    }
-  }
-  
-  // Handle form submission and navigation
-  async function goToFillerPage() {
-    if (!validateAdditionalInfo()) {
-      return false;
-    }
-  
-    try {
-      const continueButton = document.getElementById('continueButton');
-      if (continueButton) {
-        continueButton.disabled = true;
-        continueButton.textContent = 'Processing...';
-      }
-  
-      const success = await submitUserData();
-      
-      if (success) {
-        window.location.href = "/application/form_session.html";
+    function toggleInputField(selectId, inputType) {
+      const selectElement = document.getElementById(selectId);
+      const containerId = `${selectId}-container`;
+      const container = document.getElementById(containerId);
+      if (selectElement.value === 'yes' || selectElement.value === 'provide_anumber') {
+        const inputField = `<input type="text" class="form-control" placeholder="Enter ${inputType.replace('-', ' ')}" />`;
+        container.innerHTML = inputField;
       } else {
+        container.innerHTML = '';
+      }
+    }
+
+    // Validation function
+    function validateAdditionalInfo() {
+      console.log('Starting validation...');
+      
+      // Only Application Location is required
+      const applyingFrom = document.getElementById('part5-1b-apply-from')?.value;
+      if (!applyingFrom) {
+        showAlert('Please select where you will be applying from');
+        return false;
+      }
+
+      return true;
+    }
+
+    // Submit user data
+    async function submitUserData() {
+      try {
+        console.log('Starting data submission...');
+        
+        // Get authentication data
+        const clientData = JSON.parse(localStorage.getItem('clientData'));
+        const accessToken = localStorage.getItem('accessToken');
+        
+        console.log('Auth Data:', { 
+          hasClientData: !!clientData, 
+          hasToken: !!accessToken 
+        });
+
+        if (!clientData?.email_address || !accessToken) {
+          throw new Error('Authentication data missing');
+        }
+
+        // Get form values
+        const applyingFrom = document.getElementById('part5-1b-apply-from').value;
+        const hasSSN = document.getElementById('part1-7').value || 'no';
+        const hasUSCISAccount = document.getElementById('part1-8').value || 'no';
+        const hasPreviousPetition = document.getElementById('part2-2a').value || 'no';
+        const hasAlienRegistration = document.getElementById('part3-8').value || 'no_anumber';
+
+        // Get additional input values if applicable
+        const ssnNumber = hasSSN === 'yes' ? 
+          document.getElementById('part1-7-container')?.querySelector('input')?.value : '';
+        const uscisAccountNumber = hasUSCISAccount === 'yes' ? 
+          document.getElementById('part1-8-container')?.querySelector('input')?.value : '';
+        const petitionReceiptNumber = hasPreviousPetition === 'yes' ? 
+          document.getElementById('part2-2a-container')?.querySelector('input')?.value : '';
+        const alienRegistrationNumber = hasAlienRegistration === 'provide_anumber' ? 
+          document.getElementById('part3-8-container')?.querySelector('input')?.value : '';
+
+        // Prepare data
+        const userData = {
+          email_address: clientData.email_address,
+          applying_from: applyingFrom,
+          has_ssn: hasSSN,
+          ssn_number: ssnNumber || "",
+          has_uscis_account: hasUSCISAccount,
+          uscis_account_number: uscisAccountNumber || "",
+          is_amendment: hasPreviousPetition,
+          previous_receipt_number: petitionReceiptNumber || "",
+          has_alien_number: hasAlienRegistration,
+          alien_number: alienRegistrationNumber || ""
+        };
+
+        console.log('Submitting data:', userData);
+
+        const response = await fetch('http://127.0.0.1:5000/submit-user-data', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`
+          },
+          body: JSON.stringify(userData)
+        });
+
+        console.log('Response status:', response.status);
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('API Error:', errorData);
+          throw new Error(errorData.error || 'Failed to submit user data');
+        }
+
+        const data = await response.json();
+        console.log('Success response:', data);
+        return true;
+
+      } catch (error) {
+        console.error('Submission error:', error);
+        showAlert(error.message || 'Failed to submit user data');
+        return false;
+      }
+    }
+
+    // Handle form submission and navigation
+    async function goToFillerPage() {
+      console.log('goToFillerPage function called');
+
+      if (!validateAdditionalInfo()) {
+        console.log('Validation failed');
+        return false;
+      }
+
+      try {
+        const continueButton = document.getElementById('continueButton');
+        if (continueButton) {
+          console.log('Disabling continue button');
+          continueButton.disabled = true;
+          continueButton.textContent = 'Processing...';
+        }
+
+        console.log('Calling submitUserData');
+        const success = await submitUserData();
+        
+        if (success) {
+          console.log('Data submitted successfully, redirecting...');
+          window.location.href = "/application/form_session.html";
+        } else {
+          console.log('Data submission failed');
+          if (continueButton) {
+            continueButton.disabled = false;
+            continueButton.textContent = 'Continue';
+          }
+        }
+      } catch (error) {
+        console.error('Error in form submission:', error);
         if (continueButton) {
           continueButton.disabled = false;
           continueButton.textContent = 'Continue';
         }
       }
-    } catch (error) {
-      console.error('Error in form submission:', error);
-      if (continueButton) {
-        continueButton.disabled = false;
-        continueButton.textContent = 'Continue';
+    }
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Page loaded');
+      
+      // Check authentication
+      const clientData = JSON.parse(localStorage.getItem('clientData'));
+      const accessToken = localStorage.getItem('accessToken');
+      
+      if (!clientData || !clientData.email_address || !accessToken) {
+        console.log('Authentication check failed');
+        window.location.href = '/pages/login-client.html';
+        return;
       }
-    }
-  }
-  
-  // Initialize page
-  document.addEventListener('DOMContentLoaded', function() {
-    // Check authentication
-    const clientData = JSON.parse(localStorage.getItem('clientData'));
-    const accessToken = localStorage.getItem('accessToken');
-    
-    if (!clientData || !clientData.email_address || !accessToken) {
-      window.location.href = '/pages/login-client.html';
-      return;
-    }
-  
-    // Initialize alert message
-    const alertMessage = document.getElementById('alert-message');
-    if (alertMessage) {
-      alertMessage.style.display = 'none';
-    }
-  });
+
+      // Add button click handler
+      const continueButton = document.getElementById('continueButton');
+      if (continueButton) {
+        continueButton.addEventListener('click', async function(e) {
+          e.preventDefault();
+          console.log('Continue button clicked');
+          await goToFillerPage();
+        });
+      }
+
+      // Initialize alert message
+      const alertMessage = document.getElementById('alert-message');
+      if (alertMessage) {
+        alertMessage.style.display = 'none';
+      }
+
+      console.log('Page initialization complete');
+    });
   </script>
 
   <footer class="pc-footer" style="border: 1px solid #E0E0E0; border-radius: 8px; padding: 10px 20px; margin-left: auto; margin-right: 75px; width: 100%; max-width: 1100px;">

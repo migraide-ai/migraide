@@ -358,7 +358,7 @@ let currentNudgeName = '';
             return;
         }
     
-        fetch('http://127.0.0.1:5000/list_clients', {
+        fetch('http://127.0.0.1:5001/api/dashboard/list_clients', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
@@ -482,7 +482,7 @@ window.openNudgeModal = function(email, name) {
 
 window.nudgeClient = function(email) {
   const accessToken = localStorage.getItem('accessToken');
-  fetch('http://127.0.0.1:5000/send_nudge', {
+  fetch('http://127.0.0.1:5001/api/dashboard/send_nudge', {
       method: 'POST',
       headers: {
           'Authorization': `Bearer ${accessToken}`,
@@ -506,7 +506,7 @@ window.nudgeClient = function(email) {
 
 window.viewClientDetails = function(clientId) {
     const accessToken = localStorage.getItem('accessToken');
-    fetch(`http://127.0.0.1:5000/client_details/${clientId}`, {
+    fetch(`http://127.0.0.1:5001/api/dashboard/client_details/${clientId}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${accessToken}`,
@@ -553,7 +553,7 @@ window.viewClientDetails = function(clientId) {
 window.deleteClient = function(clientId) {
   showConfirm('Are you sure you want to delete this client?', function() {
       const accessToken = localStorage.getItem('accessToken');
-      fetch(`http://127.0.0.1:5000/delete_client/${clientId}`, {
+      fetch(`http://127.0.0.1:5001/api/dashboard/delete_client/${clientId}`, {
           method: 'DELETE',
           headers: {
               'Authorization': `Bearer ${accessToken}`,
@@ -576,7 +576,7 @@ window.deleteClient = function(clientId) {
 };
 window.updateClientStatus = function(email) {
   const token = localStorage.getItem('token');
-  fetch('http://127.0.0.1:5000/update_status_by_email', {
+  fetch('http://127.0.0.1:5001/api/dashboard/update_status_by_email', {
       method: 'PUT',
       headers: {
           'Authorization': `Bearer ${token}`,
