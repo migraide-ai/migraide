@@ -486,7 +486,7 @@
         }
 
         // Define the backend endpoint URL for client sign-in
-        const endpoint = 'http://127.0.0.1:5001/api/dashboard/client_sign_in';
+        const endpoint = `${window.API_BASE_URL}/client_sign_in`
 
         // Prepare the data to be sent in the request
         const requestData = {
