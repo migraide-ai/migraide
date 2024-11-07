@@ -87,6 +87,7 @@
  <!-- [Head] end -->
  <!-- [Body] Start -->
  <body data-pc-preset="preset-1" data-pc-sidebar-caption="true" data-pc-layout="vertical" data-pc-direction="ltr" data-pc-theme_contrast="" data-pc-theme="light">
+  <script src="../assets/js/config.js"></script>
    <!-- [ Pre-loader ] start -->
 <div class="loader-bg">
   <div class="loader-track">
@@ -1907,7 +1908,7 @@
           return;
         }
   
-        fetch('http://127.0.0.1:5001/api/dashboard/add_client', {
+        fetch(`${window.API_BASE_URL}/add_client`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1947,7 +1948,7 @@
           return;
         }
 
-        fetch('http://127.0.0.1:5001/api/dashboard/send_nudge', {
+        fetch(`${window.API_BASE_URL}/send_nudge`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
