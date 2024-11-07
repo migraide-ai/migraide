@@ -46,6 +46,15 @@
   <!-- [Body] Start -->
 
   <body data-pc-preset="preset-1" data-pc-sidebar-caption="true" data-pc-layout="vertical" data-pc-direction="ltr" data-pc-theme_contrast="" data-pc-theme="light">
+
+    <script>
+      // Define API_BASE_URL as a global variable
+      window.API_BASE_URL = "https://beta.migraide.com/api/dashboard";  // Change this based on the environment
+      // window.API_BASE_URL = "http://127.0.0.1:5001/api/dashboard";  // Change this based on the environment
+
+    </script>
+
+
     <!-- [ Pre-loader ] start -->
     <div class="loader-bg">
       <div class="loader-track">
@@ -428,7 +437,7 @@
         console.log(formData);  // Debug to ensure correct form data
       
         try {
-          const response = await fetch('http://127.0.0.1:5001/api/dashboard/register', {
+          const response = await fetch(`${window.API_BASE_URL}/register`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
