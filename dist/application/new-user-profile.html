@@ -1925,7 +1925,7 @@
         .then(data => {
           if (data.msg === 'Client added successfully') {
             showAlert('Client added successfully');
-            sendNudge(formData.email_address);  // Call sendNudge after successful client addition
+            // sendNudge(formData.email_address);  // Call sendNudge after successful client addition
           } else {
             alert('Error: ' + data.msg);
           }
