@@ -99,6 +99,9 @@
   </style>
 </head>
 <body @@bodySetup>
+
+  <script src="../assets/js/config.js"></script>
+
   @@include('../layouts/layout-vertical.html')
 
   <div class="pc-container">
@@ -313,7 +316,7 @@
 
         console.log('Submitting data:', userData);
 
-        const response = await fetch('http://127.0.0.1:5000/submit-user-data', {
+        const response = await fetch(`${DOC_BASE_URL}/submit-user-data`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

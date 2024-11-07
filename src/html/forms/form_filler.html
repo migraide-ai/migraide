@@ -157,6 +157,9 @@
   </style>
 </head>
 <body @@bodySetup>
+
+  <script src="../assets/js/config.js"></script>
+
   @@include('../layouts/layout-vertical.html')
 
   <div class="pc-container">
@@ -321,7 +324,7 @@
 
   <!-- Include your JavaScript file -->
   <script>
-    
+
     // Common authentication helper function
 function getAuthenticatedClientData() {
   const clientData = JSON.parse(localStorage.getItem('clientData'));
@@ -484,7 +487,7 @@ async function handlePassportUpload(files, applicantType) {
       const progress = ((i + 1) / fileArray.length) * 90;
       updateProgress(elementPrefix, progress, `Processing file ${i + 1} of ${fileArray.length}...`);
 
-      const response = await fetch('http://127.0.0.1:5000/extract-passport-data', {
+      const response = await fetch(`${DOC_BASE_URL}/extract-passport-data`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${accessToken}`
@@ -543,7 +546,7 @@ async function handleI94Upload(file) {
       }
     }, 200);
 
-    const response = await fetch('http://127.0.0.1:5000/extract_i94_data', {
+    const response = await fetch(`${DOC_BASE_URL}/extract_i94_data`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${accessToken}`
@@ -594,7 +597,7 @@ async function handleResumeUpload(file) {
       }
     }, 200);
 
-    const response = await fetch('http://127.0.0.1:5000/upload-resume', {
+    const response = await fetch(`${DOC_BASE_URL}/upload-resume`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${accessToken}`
@@ -638,7 +641,7 @@ async function handleAddressUpload(file) {
     formData.append('email', clientData.email_address);
 
     // Add access token to headers
-    const response = await fetch('http://127.0.0.1:5000/extract_address_data', {
+    const response = await fetch(`${DOC_BASE_URL}/extract_address_data`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${accessToken}` // Make sure to include the token

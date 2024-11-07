@@ -263,6 +263,9 @@
   <!-- [Head] end -->
   <!-- [Body] Start -->
   <body data-pc-preset="preset-1" data-pc-sidebar-caption="true" data-pc-layout="vertical" data-pc-direction="ltr" data-pc-theme_contrast="" data-pc-theme="light">
+
+    <script src="../assets/js/config.js"></script>
+
      <!-- [ Sidebar Menu ] start -->
 <nav class="pc-sidebar">
   <div class="navbar-wrapper">
@@ -1675,7 +1678,7 @@ async function fillI140Form() {
           throw new Error('Please log in again to continue');
       }
 
-      const response = await fetch('http://127.0.0.1:5000/fill_i140_pdf', {
+      const response = await fetch(`${DOC_BASE_URL}/fill_i140_pdf`, {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
@@ -1709,7 +1712,7 @@ async function fillG1145Form() {
           throw new Error('Please log in again to continue');
       }
 
-      const response = await fetch('http://127.0.0.1:5000/fill_g1145_pdf', {
+      const response = await fetch(`${DOC_BASE_URL}/fill_g1145_pdf`, {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
@@ -1746,7 +1749,7 @@ async function fillG1450Forms() {
           throw new Error('Please log in again to continue');
       }
 
-      const response = await fetch('http://127.0.0.1:5000/fill_all_g1450_pdf', {
+      const response = await fetch(`${DOC_BASE_URL}/fill_all_g1450_pdf`, {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
@@ -1796,7 +1799,7 @@ async function fillI907Form() {
           throw new Error('Please log in again to continue');
       }
 
-      const response = await fetch('http://127.0.0.1:5000/fill_i907_pdf', {
+      const response = await fetch(`${DOC_BASE_URL}/fill_i907_pdf`, {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
