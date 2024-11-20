@@ -98,7 +98,12 @@ const path = {
 //  [ browser reload ] start
 gulp.task('browserSync', function () {
   browsersync.init({
-    server: 'dist/'
+    server: 'dist/',
+    ghostMode: false,
+    codeSync: false,
+    injectNotification: false,
+    injectChanges:false,
+    notify:false
   });
 });
 //  [ browser reload ] end
