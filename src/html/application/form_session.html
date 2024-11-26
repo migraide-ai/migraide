@@ -287,6 +287,7 @@
   
     <script>
  // Generate skeleton loaders
+// Generate skeleton loaders
 function generateSkeletons() {
   const formPreviews = document.getElementById('form-previews');
   for (let i = 0; i < 6; i++) {
@@ -326,6 +327,48 @@ let progressPercentage;
 let processingText;
 let formPreviews;
 
+// Unified Status Update Function
+async function updateClientStatus(email, status) {
+  const accessToken = localStorage.getItem('accessToken');
+  try {
+      const response = await fetch(`${window.API_BASE_URL}/api/dashboard/update_status_by_email`, {
+          method: 'PUT',
+          headers: {
+              'Authorization': `Bearer ${accessToken}`,
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+              email_address: email,
+              application_status: status
+          }),
+      });
+      
+      const data = await response.json();
+      if (data.msg === 'Application status updated successfully') {
+          console.log(`Status updated to ${status}`);
+          return true;
+      } else {
+          console.error(`Failed to update status: ${data.msg}`);
+          return false;
+      }
+  } catch (error) {
+      console.error('Status update error:', error);
+      return false;
+  }
+}
+
+// Loading overlay functions
+function showLoadingOverlay() {
+  const overlay = document.getElementById('loading-overlay');
+  const loadingText = overlay.querySelector('p');
+  loadingText.textContent = 'Opening your filled form...';
+  overlay.style.display = 'flex';
+}
+
+function hideLoadingOverlay() {
+  const overlay = document.getElementById('loading-overlay');
+  overlay.style.display = 'none';
+}
 // Function to fill I-140 form
 async function fillI140Form() {
   try {
@@ -387,9 +430,8 @@ async function fillG1145Form() {
       }
 
       const data = await response.json();
-      // Store the URL with the correct key for G-1145
       localStorage.setItem('g1145FormUrl', data.pdf_url);
-      console.log('G-1145 form URL stored:', data.pdf_url); // Debug log
+      console.log('G-1145 form URL stored:', data.pdf_url);
       return true;
   } catch (error) {
       console.error('Error filling G-1145 form:', error);
@@ -424,21 +466,13 @@ async function fillG1450Forms() {
       }
 
       const data = await response.json();
-      console.log('G-1450 response:', data); // Debug log
-
       if (!data.pdf_links) {
           throw new Error('No PDF links received for G-1450 forms');
       }
 
-      // Store URLs for different payment amounts
       localStorage.setItem('g1450_300FormUrl', data.pdf_links.payment_300);
       localStorage.setItem('g1450_715FormUrl', data.pdf_links.payment_715);
       localStorage.setItem('g1450_2805FormUrl', data.pdf_links.payment_2805);
-
-      // Debug logs
-      console.log('G-1450 300 URL:', data.pdf_links.payment_300);
-      console.log('G-1450 715 URL:', data.pdf_links.payment_715);
-      console.log('G-1450 2805 URL:', data.pdf_links.payment_2805);
       
       return true;
   } catch (error) {
@@ -447,7 +481,6 @@ async function fillG1450Forms() {
   }
 }
 
-// Add I-907 form filling function
 async function fillI907Form() {
   try {
       const clientData = JSON.parse(localStorage.getItem('clientData'));
@@ -482,7 +515,6 @@ async function fillI907Form() {
   }
 }
 
-
 // Function to fill all forms
 async function fillAllForms() {
   try {
@@ -499,24 +531,54 @@ async function fillAllForms() {
       return false;
   }
 }
+// Progress update function with unified status handling
+async function updateProcessingProgress() {
+  if (progress < 100) {
+      progress += 16.67;
+      currentStep += 1;
+      progressBarFill.style.width = progress + '%';
+      progressPercentage.innerText = Math.floor(progress) + '%';
+      processingText.innerText = progressSteps[currentStep];
 
-// Loading overlay functions
-function showLoadingOverlay() {
-  const overlay = document.getElementById('loading-overlay');
-  const loadingText = overlay.querySelector('p');
-  loadingText.textContent = 'Opening your filled form...';
-  overlay.style.display = 'flex';
+      const randomTime = Math.random() * (2000 - 1000) + 1000;
+      setTimeout(updateProcessingProgress, randomTime);
+  } else {
+      const success = await fillAllForms();
+      
+      if (success) {
+          // Get client data for status update
+          const clientData = JSON.parse(localStorage.getItem('clientData'));
+          if (clientData && clientData.email_address) {
+              // Update status to Completed using unified function
+              const statusUpdated = await updateClientStatus(clientData.email_address, 'Completed');
+              if (statusUpdated) {
+                  console.log('Status successfully updated to Completed');
+              } else {
+                  console.error('Failed to update status to Completed');
+              }
+          }
+
+          replaceSkeletonWithThumbnails();
+          const headerText = document.querySelector('.card-header h5');
+          headerText.innerText = "Your forms are now ready! Click on them to download. Ensure you download all the forms before moving forward!!!";
+          headerText.style.color = '#4285F4';
+
+          const continueButton = document.getElementById('btn-continue');
+          continueButton.disabled = false;
+          continueButton.style.backgroundColor = '#4285F4';
+          continueButton.style.color = '#fff';
+      } else {
+          const headerText = document.querySelector('.card-header h5');
+          headerText.innerText = "There was an error processing your forms. Please try again.";
+          headerText.style.color = '#dc3545';
+      }
+  }
 }
 
-function hideLoadingOverlay() {
-  const overlay = document.getElementById('loading-overlay');
-  overlay.style.display = 'none';
-}
-
-// Modified viewFilledForm function with debugging
+// Form viewing function
 function viewFilledForm(formType) {
   let formUrl;
-  console.log('Viewing form type:', formType); // Debug log
+  console.log('Viewing form type:', formType);
   
   switch(formType) {
       case 'I-140':
@@ -534,15 +596,13 @@ function viewFilledForm(formType) {
       case 'I-1450-2805':
           formUrl = localStorage.getItem('g1450_2805FormUrl');
           break;
-          case 'I-907':  // Add this case
+      case 'I-907':
           formUrl = localStorage.getItem('i907FormUrl');
           break;
       default:
           console.error('Unknown form type:', formType);
           return;
   }
-
-  console.log('Form URL:', formUrl); // Debug log
 
   if (!formUrl) {
       alert('Form URL not found. Please try regenerating the form.');
@@ -551,7 +611,7 @@ function viewFilledForm(formType) {
   window.open(formUrl, '_blank');
 }
 
-// Modified thumbnail creation with corrected form names
+// Replace skeleton loaders with form thumbnails
 function replaceSkeletonWithThumbnails() {
   formPreviews.innerHTML = '';
   
@@ -562,7 +622,7 @@ function replaceSkeletonWithThumbnails() {
       { name: 'I-1450-300', image: '/assets/images/widget/form_g1450_300.png' },
       { name: 'I-1450-2805', image: '/assets/images/widget/form_g1450_2805.png' },
       { name: 'I-907', image: '/assets/images/widget/form_i907.png' }
-      ];
+  ];
 
   formTypes.forEach(form => {
       const thumbnail = document.createElement('div');
@@ -590,7 +650,7 @@ function replaceSkeletonWithThumbnails() {
       `;
 
       thumbnail.addEventListener('click', () => {
-          console.log('Clicking form:', form.name); // Debug log
+          console.log('Clicking form:', form.name);
           showLoadingOverlay();
           viewFilledForm(form.name);
           setTimeout(hideLoadingOverlay, 2000);
@@ -598,37 +658,6 @@ function replaceSkeletonWithThumbnails() {
 
       formPreviews.appendChild(thumbnail);
   });
-}
-// Progress update function
-async function updateProcessingProgress() {
-  if (progress < 100) {
-      progress += 16.67;
-      currentStep += 1;
-      progressBarFill.style.width = progress + '%';
-      progressPercentage.innerText = Math.floor(progress) + '%';
-      processingText.innerText = progressSteps[currentStep];
-
-      const randomTime = Math.random() * (2000 - 1000) + 1000;
-      setTimeout(updateProcessingProgress, randomTime);
-  } else {
-      const success = await fillAllForms();
-      
-      if (success) {
-          replaceSkeletonWithThumbnails();
-          const headerText = document.querySelector('.card-header h5');
-          headerText.innerText = "Your forms are now ready! Click on them to download. Ensure you download all the forms before moving forward!!!";
-          headerText.style.color = '#4285F4';
-
-          const continueButton = document.getElementById('btn-continue');
-          continueButton.disabled = false;
-          continueButton.style.backgroundColor = '#4285F4';
-          continueButton.style.color = '#fff';
-      } else {
-          const headerText = document.querySelector('.card-header h5');
-          headerText.innerText = "There was an error processing your forms. Please try again.";
-          headerText.style.color = '#dc3545';
-      }
-  }
 }
 
 // Initialize page
@@ -639,7 +668,7 @@ document.addEventListener('DOMContentLoaded', function() {
   processingText = document.getElementById('processing-text');
   formPreviews = document.getElementById('form-previews');
 
-  // Check authentication
+  // Check authentication and client data
   const clientData = JSON.parse(localStorage.getItem('clientData'));
   const accessToken = localStorage.getItem('accessToken');
   
@@ -656,7 +685,7 @@ document.addEventListener('DOMContentLoaded', function() {
   setTimeout(updateProcessingProgress, 5000);
 });
 
-// Handle browser navigation
+// Navigation handling
 history.pushState(null, null, location.href);
 window.onpopstate = function(event) {
   history.pushState(null, null, location.href);
@@ -676,6 +705,7 @@ window.onpopstate = function(event) {
   localStorage.removeItem('g1450_300FormUrl');
   localStorage.removeItem('g1450_715FormUrl');
   localStorage.removeItem('g1450_2805FormUrl');
+  localStorage.removeItem('i907FormUrl');
   window.location.href = '/login.html';
 };
 

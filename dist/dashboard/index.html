@@ -2847,53 +2847,91 @@
    
     <script>
       document.addEventListener('DOMContentLoaded', function () {
-          console.log('Starting dashboard initialization');
-          
-          // Check what data we have in localStorage
-          const businessData = localStorage.getItem('businessData');
-          const clientData = localStorage.getItem('clientData');
-          
-          console.log('Found in localStorage:', {
-              hasBusinessData: !!businessData,
-              hasClientData: !!clientData,
-              businessData: businessData ? JSON.parse(businessData) : null,
-              clientData: clientData ? JSON.parse(clientData) : null
-          });
-  
-          const userData = businessData || clientData;
-  
-          if (userData) {
-              try {
-                  const parsedUserData = JSON.parse(userData);
-                  console.log('Parsed user data:', parsedUserData);
-                  
-                  const greetingHeader = document.getElementById('greeting-header');
-                  
-                  if (greetingHeader) {
-                      if (parsedUserData.first_name) {
-                          console.log('Setting greeting with name:', parsedUserData.first_name);
-                          greetingHeader.innerText = `Hi, ${parsedUserData.first_name} 👋🏾`;
-                      } else {
-                          // If no first name, check what data we do have
-                          console.log('No first_name found. Available fields:', Object.keys(parsedUserData));
-                          greetingHeader.innerText = `Hi 👋🏾`;
-                          
-                          // Try to get the name from other possible fields
-                          if (parsedUserData.name) {
-                              greetingHeader.innerText = `Hi, ${parsedUserData.name} 👋🏾`;
-                          }
-                      }
-                  } else {
-                      console.log('Greeting header element not found');
-                  }
-              } catch (error) {
-                  console.error('Error parsing user data:', error);
-              }
-          } else {
-              console.log('No user data found, redirecting to login');
-              window.location.href = '/login.html';
-          }
-      });
+        console.log('Starting dashboard initialization');
+        
+        // Check what data we have in localStorage
+        const businessData = localStorage.getItem('businessData');
+        const clientData = localStorage.getItem('clientData');
+        
+        console.log('Found in localStorage:', {
+            hasBusinessData: !!businessData,
+            hasClientData: !!clientData,
+            businessData: businessData ? JSON.parse(businessData) : null,
+            clientData: clientData ? JSON.parse(clientData) : null
+        });
+    
+        // Add handler for Get Started button
+        const getStartedBtn = document.querySelector('a[href="/application/business-profile.html"]');
+        if (getStartedBtn) {
+            getStartedBtn.addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent default navigation
+    
+                // Check if business data exists in localStorage
+                if (businessData) {
+                    // Business already registered, redirect to client list
+                    console.log('Business already registered, redirecting to client list');
+                    window.location.href = '/application/client-list.html';
+                } else {
+                    // Business not registered, proceed to registration
+                    console.log('Business not registered, proceeding to registration');
+                    window.location.href = '/application/business-profile.html';
+                }
+            });
+        } else {
+            console.log('Get Started button not found');
+        }
+    
+        const userData = businessData || clientData;
+    
+        if (userData) {
+            try {
+                const parsedUserData = JSON.parse(userData);
+                console.log('Parsed user data:', parsedUserData);
+                
+                const greetingHeader = document.getElementById('greeting-header');
+                
+                if (greetingHeader) {
+                    if (parsedUserData.first_name) {
+                        console.log('Setting greeting with name:', parsedUserData.first_name);
+                        greetingHeader.innerText = `Hi, ${parsedUserData.first_name} 👋🏾`;
+                    } else {
+                        // If no first name, check what data we do have
+                        console.log('No first_name found. Available fields:', Object.keys(parsedUserData));
+                        greetingHeader.innerText = `Hi 👋🏾`;
+                        
+                        // Try to get the name from other possible fields
+                        if (parsedUserData.name) {
+                            greetingHeader.innerText = `Hi, ${parsedUserData.name} 👋🏾`;
+                        }
+                    }
+                } else {
+                    console.log('Greeting header element not found');
+                }
+            } catch (error) {
+                console.error('Error parsing user data:', error);
+            }
+        } else {
+            console.log('No user data found, redirecting to login');
+            window.location.href = '/login.html';
+        }
+    
+        // Check for access token
+        const accessToken = localStorage.getItem('accessToken');
+        if (!accessToken) {
+            console.log('No access token found, redirecting to login');
+            window.location.href = '/login.html';
+            return;
+        }
+    
+        // Handle browser back button
+        window.onpopstate = function(event) {
+            // Prevent going back if business is registered
+            if (businessData) {
+                history.pushState(null, null, window.location.pathname);
+                window.location.href = '/application/client-list.html';
+            }
+        };
+    });
   </script>
     
     
