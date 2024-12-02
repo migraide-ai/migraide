@@ -1701,292 +1701,335 @@
 <script src="../assets/js/plugins/simple-datatables.js"></script>
 <script>
   // Global variables for scheduling
-// Global variables for scheduling
-let currentClientEmail = '';
-let currentClientName = '';
-let currentNudgeEmail = '';
+  let currentClientEmail = '';
+  let currentClientName = '';
+  let currentNudgeEmail = '';
 let currentNudgeName = '';
-
-// Setup the DataTable
-const dataTable = new simpleDatatables.DataTable('#pc-dt-simple', {
-    sortable: false,
-    perPage: 5
-});
-
-// Centralized alert function
-function showAlert(message, isSuccess, callback = null) {
-    let alertMessage = document.querySelector('.alert-message');
-    if (!alertMessage) {
-        alertMessage = document.createElement('div');
-        alertMessage.className = 'alert-message';
-        document.body.appendChild(alertMessage);
-    }
-    
-    alertMessage.innerHTML = `<span class="check-icon"></span> ${message}`;
-    alertMessage.style.backgroundColor = isSuccess ? '#28a745' : '#dc3545';
-    alertMessage.style.display = 'flex';
-
-    setTimeout(function () {
-        alertMessage.style.display = 'none';
-        if (callback) callback();
-    }, 2000);
-}
-
-// Custom confirm dialog
-function showConfirm(message, onConfirm) {
-    let confirmMessage = document.querySelector('.alert-message');
-    if (!confirmMessage) {
-        confirmMessage = document.createElement('div');
-        confirmMessage.className = 'alert-message';
-        document.body.appendChild(confirmMessage);
-    }
-
-    confirmMessage.innerHTML = `
-        <span class="check-icon"></span>
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-            <div>${message}</div>
-            <div style="display: flex; gap: 10px;">
-                <button class="btn btn-sm btn-light" onclick="handleConfirmResponse(false)">Cancel</button>
-                <button class="btn btn-sm btn-primary" onclick="handleConfirmResponse(true)">OK</button>
-            </div>
-        </div>`;
-    confirmMessage.style.backgroundColor = '#2196F3';
-    confirmMessage.style.display = 'flex';
-    
-    window.handleConfirmResponse = function(response) {
-        confirmMessage.style.display = 'none';
-        if (response) {
-            onConfirm();
-        }
-    };
-}
-
-// Initial setup when document loads
-document.addEventListener('DOMContentLoaded', function () {
-    // Add table styles
-    const tableStyle = document.createElement('style');
-    tableStyle.textContent = `
-        .table th {
-            text-align: left !important;
-            padding-left: 1rem !important;
-        }
-        .table td {
-            text-align: left !important;
-            padding-left: 1rem !important;
-            vertical-align: middle;
-        }
-        .table th:last-child,
-        .table td:last-child {
-            text-align: center !important;
-            padding-left: 0 !important;
-        }
-        .table td:first-child { width: 5%; }
-        .table td:nth-child(2) { width: 30%; }
-        .table td:nth-child(3) { width: 20%; }
-        .table td:nth-child(4) { width: 20%; }
-        .table td:nth-child(5) { width: 15%; }
-        .table td:last-child { width: 10%; }
-        .table .row {
-            margin-left: 0;
-            margin-right: 0;
-        }
-        .table .col-auto {
-            padding-left: 0;
-        }
-    `;
-    document.head.appendChild(tableStyle);
-
-    // Initialize search functionality
-    const searchInput = document.querySelector('[type="search"]');
-    if (searchInput) {
-        searchInput.addEventListener('keyup', function(e) {
-            if (dataTable) {
-                dataTable.search(e.target.value);
-            }
-        });
-    }
-
-    // Add event listeners for modal buttons
-    initializeModalButtons();
-
-    // Fetch initial data
-    fetchClients();
-});
-
-// Initialize modal buttons
-function initializeModalButtons() {
-    const scheduleMeetBtn = document.getElementById('schedule-meet-btn');
-    if (scheduleMeetBtn) {
-        scheduleMeetBtn.addEventListener('click', function() {
-            scheduleGoogleMeet(currentClientEmail, currentClientName);
-            const modal = bootstrap.Modal.getInstance(document.getElementById('review-modal'));
-            if (modal) {
-                modal.hide();
-            }
-        });
-    }
-
-    const sendNudgeBtn = document.getElementById('send-nudge-btn');
-    if (sendNudgeBtn) {
-        sendNudgeBtn.addEventListener('click', function() {
-            nudgeClient(currentNudgeEmail);
-            const modal = bootstrap.Modal.getInstance(document.getElementById('nudge-modal'));
-            if (modal) {
-                modal.hide();
-            }
-        });
-    }
-}
-// Fetch Clients Function
-function fetchClients() {
-  const accessToken = localStorage.getItem('accessToken');
-  if (!accessToken) {
-      showAlert('Please log in to view clients.', false, function() {
-          window.location.href = '../login.html';
-      });
-      return;
-  }
-
-  fetch(`${window.API_BASE_URL}/list_clients`, {
-      method: 'GET',
-      headers: {
-          'Authorization': `Bearer ${accessToken}`,
-      },
-  })
-  .then(response => response.json())
-  .then(clients => {
-      populateClientsTable(clients);
-  })
-  .catch(error => {
-      console.error('Error fetching clients:', error);
-      showAlert('Failed to fetch clients.', false);
+let clientEmail = '';
+let clientName = '';
+  // Setup the DataTable
+  const dataTable = new simpleDatatables.DataTable('#pc-dt-simple', {
+      sortable: false,
+      perPage: 5
   });
-}
-
-// Populate Clients Table with Status Handling
-function populateClientsTable(clients) {
-  const tbody = document.querySelector('#pc-dt-simple tbody');
-  tbody.innerHTML = '';  // Clear table
-
-  clients.forEach((client, index) => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-          <td class="text-left">${index + 1}</td>
-          <td class="text-left">
-              <div class="row align-items-center">
-                  <div class="col-auto">
-                      <img src="../assets/images/user/avatar-${(index % 9) + 1}.jpg" alt="user-image" class="wid-40 rounded-circle" />
-                  </div>
-                  <div class="col">
-                      <h6 class="mb-0">${client.first_name} ${client.middle_name || ''} ${client.last_name}</h6>
-                      <p class="text-muted f-12 mb-0">
-                          <a href="${client.form_url}" 
-                             onclick="handleFormLinkClick(event, '${client.email_address}')" 
-                             target="_blank"
-                             class="form-link">${client.email_address}</a>
-                      </p>
-                  </div>
-              </div>
-          </td>
-          <td class="text-left">${client.phone_number || 'N/A'}</td>
-          <td class="text-left">${client.visa_services || 'N/A'}</td>
-          <td class="text-left">${getStatusBadge(client.status || 'Not Started')}</td>
-          <td class="text-center">
-              <ul class="list-inline me-auto mb-0">
-                  <li class="list-inline-item" title="View">
-                      <a href="#" class="btn-link-secondary" onclick="viewClientDetails('${client._id}')">
-                          <i class="ti ti-eye f-18"></i>
-                      </a>
-                  </li>
-                  <li class="list-inline-item" title="Schedule Review">
-                      <a href="#" class="btn-link-primary" onclick="openScheduleModal('${client.email_address}', '${client.first_name} ${client.last_name}')" data-bs-toggle="modal" data-bs-target="#review-modal">
-                          <i class="ti ti-calendar f-18"></i>
-                      </a>
-                  </li>
-                  <li class="list-inline-item" title="Send Reminder">
-                      <a href="#" class="btn-link-success" onclick="openNudgeModal('${client.email_address}', '${client.first_name} ${client.last_name}')" data-bs-toggle="modal" data-bs-target="#nudge-modal">
-                          <i class="ti ti-clock f-18" style="color: red;"></i>
-                      </a>
-                  </li>
-                  <li class="list-inline-item" title="Delete">
-                      <a href="#" onclick="deleteClient('${client._id}')" class="btn-link-danger">
-                          <i class="ti ti-trash f-18"></i>
-                      </a>
-                  </li>
-              </ul>
-          </td>
-      `;
-      tbody.appendChild(row);
-  });
-}
-
-// Handle Form Link Click and Status Update
-function handleFormLinkClick(event, email) {
-  event.preventDefault();
-  const accessToken = localStorage.getItem('accessToken');
-  const url = event.target.href;
-
-  fetch(`${window.API_BASE_URL}/api/dashboard/update_status_by_email`, {
-      method: 'PUT',
-      headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-          email_address: email,
-          application_status: 'In Progress'
-      }),
-  })
-  .then(response => response.json())
-  .then(data => {
-      if (data.msg === 'Application status updated successfully') {
-          showAlert('Form access started', true);
-          window.open(url, '_blank');
-          fetchClients(); // Refresh the table
-      } else {
-          showAlert('Failed to update status', false);
+    // Centralized alert function
+    function showAlert(message, isSuccess, callback = null) {
+      let alertMessage = document.querySelector('.alert-message');
+      if (!alertMessage) {
+          alertMessage = document.createElement('div');
+          alertMessage.className = 'alert-message';
+          document.body.appendChild(alertMessage);
       }
-  })
-  .catch(error => {
-      console.error('Error updating status:', error);
-      showAlert('Error updating status', false);
-  });
-}
+      
+      alertMessage.innerHTML = `<span class="check-icon"></span> ${message}`;
+      alertMessage.style.backgroundColor = isSuccess ? '#28a745' : '#dc3545';
+      alertMessage.style.display = 'flex';
 
-// Status Badge Handlers
-function getStatusBadge(status) {
-  switch (status) {
-      case 'Not Started': 
-          return '<span class="badge bg-light-danger rounded-pill f-12">Not Started</span>';
-      case 'In Progress': 
-          return '<span class="badge bg-light-primary rounded-pill f-12">In Progress</span>';
-      case 'Completed': 
-          return '<span class="badge bg-light-success rounded-pill f-12">Completed</span>';
-      default: 
-          return '<span class="badge bg-light-danger rounded-pill f-12">Not Started</span>';
+      setTimeout(function () {
+          alertMessage.style.display = 'none';
+          if (callback) callback();
+      }, 2000);
+  }
+    // Custom confirm dialog
+    function showConfirm(message, onConfirm) {
+      let confirmMessage = document.querySelector('.alert-message');
+      if (!confirmMessage) {
+          confirmMessage = document.createElement('div');
+          confirmMessage.className = 'alert-message';
+          document.body.appendChild(confirmMessage);
+      }
+
+      confirmMessage.innerHTML = `
+          <span class="check-icon"></span>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+              <div>${message}</div>
+              <div style="display: flex; gap: 10px;">
+                  <button class="btn btn-sm btn-light" onclick="handleConfirmResponse(false)">Cancel</button>
+                  <button class="btn btn-sm btn-primary" onclick="handleConfirmResponse(true)">OK</button>
+              </div>
+          </div>`;
+      confirmMessage.style.backgroundColor = '#2196F3';
+      confirmMessage.style.display = 'flex';
+      
+      window.handleConfirmResponse = function(response) {
+          confirmMessage.style.display = 'none';
+          if (response) {
+              onConfirm();
+          }
+      };
+  }
+  // Status update function
+// Status update function stays outside
+async function updateClientStatus(email, status) {
+  const accessToken = localStorage.getItem('accessToken');
+  
+  try {
+      const response = await fetch('http://127.0.0.1:5000/update_status_by_email', {
+          method: 'PUT',
+          headers: {
+              'Authorization': `Bearer ${accessToken}`,
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+              email_address: email,
+              application_status: status
+          }),
+      });
+
+      const data = await response.json();
+      
+      if (data.msg === 'Application status updated successfully') {
+          showAlert('Status updated successfully!', true);
+          fetchClients();
+      } else {
+          showAlert(`Status update failed: ${data.msg}`, false);
+      }
+  } catch (error) {
+      console.error('Status update error:', error);
+      showAlert('Failed to update status. Please try again.', false);
   }
 }
 
+// Single consolidated DOMContentLoaded event
+document.addEventListener('DOMContentLoaded', function () {
+  // 1. Add table styles
+  const tableStyle = document.createElement('style');
+  tableStyle.textContent = `
+      .table th {
+          text-align: left !important;
+          padding-left: 1rem !important;
+      }
+      .table td {
+          text-align: left !important;
+          padding-left: 1rem !important;
+          vertical-align: middle;
+      }
+      .table th:last-child,
+      .table td:last-child {
+          text-align: center !important;
+          padding-left: 0 !important;
+      }
+      .table td:first-child { width: 5%; }
+      .table td:nth-child(2) { width: 30%; }
+      .table td:nth-child(3) { width: 20%; }
+      .table td:nth-child(4) { width: 20%; }
+      .table td:nth-child(5) { width: 15%; }
+      .table td:last-child { width: 10%; }
+      .table .row {
+          margin-left: 0;
+          margin-right: 0;
+      }
+      .table .col-auto {
+          padding-left: 0;
+      }
+  `;
+  document.head.appendChild(tableStyle);
+
+  // 2. Initialize search functionality
+  const searchInput = document.querySelector('[type="search"]');
+  if (searchInput) {
+      searchInput.addEventListener('keyup', function(e) {
+          if (dataTable) {
+              dataTable.search(e.target.value);
+          }
+      });
+  }
+
+  // 3. Add schedule button event listener
+  const scheduleMeetBtn = document.getElementById('schedule-meet-btn');
+  if (scheduleMeetBtn) {
+      scheduleMeetBtn.addEventListener('click', function() {
+          console.log('Scheduling meet for:', currentClientName, currentClientEmail);
+          scheduleGoogleMeet(currentClientEmail, currentClientName);
+          const modal = bootstrap.Modal.getInstance(document.getElementById('review-modal'));
+          if (modal) {
+              modal.hide();
+          }
+      });
+  }
+
+  // 4. Add nudge button event listener
+  const sendNudgeBtn = document.getElementById('send-nudge-btn');
+  if (sendNudgeBtn) {
+      sendNudgeBtn.addEventListener('click', function() {
+          console.log('Sending nudge to:', currentNudgeName, currentNudgeEmail);
+          nudgeClient(currentNudgeEmail);
+          const modal = bootstrap.Modal.getInstance(document.getElementById('nudge-modal'));
+          if (modal) {
+              modal.hide();
+          }
+      });
+  }
+
+  // 5. Client sign-in form handler
+  const signInForm = document.getElementById('client-sign-in-form');
+  if (signInForm) {
+      signInForm.addEventListener('submit', async function(event) {
+          event.preventDefault();
+          
+          const email = document.getElementById('email').value;
+          const statusCode = document.getElementById('status-code').value;
+
+          try {
+              const response = await fetch('http://127.0.0.1:5000/client_sign_in', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                      email_address: email,
+                      status_code: statusCode
+                  })
+              });
+
+              const data = await response.json();
+
+              if (data.msg === "Sign-in successful") {
+                  localStorage.setItem('clientEmail', data.client.email_address);
+                  localStorage.setItem('clientName', `${data.client.first_name} ${data.client.last_name}`);
+                  localStorage.setItem('clientToken', data.access_token);
+
+                  // Update status to In Progress when client signs in
+                  await updateClientStatus(data.client.email_address, 'In Progress');
+                  window.location.href = '/forms/form-sections.html';
+              }
+
+          } catch (error) {
+              console.error('Sign in error:', error);
+              showAlert('Error signing in', false);
+          }
+      });
+  }
+
+  // 6. Form submission handler
+  const continueButton = document.querySelector('.btn-primary');
+  if (continueButton) {
+      continueButton.addEventListener('click', async function(event) {
+          if (validateUploads()) {
+              try {
+                  const clientEmail = localStorage.getItem('clientEmail') || 
+                                    (JSON.parse(localStorage.getItem('clientData'))?.email_address);
+                  
+                  if (!clientEmail) {
+                      showAlert('Client email not found. Please sign in again.', false);
+                      return;
+                  }
+                  
+                  // Update status to Completed when all documents are uploaded
+                  await updateClientStatus(clientEmail, 'Completed');
+                  
+                  // Continue to next page
+                  window.location.href = '/forms/additional-form.html';
+                  
+              } catch (error) {
+                  console.error('Form submission error:', error);
+                  showAlert('Error submitting form', false);
+              }
+          }
+      });
+  }
+
+  // 7. Fetch initial data
+  fetchClients();
+});
+      function fetchClients() {
+        const accessToken = localStorage.getItem('accessToken');
+        if (!accessToken) {
+            showAlert('Please log in to view clients.', false, function() {
+                window.location.href = '../login.html';
+            });
+            return;
+        }
+    
+        fetch(`${window.API_BASE_URL}/list_clients`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+            },
+        })
+        .then(response => response.json())
+        .then(clients => {
+            populateClientsTable(clients);
+        })
+        .catch(error => {
+            console.error('Error fetching clients:', error);
+            showAlert('Failed to fetch clients.', false);
+        });
+    }
+  
+  function populateClientsTable(clients) {
+      const tbody = document.querySelector('#pc-dt-simple tbody');
+      tbody.innerHTML = '';  // Clear table
+  
+      clients.forEach((client, index) => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+              <td class="text-left">${index + 1}</td>
+              <td class="text-left">
+                  <div class="row align-items-center">
+                      <div class="col-auto">
+                          <img src="../assets/images/user/avatar-${(index % 9) + 1}.jpg" alt="user-image" class="wid-40 rounded-circle" />
+                      </div>
+                      <div class="col">
+                          <h6 class="mb-0">${client.first_name} ${client.middle_name || ''} ${client.last_name}</h6>
+                          <p class="text-muted f-12 mb-0">${client.email_address}</p>
+                      </div>
+                  </div>
+              </td>
+              <td class="text-left">${client.phone_number || 'N/A'}</td>
+              <td class="text-left">${client.visa_services || 'N/A'}</td>
+              <td class="text-left">${getStatusBadge(client.status)}</td>
+              <td class="text-center">
+                 <ul class="list-inline me-auto mb-0">
+                    <li class="list-inline-item" title="View">
+                        <a href="#" class="btn-link-secondary" onclick="viewClientDetails('${client._id}')">
+                            <i class="ti ti-eye f-18"></i>
+                        </a>
+                    </li>
+                    <li class="list-inline-item" title="Schedule Review">
+                        <a href="#" class="btn-link-primary" onclick="openScheduleModal('${client.email_address}', '${client.first_name} ${client.last_name}')" data-bs-toggle="modal" data-bs-target="#review-modal">
+                            <i class="ti ti-calendar f-18"></i>
+                        </a>
+                    </li>
+                    <li class="list-inline-item" title="Send Reminder">
+                        <a href="#" class="btn-link-success" onclick="openNudgeModal('${client.email_address}', '${client.first_name} ${client.last_name}')" data-bs-toggle="modal" data-bs-target="#nudge-modal">
+                            <i class="ti ti-clock f-18" style="color: red;"></i>
+                        </a>
+                    </li>
+                    <li class="list-inline-item" title="Delete">
+                        <a href="#" onclick="deleteClient('${client._id}')" class="btn-link-danger">
+                            <i class="ti ti-trash f-18"></i>
+                        </a>
+                      </li>
+                  </ul>
+              </td>
+          `;
+          tbody.appendChild(row);
+      });
+  }
+  function getStatusBadge(status) {
+    switch (status) {
+        case 'Not Started': return '<span class="badge bg-light-danger rounded-pill f-12">Not Started</span>';
+        case 'In Progress': return '<span class="badge bg-light-primary rounded-pill f-12">In Progress</span>';
+        case 'Completed': return '<span class="badge bg-light-success rounded-pill f-12">Completed</span>';
+        default: return '<span class="badge bg-light-secondary rounded-pill f-12">Unknown</span>';
+    }
+}
+
+// Helper function for status badge classes
 function getStatusClass(status) {
-  switch (status) {
-      case 'In Progress': return 'bg-primary';
-      case 'Completed': return 'bg-success';
-      case 'Not Started': return 'bg-danger';
-      default: return 'bg-secondary';
-  }
+    switch (status) {
+        case 'In Progress': return 'bg-primary';
+        case 'Completed': return 'bg-success';
+        case 'Not Started': return 'bg-danger';
+        default: return 'bg-secondary';
+    }
 }
-// Modal Open Functions
+
 window.openScheduleModal = function(email, name) {
-  currentClientEmail = email;
-  currentClientName = name;
+    currentClientEmail = email;
+    currentClientName = name;
 }
-
-window.openNudgeModal = function(email, name) {
-  currentNudgeEmail = email;
-  currentNudgeName = name;
-}
-
-// Google Meet Scheduling
 window.scheduleGoogleMeet = function(clientEmail, clientName) {
   // Get the logged in user's data directly
   const businessEmail = JSON.parse(localStorage.getItem('businessData')).email_address;
@@ -2014,8 +2057,12 @@ window.scheduleGoogleMeet = function(clientEmail, clientName) {
 
   window.open(url, '_blank');
 }
+// Update the openNudgeModal function
+window.openNudgeModal = function(email, name) {
+  currentNudgeEmail = email;
+  currentNudgeName = name;
+}
 
-// Nudge Client Function
 window.nudgeClient = function(email) {
   const accessToken = localStorage.getItem('accessToken');
   fetch(`${window.API_BASE_URL}/send_nudge`, {
@@ -2040,54 +2087,52 @@ window.nudgeClient = function(email) {
   });
 }
 
-// View Client Details
 window.viewClientDetails = function(clientId) {
-  const accessToken = localStorage.getItem('accessToken');
-  fetch(`${window.API_BASE_URL}/client_details/${clientId}`, {
-      method: 'GET',
-      headers: {
-          'Authorization': `Bearer ${accessToken}`,
-      },
-  })
-  .then(response => response.json())
-  .then(client => {
-      // Update modal fields with null checks
-      const modalElements = {
-          'h5.mb-0': `${client.first_name || ''} ${client.middle_name || ''} ${client.last_name || ''}`,
-          'p.text-muted.text-sm': client.occupation || 'N/A',
-          'span.badge': client.status || 'Unknown',
-          '[data-field="email"]': client.email_address || 'N/A',
-          '[data-field="phone"]': client.phone_number || 'N/A',
-          '[data-field="form-url"]': client.form_url || '#',
-          '[data-field="full-name"]': `${client.first_name || ''} ${client.middle_name || ''} ${client.last_name || ''}`,
-          '[data-field="full-name-details"]': `${client.first_name || ''} ${client.middle_name || ''} ${client.last_name || ''}`,
-          '[data-field="visa-service"]': client.visa_services || 'N/A',
-          '[data-field="gender"]': client.client_gender || 'N/A',
-          '[data-field="dob"]': client.date_of_birth || 'N/A'
-      };
+    const accessToken = localStorage.getItem('accessToken');
+    fetch(`${window.API_BASE_URL}/client_details/${clientId}`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+        },
+    })
+    .then(response => response.json())
+    .then(client => {
+        // Update modal fields with null checks
+        const modalElements = {
+            'h5.mb-0': `${client.first_name || ''} ${client.middle_name || ''} ${client.last_name || ''}`,
+            'p.text-muted.text-sm': client.occupation || 'N/A',
+            'span.badge': client.status || 'Unknown',
+            '[data-field="email"]': client.email_address || 'N/A',
+            '[data-field="phone"]': client.phone_number || 'N/A',
+            '[data-field="form-url"]': client.form_url || '#',
+            '[data-field="full-name"]': `${client.first_name || ''} ${client.middle_name || ''} ${client.last_name || ''}`,
+            '[data-field="full-name-details"]': `${client.first_name || ''} ${client.middle_name || ''} ${client.last_name || ''}`,
+            '[data-field="visa-service"]': client.visa_services || 'N/A',
+            '[data-field="gender"]': client.client_gender || 'N/A',
+            '[data-field="dob"]': client.date_of_birth || 'N/A'
+        };
 
-      // Update each element in the modal
-      Object.entries(modalElements).forEach(([selector, value]) => {
-          const element = document.querySelector(`#customer-modal ${selector}`);
-          if (element) {
-              if (selector === 'span.badge') {
-                  element.className = `badge ${getStatusClass(value)}`;
-              }
-              element.textContent = value;
-          }
-      });
+        // Update each element in the modal
+        Object.entries(modalElements).forEach(([selector, value]) => {
+            const element = document.querySelector(`#customer-modal ${selector}`);
+            if (element) {
+                if (selector === 'span.badge') {
+                    element.className = `badge ${getStatusClass(value)}`;
+                }
+                element.textContent = value;
+            }
+        });
 
-      // Show the modal
-      const modal = new bootstrap.Modal(document.getElementById('customer-modal'));
-      modal.show();
-  })
-  .catch(error => {
-      console.error('Error fetching client details:', error);
-      alert('Failed to fetch client details.');
-  });
+        // Show the modal
+        const modal = new bootstrap.Modal(document.getElementById('customer-modal'));
+        modal.show();
+    })
+    .catch(error => {
+        console.error('Error fetching client details:', error);
+        alert('Failed to fetch client details.');
+    });
 };
 
-// Delete Client Function
 window.deleteClient = function(clientId) {
   showConfirm('Are you sure you want to delete this client?', function() {
       const accessToken = localStorage.getItem('accessToken');
@@ -2110,6 +2155,33 @@ window.deleteClient = function(clientId) {
           console.error('Error deleting client:', error);
           showAlert('Failed to delete client.', false);
       });
+  });
+};
+window.updateClientStatus = function(email) {
+  const token = localStorage.getItem('token');
+  fetch(`${window.API_BASE_URL}/update_status_by_email`, {
+      method: 'PUT',
+      headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+          email_address: email,
+          application_status: 'In Progress'
+      }),
+  })
+  .then(response => response.json())
+  .then(data => {
+      if (data.msg === 'Application status updated successfully') {
+          showAlert('Status updated successfully!', true);
+          fetchClients();
+      } else {
+          showAlert(`Status update failed: ${data.msg}`, false);
+      }
+  })
+  .catch(error => {
+      console.error('Status update error:', error);
+      showAlert('Failed to update status. Please try again.', false);
   });
 };
 
