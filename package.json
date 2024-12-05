@@ -37,6 +37,7 @@
     "sass": "^1.71.1"
   },
   "dependencies": {
+    "@amplitude/analytics-browser": "^2.11.9",
     "@ckeditor/ckeditor5-build-balloon": "^41.1.0",
     "@ckeditor/ckeditor5-build-classic": "^41.1.0",
     "@ckeditor/ckeditor5-build-decoupled-document": "^41.1.0",
